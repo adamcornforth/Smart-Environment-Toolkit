@@ -12,47 +12,115 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 	 */
 	public function up()
 	{
-		Schema::table('Spot', function($table)
+		Schema::create('Users', function($table)
 		{
-		    $table->string('spot_address');
+			$table->increments('id');
+		    $table->string('first_name'); 
+		    $table->string('last_name'); 
+		    $table->string('email');
+		    $table->string('password');
+		    $table->rememberToken();
 		    $table->timestamps();
 		});
 
-		Schema::table('Zone', function($table)
+		Schema::create('Spot', function($table)
+		{
+			$table->increments('id');
+		    $table->string('spot_address')->unique();
+		    $table->integer('user_id')->unsigned();
+		    $table->timestamps();
+
+		    $table->foreign('user_id')->references('id')->on('Users');
+		});
+
+		Schema::create('Sensor', function($table)
+		{
+		    $table->increments('id');
+		    $table->string('title');
+		    $table->string('table');
+		    $table->string('field');
+		    $table->string('description');
+		    $table->timestamps();
+		});
+
+		Schema::create('Object', function($table)
+		{
+		    $table->increments('id');
+		    $table->string('title');
+		    $table->string('description');
+		    $table->integer('spot_id')->unsigned();
+
+			$table->foreign('spot_id')->references('id')->on('Spot');
+		    $table->timestamps();
+		});
+
+		Schema::create('Job', function($table)
+		{
+		    $table->increments('id');
+		    $table->string('title');
+		    $table->string('description');
+		    $table->float('threshold');
+		    $table->integer('object_id')->unsigned();
+		    $table->integer('sensor_id')->unsigned();
+
+		    $table->foreign('object_id')->references('id')->on('Object');
+		    $table->foreign('sensor_id')->references('id')->on('Sensor');
+		    $table->timestamps();
+		});
+
+		Schema::create('Zone', function($table)
 		{
 		    $table->increments('id');
 		    $table->string('title');
 		    $table->timestamps();
 		});
 
-		Schema::table('Spot_Zone', function($table)
+		Schema::create('zone_spot', function($table)
 		{
 		    $table->increments('id');
-		    $table->string('spot_address');
+		    $table->integer('spot_address');
 		    $table->integer('zone_id')->unsigned();
 
-		    $table->foreign('spot_address')->references('spot_address')->on('Zone');
 		    $table->foreign('zone_id')->references('id')->on('Zone');
 		    $table->timestamps();
 		});
 
-		Schema::table('Light', function($table)
+		Schema::create('Light', function($table)
 		{
 		    $table->increments('id');
 		    $table->integer('light_intensity');
-		    $table->integer('zone_id')->unsigned();
+		    $table->string('spot_address');
+		    $table->integer('job_id')->unsigned()->default(0);
+		    $table->integer('zone_id')->unsigned()->default(0);
 		    $table->timestamp('created_at');
 
+		    $table->foreign('job_id')->references('id')->on('Job');
 		    $table->foreign('zone_id')->references('id')->on('Zone');
 		});
 
-		Schema::table('Heat', function($table)
+		Schema::create('Heat', function($table)
 		{
 		    $table->increments('id');
 		    $table->float('heat_temperature');
-		    $table->integer('zone_id')->unsigned();
-		    $table->timestamp('created_at');
+		    $table->string('spot_address');
+		    $table->integer('job_id')->unsigned()->default(0);
+		    $table->integer('zone_id')->unsigned()->default(0);
+		    $table->timestamp('created_at'); 
 
+		    $table->foreign('job_id')->references('id')->on('Job');
+		    $table->foreign('zone_id')->references('id')->on('Zone');
+		});
+
+		Schema::create('Acceleration', function($table)
+		{
+		    $table->increments('id');
+		    $table->float('acceleration');
+		    $table->string('spot_address');
+		    $table->integer('job_id')->unsigned()->default(0);
+		    $table->integer('zone_id')->unsigned()->default(0);
+		    $table->timestamp('created_at'); 
+
+		    $table->foreign('job_id')->references('id')->on('Job');
 		    $table->foreign('zone_id')->references('id')->on('Zone');
 		});
 	}
@@ -64,7 +132,16 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 	 */
 	public function down()
 	{
-		//
+		Schema::drop('Acceleration'); 
+		Schema::drop('Heat'); 
+		Schema::drop('Light'); 
+		Schema::drop('zone_spot'); 
+		Schema::drop('Zone');
+		Schema::drop('Job'); 
+		Schema::drop('Sensor');
+		Schema::drop('Object');
+		Schema::drop('Spot');    
+		Schema::drop('Users');   
 	}
 
 }

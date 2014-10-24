@@ -27,7 +27,7 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 		{
 			$table->increments('id');
 		    $table->string('spot_address')->unique();
-		    $table->integer('user_id')->unsigned();
+		    $table->integer('user_id')->unsigned()->nullable();
 		    $table->timestamps();
 
 		    $table->foreign('user_id')->references('id')->on('Users');
@@ -40,6 +40,7 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 		    $table->string('table');
 		    $table->string('field');
 		    $table->string('description');
+		    $table->integer('port_number');
 		    $table->timestamps();
 		});
 
@@ -59,7 +60,7 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 		    $table->increments('id');
 		    $table->string('title');
 		    $table->string('description');
-		    $table->float('threshold');
+		    $table->float('threshold')->nullable();
 		    $table->integer('object_id')->unsigned();
 		    $table->integer('sensor_id')->unsigned();
 
@@ -78,7 +79,7 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 		Schema::create('zone_spot', function($table)
 		{
 		    $table->increments('id');
-		    $table->integer('spot_address');
+		    $table->string('spot_address');
 		    $table->integer('zone_id')->unsigned();
 
 		    $table->foreign('zone_id')->references('id')->on('Zone');
@@ -90,7 +91,7 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 		    $table->increments('id');
 		    $table->integer('light_intensity');
 		    $table->string('spot_address');
-		    $table->integer('job_id')->unsigned()->default(0);
+		    $table->integer('job_id')->unsigned()->nullable();
 		    $table->integer('zone_id')->unsigned()->default(0);
 		    $table->timestamp('created_at');
 
@@ -103,7 +104,7 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 		    $table->increments('id');
 		    $table->float('heat_temperature');
 		    $table->string('spot_address');
-		    $table->integer('job_id')->unsigned()->default(0);
+		    $table->integer('job_id')->unsigned()->nullable();
 		    $table->integer('zone_id')->unsigned()->default(0);
 		    $table->timestamp('created_at'); 
 
@@ -116,7 +117,7 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 		    $table->increments('id');
 		    $table->float('acceleration');
 		    $table->string('spot_address');
-		    $table->integer('job_id')->unsigned()->default(0);
+		    $table->integer('job_id')->unsigned()->nullable();
 		    $table->integer('zone_id')->unsigned()->default(0);
 		    $table->timestamp('created_at'); 
 

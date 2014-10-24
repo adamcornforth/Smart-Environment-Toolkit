@@ -15,11 +15,12 @@ class Job extends Eloquent {
 	 */
 	public function object()
 	{
-		return $this->hasOne('Object');
+		return $this->belongsTo('Object');
 	}
 
 	public function getReadings($threshold, $table, $field)
 	{
+		$threshold = ($threshold == null) ? 1 : $threshold;
 		return $this->hasMany($table)->where($field, '>', $threshold)->get();
 	}
 

@@ -15,3 +15,7 @@ Route::get('/', function()
 {
 	return View::make('hello');
 });
+
+Route::resource('spots', 'SpotController');
+Route::resource('objects', 'ObjectController');
+Route::resource('jobs', 'JobController');

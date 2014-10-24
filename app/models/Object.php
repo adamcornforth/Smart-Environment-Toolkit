@@ -5,9 +5,9 @@ class Object extends Eloquent {
     /**
 	 * Get this object's spots 
 	 */
-	public function spots()
+	public function spot()
 	{
-		return $this->hasOne('Spot');
+		return $this->belongsTo('Spot');
 	}
 
 	/**

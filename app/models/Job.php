@@ -20,8 +20,13 @@ class Job extends Eloquent {
 
 	public function getReadings($threshold, $table, $field)
 	{
-		$threshold = ($threshold == null) ? 1 : $threshold;
-		return $this->hasMany($table)->where($field, '>', $threshold)->get();
+		if($threshold && !is_null($threshold) && $table && !is_null($table)) {
+			return $this->hasMany($table)->where($field, '>', $threshold)->orderBy('id', 'DESC')->get();
+		} elseif($table && !is_null($table)) {
+			return $this->hasMany($table)->orderBy('id', 'DESC')->get();
+		} else {
+			return new \Illuminate\Database\Eloquent\Collection;
+		}
 	}
 
 }

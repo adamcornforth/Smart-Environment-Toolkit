@@ -3,7 +3,7 @@
 @section('content')
 	<div class='page-header'>
 		<h1>
-			Dashboard <small>Latest Lab Object Event Data</small>
+			Dashboard <small>Viewing latest lab event data</small>
 		</h1>
 	</div>
 
@@ -11,29 +11,50 @@
 	<div class='row marketing'>
 		<div class='col-md-12'>
 		  	@foreach(Spot::all() as $spot)
-		  		<h4> 
-		  			@if(isset($spot->object->id))
-		  				{{ $spot->user->first_name }}'s SPOT, <strong>{{ $spot->spot_address}}</strong>, is responsible for monitoring the <strong>{{ $spot->object->title }}</strong>: 
-		  			@else 
-		  				{{ $spot->user->first_name }}'s SPOT, <strong>{{ $spot->spot_address}}</strong> currently has <strong>no monitoring responsibilities</strong>
-		  			@endif
-		  		</h4>
-		  			@if(isset($spot->object->id))
-						<ul>
-	  					@foreach($spot->jobs as $job)
-	      					<li>"<strong>{{ $job->title }}</strong>" event with the <strong>{{ $job->sensor->title }}</strong> 
-	      						@if($job->threshold)
-	      							(threshold: {{ $job->threshold }})
-	      						@endif
-	      						<ul>
-	      							@foreach($job->getReadings($job->threshold, $job->sensor->table, $job->sensor->field) as $reading)
-	      								<li>A "<strong>{{ $job->title }}</strong>" event occured at on <strong>{{ Carbon::parse($reading->created_at)->format('D jS M') }}</strong> at <strong>{{ Carbon::parse($reading->created_at)->format('G:ia') }} due to reading: {{ $reading[$job->sensor->field] }}</strong> </li>
-	      							@endforeach
-	      						</ul>
-	      					</li>
-	      				@endforeach
-      				@endif
-      			</ul>
+		  		@if(isset($spot->object->id))
+			  		<div class='col-md-4'>
+		  				<h3>
+		  					<strong>{{ $spot->object->title }}</strong>
+		  				</h3>
+				  		<div class='panel panel-default'>
+							<table class='table table-striped'>
+								<thead>
+									<tr>
+										<th>Event</th>
+										<th>Reading</th>
+										<th>Time &amp; Date</th>
+									</tr>
+								</thead>
+			  					@foreach($spot->jobs as $job)
+			      					@foreach($job->getReadings($job->threshold, $job->sensor->table, $job->sensor->field)->take(4) as $reading)
+				      					<tr>
+				      						<td>
+				      							<small>{{ $job->title }}</small>
+				      						</td>
+				      						<td> 
+				      							<small>{{ number_format($reading[$job->sensor->field], 2) }}</small>
+				      						</td>
+				      						<td>
+				      							<small>{{ Carbon::parse($reading->created_at)->format('G:ia') }} on {{ Carbon::parse($reading->created_at)->format('jS M') }}</small> 
+				      						</td>
+				      					</tr>
+			      					@endforeach
+			      					<tr>
+			      						<td colspan='3'>
+			      							<small>
+			      								Viewing <strong>4</strong> out of <strong>{{ count($job->getReadings($job->threshold, $job->sensor->table, $job->sensor->field)) }}</strong> readings
+			      								<a href='{{ url("spots/".$spot->id)}}' class='pull-right'>View all <span class='glyphicon glyphicon-chevron-right'></span></a>
+			      							</small>
+			      						</td>
+			      					</tr>
+			      				@endforeach
+			      			</table>
+			      			<div class='panel-footer'>
+			      				Recordings from {{ $spot->user->first_name }}'s SPOT <a href='{{ url("spots/".$spot->id."")}}'><strong>{{ $spot->spot_address}}</strong></a>
+			      			</div>
+			      		</div>
+	      			</div>
+      			@endif
 		  	@endforeach
 		</div>
 	</div>

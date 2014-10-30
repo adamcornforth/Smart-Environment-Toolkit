@@ -37,8 +37,8 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 		{
 		    $table->increments('id');
 		    $table->string('title');
-		    $table->string('table');
-		    $table->string('field');
+		    $table->string('table')->nullable();
+		    $table->string('field')->nullable();
 		    $table->string('description');
 		    $table->integer('port_number');
 		    $table->timestamps();
@@ -79,10 +79,13 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 		Schema::create('zone_spot', function($table)
 		{
 		    $table->increments('id');
-		    $table->string('spot_address');
 		    $table->integer('zone_id')->unsigned();
+		    $table->integer('spot_id')->unsigned();
+		    $table->integer('job_id')->unsigned()->nullable();
 
+		    $table->foreign('spot_id')->references('id')->on('Spot');
 		    $table->foreign('zone_id')->references('id')->on('Zone');
+		    $table->foreign('job_id')->references('id')->on('Job');
 		    $table->timestamps();
 		});
 
@@ -124,6 +127,19 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 		    $table->foreign('job_id')->references('id')->on('Job');
 		    $table->foreign('zone_id')->references('id')->on('Zone');
 		});
+
+		Schema::create('Motion', function($table)
+		{
+		    $table->increments('id');
+		    $table->integer('motion');
+		    $table->string('spot_address');
+		    $table->integer('job_id')->unsigned()->nullable();
+		    $table->integer('zone_id')->unsigned()->default(0);
+		    $table->timestamp('created_at'); 
+
+		    $table->foreign('job_id')->references('id')->on('Job');
+		    $table->foreign('zone_id')->references('id')->on('Zone');
+		});
 	}
 
 	/**
@@ -133,6 +149,7 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 	 */
 	public function down()
 	{
+		Schema::drop('Motion'); 
 		Schema::drop('Acceleration'); 
 		Schema::drop('Heat'); 
 		Schema::drop('Light'); 

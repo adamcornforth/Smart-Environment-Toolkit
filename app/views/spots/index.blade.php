@@ -14,9 +14,8 @@
 			  		<thead>
 			  			<tr>
 			  				<th>#</th>
-			  				<th>Spot Address</th>
-			  				<th>Owner</th>
-			  				<th>Date Added</th>
+			  				<th>Spot Details</th>
+			  				<th>Tracking Information</th>
 			  				<th>Last Seen</th>
 			  			</tr>
 			  		</thead>
@@ -24,10 +23,38 @@
 			  			@foreach($spots as $spot)
 				  			<tr>
 				  				<td>{{ $spot->id }}</td>
-				  				<td>{{ $spot->spot_address }}</td>
-				  				<td>{{ $spot->user->first_name }}</td>
-				  				<td>{{ Carbon::parse($spot->created_at)->format('D jS M') }} at {{ Carbon::parse($spot->created_at)->format('G:ia') }}</td>
-				  				<td>{{ $spot->updated_at }}</td>
+				  				<td>
+				  					<a href='{{ url('spots/'.$spot->id) }}'>
+				  						{{ $spot->spot_address }}
+				  					</a> <br />
+				  					<small class='text-muted'>
+				  						@if(count($spot->user))
+					  						<span class='glyphicon glyphicon-user'></span> {{ $spot->user->first_name }} {{ $spot->user->last_name }}
+					  					@else
+					  						No owner
+					  					@endif
+				  					</small>
+				  				</td>
+				  				<td>
+				  					@if(count($spot->object))
+				  						{{ $spot->object->title }} <br />
+				  						<small class='text-muted'>Tracking "{{ $spot->object->jobs->first()->title }}" event</span>
+				  					@else
+				  						<span class='text-danger'>
+				  							<span class='glyphicon glyphicon-exclamation-sign'></span> Unconfigured SPOT 
+				  							<a href='{{ url('spots/'.$spot->id.'/edit') }}' class='btn btn-primary btn-sm pull-right'>
+				  								Configure SPOT
+				  								<span class='glyphicon glyphicon-chevron-right'></span>
+				  							</a>
+				  						</span>
+				  					@endif
+				  				</td>
+				  				<td>
+				  					<strong>{{ Carbon::parse($spot->updated_at)->format('D jS M') }}</strong> at <strong>{{ Carbon::parse($spot->updated_at)->format('G:ia') }}</strong><br />
+				  					<small class='text-muted'>
+				  						First detected {{ Carbon::parse($spot->created_at)->format('d/m/y') }} {{ Carbon::parse($spot->created_at)->format('G:ia') }}
+				  					</small>
+				  				</td>
 				  			</tr>
 				  		@endforeach
 			  		</tbody>

@@ -21,59 +21,61 @@
 		@show
 	</head>
     <body>
-        @section('sidebar')
-			<?php
+        @section('nav')
+  			<?php
 
-			echo Navbar::withBrand('Project name', '#')
-      ->withContent(Navigation::links([
-              [
-                  'link' => url(''),
-                  'title' => 'Dashboard'
-              ],
-              [
-                  'link' => url('spots'),
-                  'title' => 'Spots'
-              ],
-              [
-                  'link' => url('objects'),
-                  'title' => 'Lab Objects'
-              ],
-              [
-                  'link' => url('jobs'),
-                  'title' => 'Jobs'
-              ]
-              // [
-              //     'dropdown',
-              //     [
-              //         [
-              //             'link' => '#',
-              //             'title' => 'Action'
-              //         ],
-              //         [
-              //             'link' => '#',
-              //             'title' => 'Another Action'
-              //         ],
-              //         Navigation::NAVIGATION_DIVIDER,
-              //         [
-              //             'link' => '#',
-              //             'title' => 'Something else here'
-              //         ],
-              //     ]
-              // ]
-              ]));
-      // ->withContent(
-      // '<form class="navbar-form navbar-right" role="search">
-      //     <div class="form-group">
-      //         <input type="text" class="form-control" placeholder="Search">
-      //     </div>
-      //     <button type="submit" class="btn btn-default">Submit</button>
-      // </form>');
+    			echo Navbar::withBrand('Java Sun SPOT', url(''))
+          ->withContent(Navigation::links([
+                  [
+                      'link' => url(''),
+                      'title' => 'Dashboard'
+                  ],
+                  [
+                      'link' => url('spots'),
+                      'title' => 'Spots'
+                  ],
+                  [
+                      'link' => url('objects'),
+                      'title' => 'Lab Objects'
+                  ]
+                  // [
+                  //     'dropdown',
+                  //     [
+                  //         [
+                  //             'link' => '#',
+                  //             'title' => 'Action'
+                  //         ],
+                  //         [
+                  //             'link' => '#',
+                  //             'title' => 'Another Action'
+                  //         ],
+                  //         Navigation::NAVIGATION_DIVIDER,
+                  //         [
+                  //             'link' => '#',
+                  //             'title' => 'Something else here'
+                  //         ],
+                  //     ]
+                  // ]
+                  ]));
+          // ->withContent(
+          // '<form class="navbar-form navbar-right" role="search">
+          //     <div class="form-group">
+          //         <input type="text" class="form-control" placeholder="Search">
+          //     </div>
+          //     <button type="submit" class="btn btn-default">Submit</button>
+          // </form>');
+    			?>
 
-
-			?>
         @show
 
         <div class="container">
+          @section('alert')
+            @if(Session::has('notice'))
+              <div class='alert alert-warning'>
+                <p> <strong>Heads up!</strong> {{ Session::pull('notice') }} </p>
+              </div>
+            @endif
+          @show
             @yield('content')
         </div>
     </body>

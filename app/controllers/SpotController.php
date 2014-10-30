@@ -43,7 +43,7 @@ class SpotController extends BaseController {
 	 */
 	public function show($id)
 	{
-		//
+		return View::make('spots.view', array('spot' => Spot::find($id)));
 	}
 
 
@@ -55,7 +55,7 @@ class SpotController extends BaseController {
 	 */
 	public function edit($id)
 	{
-		//
+		return View::make('spots.edit', array('spot' => Spot::find($id)));
 	}
 
 
@@ -67,7 +67,29 @@ class SpotController extends BaseController {
 	 */
 	public function update($id)
 	{
-		//
+		$spot = Spot::find($id); 
+		$spot->user_id = (Input::has('user_id')) ? Input::get('user_id') : null;
+		$spot->save(); 
+
+		if(Input::has('object_title')) {
+			$object = new Object(); 
+			$object->title = Input::get('object_title');
+			$object->spot_id = $spot->id;
+			$object->save();
+		}
+
+		if(Input::has('job_title') && Input::has('object_title') && Input::has('sensor_id')) {
+			$job = new Job(); 
+			$job->title = Input::get('job_title');
+			$job->threshold = NULL;
+			$job->object_id = $object->id;
+			$job->sensor_id = Input::get('sensor_id');
+			$job->save();
+		}
+
+		Session::forget('notice');
+
+		return View::make('spots.view', array('spot' => $spot));
 	}
 
 

@@ -11,11 +11,20 @@
 |
 */
 
-Route::get('/', function()
-{
-	return View::make('hello');
+Route::filter('spot', function() {
+	$spot = Spot::whereUserId(null)->first();
+	if($spot != null) {
+		Session::put('notice', 'A new Sun SPOT with the address of <strong>'.$spot->spot_address.'</strong> has been detected. Please <a href="'.url("spots/$spot->id/edit").'"><span class="glyphicon glyphicon-cog"></span> click here</a> to configure it.');
+	}
 });
 
-Route::resource('spots', 'SpotController');
-Route::resource('objects', 'ObjectController');
-Route::resource('jobs', 'JobController');
+Route::group(array('before' => 'spot'), function() {
+	Route::get('/', function()
+	{
+		return View::make('hello');
+	});
+
+	Route::resource('spots', 'SpotController');
+	Route::resource('objects', 'ObjectController');
+	Route::resource('jobs', 'JobController');
+});

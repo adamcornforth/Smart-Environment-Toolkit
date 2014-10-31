@@ -25,4 +25,23 @@ class Spot extends Eloquent {
 	{
 		return $this->hasManyThrough('Job', 'Object');
 	}
+
+	/**
+	 * Returns spots that have roaming sensors in its jobs
+	 */
+	public static function getRoamingSpots() 
+	{
+		$spots = DB::table('Spot')
+            ->join('Object', 'Spot.id', '=', 'Object.spot_id')
+            ->join('Job', 'Object.id', '=', 'Job.object_id')
+            ->join('zone_spot', 'Job.id', '=', 'zone_spot.job_id')
+            ->groupBy('Spot.id')
+            ->get();
+        $collection = new \Illuminate\Database\Eloquent\Collection;
+        foreach ($spots as $spot) {
+        	$collection->add(Spot::find($spot->spot_id));
+        }
+        
+        return $collection;
+	}
 }

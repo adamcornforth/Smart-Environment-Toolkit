@@ -37,6 +37,10 @@
                   [
                       'link' => url('objects'),
                       'title' => 'Lab Objects'
+                  ],
+                  [
+                      'link' => url('zones'),
+                      'title' => 'Zones'
                   ]
                   // [
                   //     'dropdown',

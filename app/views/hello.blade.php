@@ -22,7 +22,7 @@
 									<tr>
 										<th>Event</th>
 										<th>Reading</th>
-										<th>Time &amp; Date</th>
+										<th>Time</th>
 									</tr>
 								</thead>
 			  					@foreach($spot->jobs as $job)
@@ -35,7 +35,10 @@
 				      							<small>{{ number_format($reading[$job->sensor->field], 2) }}</small>
 				      						</td>
 				      						<td>
-				      							<small>{{ Carbon::parse($reading->created_at)->format('G:ia') }} on {{ Carbon::parse($reading->created_at)->format('jS M') }}</small> 
+				      							<small>
+				      								{{ Carbon::parse($reading->created_at)->format('G:ia') }}<br />
+				      								<span class='text-muted'>{{ Carbon::parse($reading->created_at)->format('jS M') }}</span>
+				      							</small> 
 				      						</td>
 				      					</tr>
 			      					@endforeach

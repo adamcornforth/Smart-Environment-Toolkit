@@ -27,4 +27,5 @@ Route::group(array('before' => 'spot'), function() {
 	Route::resource('spots', 'SpotController');
 	Route::resource('objects', 'ObjectController');
 	Route::resource('jobs', 'JobController');
+	Route::resource('zones', 'ZoneController');
 });

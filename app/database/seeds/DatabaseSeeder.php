@@ -74,15 +74,16 @@ class LightHeatSeeder extends Seeder {
         /**
          * Create some lab Objects
          */
-        $objects['fridge'] = Object::create(array('title' => 'Fridge Door', 'spot_id' => $spots['adam'][0]->id));
+        $objects['fridge'] = Object::create(array('title' => 'Fridge Door', 'spot_id' => $spots['vitali'][0]->id));
         $objects['kettle'] = Object::create(array('title' => 'Kettle', 'spot_id' => $spots['vitali'][1]->id));
+        
         // $objects['chair'] = Object::create(array('title' => 'Computer Chair', 'spot_id' => $spots['dom'][0]->id));
         $objects['fridge_light'] = Object::create(array('title' => 'Fridge Light', 'spot_id' => $spots['dom'][1]->id));
 
         $objects['north_pillar'] = Object::create(array('title' => 'North Pillar', 'spot_id' => $spots['adam'][1]->id));
+        $objects['south_pillar'] = Object::create(array('title' => 'South Pillar', 'spot_id' => $spots['adam'][0]->id));
         $objects['north_pillar_user'] = Object::create(array('title' => 'Roaming User', 'spot_id' => $spots['dom'][0]->id));
 
-        $objects['south_pillar'] = Object::create(array('title' => 'South Pillar', 'spot_id' => $spots['vitali'][0]->id));
         // $objects['south_pillar_user'] = Object::create(array('title' => 'South Pillar User', 'spot_id' => $spots['dom'][0]->id));
 
         /**

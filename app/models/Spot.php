@@ -27,6 +27,14 @@ class Spot extends Eloquent {
 	}
 
 	/**
+	 * Returns this spot's switch events
+	 */
+	public function switches() 
+	{
+		return $this->hasMany('Switches', 'spot_address', 'spot_address');
+	}
+
+	/**
 	 * Returns spots that have roaming sensors in its jobs
 	 */
 	public static function getRoamingSpots() 
@@ -44,4 +52,5 @@ class Spot extends Eloquent {
         
         return $collection;
 	}
+
 }

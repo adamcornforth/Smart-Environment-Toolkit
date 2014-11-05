@@ -79,6 +79,42 @@
 			  		</p>
 			  	</div>
 			</div>
+
+			<div class='panel panel-default'>
+				<div class='panel-heading'>
+					Latest Switch Events
+				</div>
+				@if($spot->switches->count())
+				  	<table class='table table-striped'>
+				  		<thead>
+							<tr>
+								<th><small>Switch</small></th>
+								<th><small>Time &amp; Date</small></th>
+							</tr>
+						</thead>
+						<tbody>
+							@foreach ($spot->switches()->orderBy('id', 'DESC')->take(5)->get() as $switch)
+								<tr>
+									<td><small>{{ $switch->switch_id }}</small></td>
+									<td><small>{{ Carbon::parse($switch->created_at)->format('G:ia') }} on {{ Carbon::parse($switch->created_at)->format('jS M') }}</small></td>
+								</tr>
+							@endforeach
+							@if($spot->switches->count() > 5)
+							<tr>
+								<td colspan='2'>
+									<small>Viewing <strong>5</strong> out of <strong>{{ $spot->switches->count() }}</strong> switch events</small>
+								</td>
+							</tr>
+							@endif
+						</tbody>
+					</table>
+				@else
+					<div class='panel-body'>
+						<p>No switch events recorded yet!</p>
+					</div>
+				@endif
+		  	</div>
+
 		</div>
 	</div>
 

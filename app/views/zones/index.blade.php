@@ -25,7 +25,7 @@
 			  	<table class='table table-bordered table-striped'>
 			  		<thead>
 			  			<tr>
-			  				<th>Zone</th>
+			  				<th>User</th>
 			  				<th>Moved to</th>
 			  				<th>Date &amp; Time</th>
 			  			</tr>

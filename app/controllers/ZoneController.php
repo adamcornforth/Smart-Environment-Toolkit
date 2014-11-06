@@ -82,5 +82,16 @@ class ZoneController extends \BaseController {
 		//
 	}
 
+	/**
+	 * Displays zone changes for the given spot id
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function getUser($id)
+	{
+		return View::make('zones.user', array('spot' => Spot::find($id)));
+	}
+
 
 }

@@ -27,6 +27,14 @@ class Spot extends Eloquent {
 	}
 
 	/**
+	 * Get this spot's zone changes
+	 */
+	public function zonechanges()
+	{
+		return $this->hasMany('ZoneSpot');
+	}
+
+	/**
 	 * Returns this spot's switch events
 	 */
 	public function switches() 
@@ -42,7 +50,8 @@ class Spot extends Eloquent {
 		$spots = DB::table('Spot')
             ->join('Object', 'Spot.id', '=', 'Object.spot_id')
             ->join('Job', 'Object.id', '=', 'Job.object_id')
-            ->join('zone_spot', 'Job.id', '=', 'zone_spot.job_id')
+            ->join('Sensor', 'Job.sensor_id', '=', 'Sensor.id')
+            ->where('Sensor.title', '=', 'Roaming Spot')
             ->groupBy('Spot.id')
             ->get();
         $collection = new \Illuminate\Database\Eloquent\Collection;
@@ -50,7 +59,7 @@ class Spot extends Eloquent {
         	$collection->add(Spot::find($spot->spot_id));
         }
         
-        return $collection;
+        return $collection->reverse();
 	}
 
 }

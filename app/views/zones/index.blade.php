@@ -51,16 +51,18 @@
 			style="fill:#8F4308;stroke-width:3;stroke:#000000"
 		/>
 
-		<circle cx="12.5%" cy="40%" r="40" stroke="#000000" stroke-width="4" fill="#FFFFCC">
-			<animate
-				attributeName="cx"
-				attributeType="XML"
-				from="12.5%"
-				to="47.5%"
-				begin="3s"
-				dur="5s"
-				fill="freeze"
-			/>
+		{{ $zone_before = ZoneSpot::orderBy('id', 'DESC')->skip(1)->first() }}
+		{{ $zone_after = ZoneSpot::orderBy('id', 'DESC')->first() }}
+		<circle cx="{{ SVG::update($zone_before->zone->id) }}" cy="40%" r="40" stroke="#000000" stroke-width="4" fill="#FFFFCC">
+				<animate
+					attributeName="cx"
+					attributeType="XML"
+					from="{{ SVG::update($zone_before->zone->id) }}"
+					to="{{ SVG::update($zone_after->zone->id) }}"
+					begin="3s"
+					dur="5s"
+					fill="freeze"
+				/>
 		</circle>
 	</svg>
 
@@ -131,7 +133,7 @@
 			  			@foreach(ZoneSpot::orderBy('id', 'DESC')->take(5)->get() as $zone_change)
 				  			<tr>
 				  				<td>{{ $zone_change->spot->user->first_name }}</td>
-				  				<td>{{ $zone_change->zone->title}}</td>
+				  				<td>{{ $zone_change->zone->title }}</td>
 				  				<td><strong>{{ Carbon::parse($zone_change->created_at)->format('D jS M') }}</strong> at <strong>{{ Carbon::parse($zone_change->created_at)->format('G:ia') }}</strong><br /></td>
 				  			</tr>
 				  		@endforeach

@@ -10,7 +10,9 @@
 	<br /> 
 	<div class='row marketing'>
 		<div class='col-md-12'>
+			<?php $i = 1;?>
 		  	@foreach(Spot::all() as $spot)
+		  	<?php if($i == 1) echo "<div class='row'>"; ?>
 		  		@if(isset($spot->object->id))
 			  		<div class='col-md-4'>
 		  				<h3>
@@ -58,7 +60,18 @@
 			      		</div>
 	      			</div>
       			@endif
+      		<?php $i++; 
+      		if($i > 3) {
+      			$i = 1; 
+      			echo "</div>";
+      		}
+      		?>
 		  	@endforeach
+		  	<?php 
+      		if($i != 1) {
+      			echo "</div>";
+      		}
+      		?>
 		</div>
 	</div>
 

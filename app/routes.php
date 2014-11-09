@@ -27,6 +27,12 @@ Route::group(array('before' => 'spot'), function() {
 	Route::resource('spots', 'SpotController');
 	Route::resource('objects', 'ObjectController');
 	Route::resource('jobs', 'JobController');
+
+	Route::get('zones/history', function()
+	{
+		return View::make('zones.history', array('roaming_spots' => Spot::getRoamingSpots()));
+	});
+
 	Route::controller('zones', 'ZoneController');
 	Route::resource('zones', 'ZoneController');
 });

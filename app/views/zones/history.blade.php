@@ -57,7 +57,7 @@
 				.append("circle")
 					.attr("cx", getXforZone(zone))
 					.attr("cy", getYforZone())
-					.attr("r", "40")
+					.attr("r", "25")
 					.style("stroke", "#000000")
 					.style("stroke-width", 4)
 					.style("fill", getRandomColor()); // "#FFFFCC"
@@ -70,7 +70,6 @@
 				.attr("cx", getXforZone(zone))
 				.attr("cy", getYforZone())
 				.ease("linear")
-				.delay(1000);
 		};
 
 		function zoneCreate() {
@@ -130,7 +129,7 @@
     		return color;
 		}
 
-		function startTime(date) {
+		function startTime(date, zoneMovementHistory, users) {
 			var day=date.getDate();
 			var month=date.getMonth();
 			var year=date.getFullYear();
@@ -141,7 +140,28 @@
 			s = checkTime(s);
 			document.getElementById('time').innerHTML = day+"."+(month + 1)+"."+year+" "+h+":"+m+":"+s;
 			date.setSeconds(s + 1);
-			var t = setTimeout(function(){startTime(date)},1);
+
+			var zoneMovementHistory_size = zoneMovementHistory.length - 1;
+			var movement_date = d3.time.format("%Y-%m-%d %H:%M:%S");
+			var movement_date = movement_date.parse(zoneMovementHistory[zoneMovementHistory_size].created_at);
+
+			if(date.getTime() >= movement_date.getTime())
+			{
+				//console.log(zoneMovementHistory[zoneMovementHistory_size].zone_id);
+				users[0].move_to(zoneMovementHistory[zoneMovementHistory_size].zone_id);
+				console.log(zoneMovementHistory.length);
+				console.log(zoneMovementHistory);
+
+				zoneMovementHistory = zoneMovementHistory.splice(0, (zoneMovementHistory.length-1)); // Remove 1 object from position 0
+				console.log(zoneMovementHistory.length);
+				console.log(zoneMovementHistory);
+			}
+			//console.log(date - movement_date);
+
+			if(zoneMovementHistory.length > 0)
+			{
+				var t = setTimeout(function(){startTime(date, zoneMovementHistory, users)},1);
+			}
 		}
 
 		function checkTime(i) {
@@ -159,8 +179,7 @@
     		return color;
 		}
 
-		function getRandomNumber(min,max)
-		{
+		function getRandomNumber(min,max) {
 			return Math.floor(Math.random()*(max-min+1)+min);
 		}
 
@@ -169,17 +188,17 @@
 
 		var date_start = d3.time.format("%Y-%m-%d %H:%M:%S");
 		var date_start = date_start.parse(zoneSpot[zoneSpot.length - 1].created_at);
-		startTime(date_start);
 
-		for (i = 0; i < zoneSpot.length; ++i) {
-		}
 
 		zoneCreate(); // Created all zones
 		var users = [new SVG_User(), new SVG_User(), new SVG_User()]; // Create new user
 		users[0].create(3); // Create an SVG object for that user in a zone
-		users[0].move_to(2); // Move the SVG object of a user to a zone
+		//users[0].move_to(2); // Move the SVG object of a user to a zone
 		users[1].create(1); // Create an SVG object for that user in a zone
 		users[2].create(2); // Create an SVG object for that user in a zone
+
+		var date_start_modified = new Date(date_start.getTime() - 5*60000); // Add 5 mins
+		startTime(date_start_modified, zoneSpot, users);
 	</script>
 
 	<div class='row'>

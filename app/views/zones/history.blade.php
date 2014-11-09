@@ -46,12 +46,16 @@
 	<script type="text/javascript" src="http://mbostock.github.com/d3/d3.js"></script>
 	<script type="text/javascript">
 		// SVG User class
-		function SVG_User(){
+		function SVG_User(spot_id)
+		{
 			this.svg_object;
+			this.id = spot_id;
+			console.log("Created User with id:" + spot_id);
 		}
 
 		// method "create" to create an SVG object for a user at a specified zone
-		SVG_User.prototype.create = function(zone){
+		SVG_User.prototype.create = function(zone)
+		{
 			this.svg_object = d3
 				.select("#zone_svg")
 				.append("circle")
@@ -63,8 +67,9 @@
 					.style("fill", getRandomColor()); // "#FFFFCC"
 		};
 
-		// method "move_to" to move the SVG object of a user at a specified zone
-		SVG_User.prototype.move_to = function(zone){
+		// method "moveTo" to move the SVG object of a user at a specified zone
+		SVG_User.prototype.moveTo = function(zone)
+		{
 			this.svg_object
 				.transition()
 				.attr("cx", getXforZone(zone))
@@ -72,7 +77,13 @@
 				.ease("linear")
 		};
 
-		function zoneCreate() {
+		SVG_User.prototype.getId = function()
+		{
+			return this.id;
+		};
+
+		function zoneCreate()
+		{
 			d3.select("#zone_1")
 				.append("rect")
 					.attr("x", "0%")
@@ -101,7 +112,8 @@
 					.style("stroke", "#000000");
 		}
 
-		function getXforZone(zone) {
+		function getXforZone(zone)
+		{
 			if (zone == 1 )
 			{
 				return getRandomNumber(5, 20) + "%"; //12.5 Middle
@@ -116,20 +128,24 @@
 			}
 		}
 
-		function getYforZone() {
+		function getYforZone()
+		{
 			return getRandomNumber(15, 67.5) + "%";
 		}
 
-		function getRandomY() {
+		function getRandomY()
+		{
 			var letters = '0123456789ABCDEF'.split('');
 			var color = '#';
-			for (var i = 0; i < 6; i++ ) {
+			for (var i = 0; i < 6; i++ )
+			{
 				color += letters[Math.floor(Math.random() * 16)];
 			}
     		return color;
 		}
 
-		function startTime(date, zoneMovementHistory, users) {
+		function startTime(date, zoneMovementHistory, users)
+		{
 			var day=date.getDate();
 			var month=date.getMonth();
 			var year=date.getFullYear();
@@ -141,22 +157,31 @@
 			document.getElementById('time').innerHTML = day+"."+(month + 1)+"."+year+" "+h+":"+m+":"+s;
 			date.setSeconds(s + 1);
 
-			var zoneMovementHistory_size = zoneMovementHistory.length - 1;
+			var anythingChanged = false;
 			var movement_date = d3.time.format("%Y-%m-%d %H:%M:%S");
-			var movement_date = movement_date.parse(zoneMovementHistory[zoneMovementHistory_size].created_at);
+			var movement_date = movement_date.parse(zoneMovementHistory[zoneMovementHistory.length-1].created_at);
 
 			if(date.getTime() >= movement_date.getTime())
 			{
-				//console.log(zoneMovementHistory[zoneMovementHistory_size].zone_id);
-				users[0].move_to(zoneMovementHistory[zoneMovementHistory_size].zone_id);
-				console.log(zoneMovementHistory.length);
-				console.log(zoneMovementHistory);
+				for(var i = 0; i < users.length; i++)
+				{
+					if(users[i].getId() == zoneMovementHistory[zoneMovementHistory.length-1].spot_id)
+					{
+						users[i].moveTo(zoneMovementHistory[zoneMovementHistory.length-1].zone_id);
+						zoneMovementHistory = zoneMovementHistory.splice(0, zoneMovementHistory.length-1); // Remove 1 object at the end
+						anythingChanged = true;
+						break;
+					}
+				}
 
-				zoneMovementHistory = zoneMovementHistory.splice(0, (zoneMovementHistory.length-1)); // Remove 1 object from position 0
-				console.log(zoneMovementHistory.length);
-				console.log(zoneMovementHistory);
+				if(anythingChanged === false)
+				{
+					var users_temp = [new SVG_User(zoneMovementHistory[zoneMovementHistory.length-1].spot_id)];
+					users_temp[0].create(zoneMovementHistory[zoneMovementHistory.length-1].zone_id); // Create an SVG object for that user in a zone
+					zoneMovementHistory = zoneMovementHistory.splice(0, zoneMovementHistory.length-1); // Remove 1 object at the end
+					users = users.concat(users_temp);
+				}
 			}
-			//console.log(date - movement_date);
 
 			if(zoneMovementHistory.length > 0)
 			{
@@ -164,22 +189,26 @@
 			}
 		}
 
-		function checkTime(i) {
+		function checkTime(i)
+		{
 			if (i<10) {i = "0" + i};  // add zero in front of numbers < 10
 			return i;
 		}
 
 		// from http://stackoverflow.com/questions/1484506/random-color-generator-in-javascript
-		function getRandomColor() {
+		function getRandomColor()
+		{
 			var letters = '0123456789ABCDEF'.split('');
 			var color = '#';
-			for (var i = 0; i < 6; i++ ) {
+			for (var i = 0; i < 6; i++ )
+			{
 				color += letters[Math.floor(Math.random() * 16)];
 			}
     		return color;
 		}
 
-		function getRandomNumber(min,max) {
+		function getRandomNumber(min,max)
+		{
 			return Math.floor(Math.random()*(max-min+1)+min);
 		}
 
@@ -191,11 +220,8 @@
 
 
 		zoneCreate(); // Created all zones
-		var users = [new SVG_User(), new SVG_User(), new SVG_User()]; // Create new user
-		users[0].create(3); // Create an SVG object for that user in a zone
-		//users[0].move_to(2); // Move the SVG object of a user to a zone
-		users[1].create(1); // Create an SVG object for that user in a zone
-		users[2].create(2); // Create an SVG object for that user in a zone
+		var users = []; // Create new user
+		//users[0].moveTo(2); // Move the SVG object of a user to a zone
 
 		var date_start_modified = new Date(date_start.getTime() - 5*60000); // Add 5 mins
 		startTime(date_start_modified, zoneSpot, users);

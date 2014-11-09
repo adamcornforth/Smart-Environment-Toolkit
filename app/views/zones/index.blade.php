@@ -17,6 +17,7 @@
 	<br />
 
 	<svg
+		id="zone_svg"
 		xmlns="http://www.w3.org/2000/svg"
 		xmlns:xlink="http://www.w3.org/1999/xlink"
 		version="1.1"
@@ -30,41 +31,70 @@
 		enable-background="new 0 0 1000 300"
 		xml:space="preserve"
 	>
-		<rect
-			x="0%"
-			width="250"
-			height="250"
-			style="fill:#F0DD08;stroke-width:3;stroke:#000000"
-		/>
 
-		<rect
-			x="35%"
-			width="250"
-			height="250"
-			style="fill:#56880A;stroke-width:3;stroke:#000000"
-		/>
+	{{ $zone_before = ZoneSpot::orderBy('id', 'DESC')->skip(1)->first() }}
+	{{ $zone_after = ZoneSpot::orderBy('id', 'DESC')->get() }}
+	{{ $test = $zone_after }}
 
-		<rect
-			x="70%"
-			width="250"
-			height="250"
-			style="fill:#8F4308;stroke-width:3;stroke:#000000"
-		/>
-
-		{{ $zone_before = ZoneSpot::orderBy('id', 'DESC')->skip(1)->first() }}
-		{{ $zone_after = ZoneSpot::orderBy('id', 'DESC')->first() }}
-		<circle cx="{{ SVG::update($zone_before->zone->id) }}" cy="40%" r="40" stroke="#000000" stroke-width="4" fill="#FFFFCC">
-				<animate
-					attributeName="cx"
-					attributeType="XML"
-					from="{{ SVG::update($zone_before->zone->id) }}"
-					to="{{ SVG::update($zone_after->zone->id) }}"
-					begin="3s"
-					dur="5s"
-					fill="freeze"
-				/>
-		</circle>
 	</svg>
+
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="http://mbostock.github.com/d3/d3.js"></script>
+	<script type="text/javascript">
+		var i;
+		var before = {{ json_encode($test) }};
+
+		d3.select("#zone_svg")
+			.append("rect")
+				.attr("x", "0%")
+				.attr("width", 250)
+				.attr("height", 250)
+				.style("fill", "#F0DD08")
+				.style("stroke-width", 3)
+				.style("stroke", "#000000");
+
+		d3.select("#zone_svg")
+			.append("rect")
+				.attr("x", "35%")
+				.attr("width", 250)
+				.attr("height", 250)
+				.style("fill", "#56880A")
+				.style("stroke-width", 3)
+				.style("stroke", "#000000");
+
+		d3.select("#zone_svg")
+			.append("rect")
+				.attr("x", "70%")
+				.attr("width", 250)
+				.attr("height", 250)
+				.style("fill", "#8F4308")
+				.style("stroke-width", 3)
+				.style("stroke", "#000000");
+
+		d3.select("#zone_svg")
+			.append("circle")
+				.attr("cx", getYforZone(before[0].zone_id))
+				.attr("cy", "40%")
+				.attr("r", 40)
+				.style("stroke", "#000000")
+				.style("stroke-width", 4)
+				.style("fill", "#FFFFCC");
+
+		function getYforZone(zone) {
+			if (zone == 1 )
+			{
+				return "12.5%";
+			}
+			else if (zone == 2 )
+			{
+				return "47.5%";
+			}
+			else if (zone == 3 )
+			{
+				return "82.5%";
+			}
+		}
+    </script>
 
 	<div class='row'>
 		<div class='col-md-12'>

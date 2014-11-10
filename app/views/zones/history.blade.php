@@ -344,14 +344,14 @@
 			document.getElementById("spot_" + spot_id).style.color="red";
 		}
 
+		zoneCreate(); // Created all zones
+
 		var i;
 		var zoneSpot = {{ json_encode($test) }};
 
 		var date_start = d3.time.format("%Y-%m-%d %H:%M:%S");
 		var date_start = date_start.parse(zoneSpot[zoneSpot.length - 1].created_at);
 
-
-		zoneCreate(); // Created all zones
 		var users = []; // Create new user
 		//users[0].moveTo(2); // Move the SVG object of a user to a zone
 

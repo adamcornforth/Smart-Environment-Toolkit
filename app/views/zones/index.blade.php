@@ -4,6 +4,11 @@
 	<h1>{{ $title or "Zones"}}</h1>
 
 	<br />
+	<div class="text-right">
+		<a href='{{ url("zones/history/") }}' class='btn btn-default btn-small'>
+			Show History <span class='glyphicon glyphicon-time'></span>
+		</a>
+		</div>
 	<div class='row'>
 		@foreach(Zone::where('title', '!=', 'Lab')->get() as $zone)
 			<div class='col-md-4'>
@@ -15,7 +20,6 @@
 		@endforeach
 	</div>
 	<br />
-
 	<svg
 		id="zone_svg"
 		xmlns="http://www.w3.org/2000/svg"

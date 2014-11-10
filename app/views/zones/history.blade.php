@@ -12,6 +12,7 @@
 		{{ Form::close() }}
 		</form>
 	</div> -->
+
 	<div class='row'>
 		<div class='col-md-12'>
 			<div class='panel panel-default'>
@@ -20,11 +21,12 @@
 
 				<div class="form-inline text-center" role="form">
 
-					{{ Form::open(['action' => 'ZoneController@history']) }}
+					<!-- {{ Form::open(['action' => 'ZoneController@history']) }} -->
+					<form action="{{ url('zones/history') }}" method="GET">
 					<div class="form-group">
 						{{ Form::label('day_label', 'Pick a day', array('class' => 'sr-only')) }}
 						<!-- {{ Form::text('day', 'Type a date dd/mm/yyyy', array('class' => 'form-control')) }} -->
-						<input type="text" class="form-control" id="day" placeholder="Type a date dd/mm/yyyy">
+						<input type="text" class="form-control" name="day" id="day" placeholder="Type a date yyyy-mm-dd">
 					</div>
 					<button type="submit" class="btn btn-default">Submit</button>
 					{{ Form::close() }}
@@ -64,9 +66,18 @@
 					<g id="zone_2"></g>
 					<g id="zone_3"></g>
 
+					{{ $day_picked = Input::get('day'); }}
+
 					{{ $zone_before = ZoneSpot::orderBy('id', 'DESC')->skip(1)->first() }}
-					{{ $zone_after = ZoneSpot::where('created_at', '>', '2014-11-03 15:44:40')->orderBy('id', 'DESC')->get() }}
-					{{ $test = $zone_after }}
+
+					@if($day_picked != 'NULL')
+						{{ $zone_after = ZoneSpot::where('created_at', '>', $day_picked)->orderBy('id', 'DESC')->get() }}
+						{{ $test = $zone_after }}
+						{{ var_dump($test) }}
+					@else
+
+						{{ $test = NULL }}
+					@endif
 
 					</svg>
 				</div>
@@ -139,7 +150,7 @@
 			  			</tr>
 			  		</thead>
 			  		<tbody>
-			  			@foreach(ZoneSpot::where('zone_id', '!=', 4)->orderBy('id', 'DESC')->get() as $zone_change)
+			  			@foreach(ZoneSpot::where('zone_id', '!=', 4)->where('created_at', '>', $day_picked)->orderBy('id', 'DESC')->get() as $zone_change)
 				  			<tr>
 				  				<td>{{ $zone_change->spot->user->first_name }}</td>
 				  				<td>{{ $zone_change->zone->title }}</td>

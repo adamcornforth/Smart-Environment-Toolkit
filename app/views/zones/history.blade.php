@@ -70,13 +70,14 @@
 
 					{{ $zone_before = ZoneSpot::orderBy('id', 'DESC')->skip(1)->first() }}
 
-					@if($day_picked != 'NULL')
+					@if(Input::has('day'))
 						{{ $zone_after = ZoneSpot::where('created_at', '>', Carbon::parse($day_picked)->toDateTimeString())->where('created_at', '<', Carbon::parse($day_picked)->endOfDay()->toDateTimeString())->orderBy('id', 'DESC')->get() }}
 						{{ $test = $zone_after }}
 						{{-- var_dump($test) --}}
 					@else
-
-						{{ $test = NULL }}
+						<?php $first_record = ZoneSpot::where('created_at', '>', Carbon::now()->startOfDay()->toDateTimeString())->first(); ?>
+						<?php $day_picked = Carbon::parse($first_record->created_at)->toDateTimeString(); ?> 
+						{{ $test = ZoneSpot::where('created_at', '>', Carbon::parse()->startOfDay()->toDateTimeString())->where('created_at', '<', Carbon::parse()->endOfDay()->toDateTimeString())->orderBy('id', 'DESC')->get() }}
 					@endif
 
 					</svg>
@@ -150,8 +151,6 @@
 			  			</tr>
 			  		</thead>
 			  		<tbody>
-			  			{{ Carbon::parse($day_picked)->toDateTimeString() }} <br />
-			  			{{ Carbon::parse($day_picked)->endOfDay()->toDateTimeString() }}
 			  			@foreach(ZoneSpot::where('zone_id', '!=', 4)->where('created_at', '>', Carbon::parse($day_picked)->toDateTimeString())->where('created_at', '<', Carbon::parse($day_picked)->endOfDay()->toDateTimeString())->orderBy('id', 'DESC')->get() as $zone_change)
 				  			<tr>
 				  				<td>{{ $zone_change->spot->user->first_name }}</td>

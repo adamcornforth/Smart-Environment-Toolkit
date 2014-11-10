@@ -5,7 +5,7 @@
 
 	<br />
 	<div class="text-right">
-		<a href='{{ url("zones/history?day=NULL") }}' class='btn btn-default btn-small'>
+		<a href='{{ url("zones/history?day=") }}' class='btn btn-default btn-small'>
 			Show History <span class='glyphicon glyphicon-time'></span>
 		</a>
 		</div>

@@ -3,44 +3,159 @@
 @section('content')
 	<h1>{{ $title or "Zones"}}</h1>
 
-	<br />
+<!-- 	<div class="col-sm-2 col-sm-offset-1">
+		<form class="form-inline" role="form">
+		{{ Form::open(array('url' => 'foo/bar')) }}
+		{{ Form::label('day', 'Pick a day') }}
+		{{ Form::text('day') }}
+		{{ Form::submit('Submit') }}
+		{{ Form::close() }}
+		</form>
+	</div> -->
 	<div class='row'>
-		@foreach(Zone::where('title', '!=', 'Lab')->get() as $zone)
-			<div class='col-md-4'>
-				<h3>{{ $zone->title }}</h3>
-				@foreach($zone->users() as $user)
-					{{-- $user->first_name --}} {{-- $user->last_name --}}
-				@endforeach
+		<div class='col-md-12'>
+			<div class='panel panel-default'>
+			<div class='panel-heading'>
+				Playback Time: <div id="time"></div>
+
+				<div class="form-inline text-center" role="form">
+
+					{{ Form::open(['action' => 'ZoneController@history']) }}
+					<div class="form-group">
+						{{ Form::label('day_label', 'Pick a day', array('class' => 'sr-only')) }}
+						<!-- {{ Form::text('day', 'Type a date dd/mm/yyyy', array('class' => 'form-control')) }} -->
+						<input type="text" class="form-control" id="day" placeholder="Type a date dd/mm/yyyy">
+					</div>
+					<button type="submit" class="btn btn-default">Submit</button>
+					{{ Form::close() }}
+				</div>
 			</div>
-		@endforeach
+			 <div class="panel-body">
+
+					<br />
+
+					<div class='row'>
+						@foreach(Zone::where('title', '!=', 'Lab')->get() as $zone)
+							<div class='col-md-4'>
+								<h3>{{ $zone->title }}</h3>
+								@foreach($zone->users() as $user)
+									{{-- $user->first_name --}} {{-- $user->last_name --}}
+								@endforeach
+							</div>
+						@endforeach
+					</div>
+					<br />
+					<svg
+						id="zone_svg"
+						xmlns="http://www.w3.org/2000/svg"
+						xmlns:xlink="http://www.w3.org/1999/xlink"
+						version="1.1"
+						class=""
+						pageAlignment="none"
+						x="0px"
+						y="0px"
+						width="100%"
+						height="300px"
+						viewBox="0 0 1000 300"
+						enable-background="new 0 0 1000 300"
+						xml:space="preserve"
+					>
+					<g id="zone_1"></g>
+					<g id="zone_2"></g>
+					<g id="zone_3"></g>
+
+					{{ $zone_before = ZoneSpot::orderBy('id', 'DESC')->skip(1)->first() }}
+					{{ $zone_after = ZoneSpot::where('created_at', '>', '2014-11-03 15:44:40')->orderBy('id', 'DESC')->get() }}
+					{{ $test = $zone_after }}
+
+					</svg>
+				</div>
+			</div>
+		</div>
 	</div>
-	<br />
+	<div class='row'>
+		<div class='col-md-12'>
+			<div class='panel panel-default'>
+				<div class='panel-heading'>
+					Users Being Tracked
+				</div>
+			  	<table class='table table-bordered table-striped'>
+			  		<thead>
+			  			<tr>
+			  				<th>User Details</th>
+			  				<th>Current Zone</th>
+			  				<th>Zone Changes</th>
+			  				<th>Actions</th>
+			  			</tr>
+			  		</thead>
+			  		<tbody>
+			  			@foreach($roaming_spots as $spot)
+				  			<tr>
+				  				<div id="spot_{{ $spot->id }}">
+					  				<td>
+				  						@if(count($spot->user))
+					  						<span class='glyphicon glyphicon-user'></span> {{ $spot->user->first_name }} {{ $spot->user->last_name }}
+					  					@else
+					  						No owner
+					  					@endif <br />
+					  					<small class='text-muted'>
+						  					<a href='{{ url('spots/'.$spot->id) }}'>
+						  						{{ $spot->spot_address }}
+						  					</a>
+					  					</small>
+					  				</td>
+					  				<td>
+					  					{{ $spot->zonechanges()->orderBy('id', 'DESC')->first()->zone->title }}
+					  				</td>
+					  				<td>
+					  					<strong>{{ $spot->zonechanges->count() }}</strong> zone changes
+					  				</td>
+					  				<td class='text-right'>
+					  					<a href='{{ url("zones/user/".$spot->id)}}' class='btn btn-default btn-small'>
+					  						View All <span class='glyphicon glyphicon-chevron-right'></span>
+					  					</a>
+					  				</td>
+					  			</div>
+				  			</tr>
+				  		@endforeach
+			  		</tbody>
+			  	</table>
+			</div>
+		</div>
+	</div>
 
-	<div id="time"></div>
-	<svg
-		id="zone_svg"
-		xmlns="http://www.w3.org/2000/svg"
-		xmlns:xlink="http://www.w3.org/1999/xlink"
-		version="1.1"
-		class=""
-		pageAlignment="none"
-		x="0px"
-		y="0px"
-		width="100%"
-		height="300px"
-		viewBox="0 0 1000 300"
-		enable-background="new 0 0 1000 300"
-		xml:space="preserve"
-	>
-	<g id="zone_1"></g>
-	<g id="zone_2"></g>
-	<g id="zone_3"></g>
+	<div class='row'>
+		<div class='col-md-12'>
+			<div class='panel panel-default'>
+				<div class='panel-heading'>
+					All Zone Changes (Most Recent First)
+				</div>
+			  	<table class='table table-bordered table-striped'>
+			  		<thead>
+			  			<tr>
+			  				<th>User</th>
+			  				<th>Moved to</th>
+			  				<th>Date &amp; Time</th>
+			  			</tr>
+			  		</thead>
+			  		<tbody>
+			  			@foreach(ZoneSpot::where('zone_id', '!=', 4)->orderBy('id', 'DESC')->get() as $zone_change)
+				  			<tr>
+				  				<td>{{ $zone_change->spot->user->first_name }}</td>
+				  				<td>{{ $zone_change->zone->title }}</td>
+				  				<td><strong>{{ Carbon::parse($zone_change->created_at)->format('D jS M') }}</strong> at <strong>{{ Carbon::parse($zone_change->created_at)->format('G:ia') }}</strong><br /></td>
+				  			</tr>
+				  		@endforeach
+			  		</tbody>
+			  	</table>
+			</div>
+		</div>
+	</div>
 
-	{{ $zone_before = ZoneSpot::orderBy('id', 'DESC')->skip(1)->first() }}
-	{{ $zone_after = ZoneSpot::where('created_at', '>', '2014-11-03 15:44:40')->orderBy('id', 'DESC')->get() }}
-	{{ $test = $zone_after }}
-
-	</svg>
+	<div class="footer">
+		<hr />
+	<p>&copy; Adam Cornforth, Dominic Lindsay, Vitali Bokov 2014</p>
+	</div>
 
 	<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
 	<script type="text/javascript" src="http://mbostock.github.com/d3/d3.js"></script>
@@ -177,6 +292,7 @@
 				if(anythingChanged === false)
 				{
 					var users_temp = [new SVG_User(zoneMovementHistory[zoneMovementHistory.length-1].spot_id)];
+					changeBlockColor(3);
 					users_temp[0].create(zoneMovementHistory[zoneMovementHistory.length-1].zone_id); // Create an SVG object for that user in a zone
 					zoneMovementHistory = zoneMovementHistory.splice(0, zoneMovementHistory.length-1); // Remove 1 object at the end
 					users = users.concat(users_temp);
@@ -212,6 +328,11 @@
 			return Math.floor(Math.random()*(max-min+1)+min);
 		}
 
+		function changeBlockColor(spot_id)
+		{
+			document.getElementById("spot_" + spot_id).style.color="red";
+		}
+
 		var i;
 		var zoneSpot = {{ json_encode($test) }};
 
@@ -226,86 +347,4 @@
 		var date_start_modified = new Date(date_start.getTime() - 5*60000); // Add 5 mins
 		startTime(date_start_modified, zoneSpot, users);
 	</script>
-
-	<div class='row'>
-		<div class='col-md-12'>
-			<div class='panel panel-default'>
-				<div class='panel-heading'>
-					Users Being Tracked
-				</div>
-			  	<table class='table table-bordered table-striped'>
-			  		<thead>
-			  			<tr>
-			  				<th>User Details</th>
-			  				<th>Current Zone</th>
-			  				<th>Zone Changes</th>
-			  				<th>Actions</th>
-			  			</tr>
-			  		</thead>
-			  		<tbody>
-			  			@foreach($roaming_spots as $spot)
-				  			<tr>
-				  				<td>
-			  						@if(count($spot->user))
-				  						<span class='glyphicon glyphicon-user'></span> {{ $spot->user->first_name }} {{ $spot->user->last_name }}
-				  					@else
-				  						No owner
-				  					@endif <br />
-				  					<small class='text-muted'>
-					  					<a href='{{ url('spots/'.$spot->id) }}'>
-					  						{{ $spot->spot_address }}
-					  					</a>
-				  					</small>
-				  				</td>
-				  				<td>
-				  					{{ $spot->zonechanges()->orderBy('id', 'DESC')->first()->zone->title }}
-				  				</td>
-				  				<td>
-				  					<strong>{{ $spot->zonechanges->count() }}</strong> zone changes
-				  				</td>
-				  				<td class='text-right'>
-				  					<a href='{{ url("zones/user/".$spot->id)}}' class='btn btn-default btn-small'>
-				  						View All <span class='glyphicon glyphicon-chevron-right'></span>
-				  					</a>
-				  				</td>
-				  			</tr>
-				  		@endforeach
-			  		</tbody>
-			  	</table>
-			</div>
-		</div>
-	</div>
-
-	<div class='row'>
-		<div class='col-md-12'>
-			<div class='panel panel-default'>
-				<div class='panel-heading'>
-					All Zone Changes (Most Recent First)
-				</div>
-			  	<table class='table table-bordered table-striped'>
-			  		<thead>
-			  			<tr>
-			  				<th>User</th>
-			  				<th>Moved to</th>
-			  				<th>Date &amp; Time</th>
-			  			</tr>
-			  		</thead>
-			  		<tbody>
-			  			@foreach(ZoneSpot::where('zone_id', '!=', 4)->orderBy('id', 'DESC')->get() as $zone_change)
-				  			<tr>
-				  				<td>{{ $zone_change->spot->user->first_name }}</td>
-				  				<td>{{ $zone_change->zone->title }}</td>
-				  				<td><strong>{{ Carbon::parse($zone_change->created_at)->format('D jS M') }}</strong> at <strong>{{ Carbon::parse($zone_change->created_at)->format('G:ia') }}</strong><br /></td>
-				  			</tr>
-				  		@endforeach
-			  		</tbody>
-			  	</table>
-			</div>
-		</div>
-	</div>
-
-	<div class="footer">
-		<hr />
-	<p>&copy; Adam Cornforth, Dominic Lindsay, Vitali Bokov 2014</p>
-	</div>
 @stop

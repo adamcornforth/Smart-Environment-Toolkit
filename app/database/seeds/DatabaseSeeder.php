@@ -64,10 +64,11 @@ class LightHeatSeeder extends Seeder {
 		/**
 		 * Assign spots to Zones
 		 */
-		$spot_zone['north'] = ZoneSpot::create(array('spot_id'	=> $spots['adam'][0]->id, 'zone_id'	=> $zones['north']->id));
-		$spot_zone['center'] = ZoneSpot::create(array('spot_id'=> $spots['adam'][1]->id, 'zone_id'	=> $zones['center']->id));
-		$spot_zone['south'] = ZoneSpot::create(array('spot_id'	=> $spots['dom'][0]->id, 'zone_id'	=> $zones['south']->id));
-        ZoneSpot::create(array('spot_id' => $spots['dom'][1]->id, 'zone_id' => $zones['north']->id));
+		$spot_zone['north'] = ZoneSpot::create(array('spot_id'	=> $spots['adam'][1]->id, 'zone_id'	=> $zones['north']->id));
+		$spot_zone['center'] = ZoneSpot::create(array('spot_id'=> $spots['dom'][1]->id, 'zone_id'	=> $zones['center']->id));
+		$spot_zone['south'] = ZoneSpot::create(array('spot_id'	=> $spots['adam'][0]->id, 'zone_id'	=> $zones['south']->id));
+
+        ZoneSpot::create(array('spot_id' => $spots['dom'][0]->id, 'zone_id' => $zones['north']->id));
         ZoneSpot::create(array('spot_id' => $spots['vitali'][0]->id, 'zone_id' => $zones['north']->id));
         ZoneSpot::create(array('spot_id' => $spots['vitali'][1]->id, 'zone_id' => $zones['north']->id));
 
@@ -79,11 +80,11 @@ class LightHeatSeeder extends Seeder {
         // $objects['chair'] = Object::create(array('title' => 'Computer Chair', 'spot_id' => $spots['dom'][0]->id));
         // $objects['fridge_light'] = Object::create(array('title' => 'Fridge Light', 'spot_id' => $spots['dom'][1]->id));
 
-        $objects['north_pillar'] = Object::create(array('title' => 'North Pillar', 'spot_id' => $spots['adam'][1]->id));
-        $objects['south_pillar'] = Object::create(array('title' => 'South Pillar', 'spot_id' => $spots['adam'][0]->id));
-        $objects['center_table'] = Object::create(array('title' => 'Center Table', 'spot_id' => $spots['dom'][1]->id));
-        $objects['roaming_user_1'] = Object::create(array('title' => 'Roaming User 1', 'spot_id' => $spots['dom'][0]->id));
-        $objects['roaming_user_2'] = Object::create(array('title' => 'Roaming User 2', 'spot_id' => $spots['vitali'][0]->id));
+        $objects['north_zone'] = Object::create(array('title' => 'North Zone', 'spot_id' => $spots['adam'][1]->id));
+        $objects['south_zone'] = Object::create(array('title' => 'South Zone', 'spot_id' => $spots['adam'][0]->id));
+        $objects['center_zone'] = Object::create(array('title' => 'Center Zone', 'spot_id' => $spots['dom'][1]->id));
+        $objects['roaming_user_1'] = Object::create(array('title' => 'Roaming User (Dom)', 'spot_id' => $spots['dom'][0]->id));
+        $objects['roaming_user_2'] = Object::create(array('title' => 'Roaming User (Vitali)', 'spot_id' => $spots['vitali'][0]->id));
 
         /**
          * Create some sensors
@@ -104,21 +105,21 @@ class LightHeatSeeder extends Seeder {
         // 
         $jobs['kettle_boiled'] = Job::create(array('title' => 'Kettle boiled', 'object_id' => $objects['kettle']->id, 'sensor_id' => $sensors['thermometer']->id, 'threshold' => 40));
         
-        $jobs['center_table_range'] = Job::create(array('title' => 'User Approached Center Table', 'object_id' => $objects['center_table']->id, 'sensor_id' => $sensors['cell_tower']->id, 'threshold' => -1));
+        $jobs['center_table_range'] = Job::create(array('title' => 'User Entered Center Zone', 'object_id' => $objects['center_zone']->id, 'sensor_id' => $sensors['cell_tower']->id, 'threshold' => null));
 
-        $jobs['north_pillar_range'] = Job::create(array('title' => 'User Passed North Pillar', 'object_id' => $objects['north_pillar']->id, 'sensor_id' => $sensors['cell_tower']->id, 'threshold' => 1));
-        $jobs['south_pillar_range'] = Job::create(array('title' => 'User Passed South Pillar', 'object_id' => $objects['south_pillar']->id, 'sensor_id' => $sensors['cell_tower']->id, 'threshold' => 1));
+        $jobs['north_zone_range'] = Job::create(array('title' => 'User Entered North Zone', 'object_id' => $objects['north_zone']->id, 'sensor_id' => $sensors['cell_tower']->id, 'threshold' => null));
+        $jobs['south_zone_range'] = Job::create(array('title' => 'User Entered South Zone', 'object_id' => $objects['south_zone']->id, 'sensor_id' => $sensors['cell_tower']->id, 'threshold' => null));
 
-        $jobs['roaming_user_1'] = Job::create(array('title' => 'Roaming User 1', 'object_id' => $objects['roaming_user_1']->id, 'sensor_id' => $sensors['roaming_spot']->id, 'threshold' => null));
-        $jobs['roaming_user_2'] = Job::create(array('title' => 'Roaming User 2', 'object_id' => $objects['roaming_user_2']->id, 'sensor_id' => $sensors['roaming_spot']->id, 'threshold' => null));
+        $jobs['roaming_user_1'] = Job::create(array('title' => 'Roaming User 1 (Dom)', 'object_id' => $objects['roaming_user_1']->id, 'sensor_id' => $sensors['roaming_spot']->id, 'threshold' => null));
+        $jobs['roaming_user_2'] = Job::create(array('title' => 'Roaming User 2 (Vitali)', 'object_id' => $objects['roaming_user_2']->id, 'sensor_id' => $sensors['roaming_spot']->id, 'threshold' => null));
 
         /**
          * Assign zones to pillars
          */
-        ZoneObject::create(array('object_id' => $objects['north_pillar']->id, 'zone_id' => $zones['north']->id, 'job_id' => $jobs['north_pillar_range']->id));
-        ZoneObject::create(array('object_id' => $objects['north_pillar']->id, 'zone_id' => $zones['center']->id, 'job_id' => $jobs['north_pillar_range']->id));
-        ZoneObject::create(array('object_id' => $objects['south_pillar']->id, 'zone_id' => $zones['center']->id, 'job_id' => $jobs['south_pillar_range']->id));
-        ZoneObject::create(array('object_id' => $objects['south_pillar']->id, 'zone_id' => $zones['south']->id, 'job_id' => $jobs['south_pillar_range']->id));
+        ZoneObject::create(array('object_id' => $objects['north_zone']->id, 'zone_id' => $zones['north']->id, 'job_id' => $jobs['north_zone_range']->id));
+        ZoneObject::create(array('object_id' => $objects['north_zone']->id, 'zone_id' => $zones['center']->id, 'job_id' => $jobs['north_zone_range']->id));
+        ZoneObject::create(array('object_id' => $objects['south_zone']->id, 'zone_id' => $zones['center']->id, 'job_id' => $jobs['south_zone_range']->id));
+        ZoneObject::create(array('object_id' => $objects['south_zone']->id, 'zone_id' => $zones['south']->id, 'job_id' => $jobs['south_zone_range']->id));
 
         /**
          * Add a week's worth of data
@@ -149,10 +150,10 @@ class LightHeatSeeder extends Seeder {
                  */
                 if($north_pillar > -7 && $user_zone[$key]['zone'] != 1 && $user_zone[$key]['zone'] == 2) {
                     $user_zone[$key]['zone'] = 1; 
-                    ZoneSpot::create(array('spot_id' => $user_zone[$key]['spot'], 'zone_id' => $user_zone[$key]['zone'], 'job_id' => $jobs['north_pillar_range']->id, 'created_at' => $carbon->toDateTimeString()));
+                    ZoneSpot::create(array('spot_id' => $user_zone[$key]['spot'], 'zone_id' => $user_zone[$key]['zone'], 'job_id' => $jobs['north_zone_range']->id, 'created_at' => $carbon->toDateTimeString()));
                 } elseif($north_pillar > -7 && $user_zone[$key]['zone'] != 2 && ($user_zone[$key]['zone'] == 1 || $user_zone[$key]['zone'] == 3)) {
                     $user_zone[$key]['zone'] = 2; 
-                    ZoneSpot::create(array('spot_id' => $user_zone[$key]['spot'], 'zone_id' => $user_zone[$key]['zone'], 'job_id' => $jobs['north_pillar_range']->id, 'created_at' => $carbon->toDateTimeString()));
+                    ZoneSpot::create(array('spot_id' => $user_zone[$key]['spot'], 'zone_id' => $user_zone[$key]['zone'], 'job_id' => $jobs['center_table_range']->id, 'created_at' => $carbon->toDateTimeString()));
                 }
 
                 /**
@@ -160,17 +161,17 @@ class LightHeatSeeder extends Seeder {
                  */
                 if($south_pillar > -7 && $user_zone[$key]['zone'] != 2 && ($user_zone[$key]['zone'] == 1 || $user_zone[$key]['zone'] == 3)) {
                     $user_zone[$key]['zone'] = 2; 
-                    ZoneSpot::create(array('spot_id' => $user_zone[$key]['spot'], 'zone_id' => $user_zone[$key]['zone'], 'job_id' => $jobs['south_pillar_range']->id, 'created_at' => $carbon->toDateTimeString()));
+                    ZoneSpot::create(array('spot_id' => $user_zone[$key]['spot'], 'zone_id' => $user_zone[$key]['zone'], 'job_id' => $jobs['center_table_range']->id, 'created_at' => $carbon->toDateTimeString()));
                 } elseif($south_pillar > -7 && $user_zone[$key]['zone'] != 3 && $user_zone[$key]['zone'] == 2) {
                     $user_zone[$key]['zone'] = 3;
-                    ZoneSpot::create(array('spot_id' => $user_zone[$key]['spot'], 'zone_id' => $user_zone[$key]['zone'], 'job_id' => $jobs['south_pillar_range']->id, 'created_at' => $carbon->toDateTimeString()));
+                    ZoneSpot::create(array('spot_id' => $user_zone[$key]['spot'], 'zone_id' => $user_zone[$key]['zone'], 'job_id' => $jobs['south_zone_range']->id, 'created_at' => $carbon->toDateTimeString()));
                 }
             }
 
-            // if($door_open > 1.2) Acceleration::create(array('acceleration' => $door_open, 'zone_id' => 1, 'job_id' => $jobs['door_open']->id,'spot_address' => $spots['adam'][0]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
+         //    if($door_open > 1.2) Acceleration::create(array('acceleration' => $door_open, 'zone_id' => 1, 'job_id' => $jobs['door_open']->id,'spot_address' => $spots['adam'][0]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
         	// if($kettle_boiled > 40) Heat::create(array('heat_temperature' => $kettle_boiled, 'zone_id' => 1, 'job_id' => $jobs['kettle_boiled']->id,'spot_address'	=> $spots['adam'][1]->spot_address, 'created_at'	=> $carbon->toDateTimeString()));
-            // if($fridge_light_on > 40) Light::create(array('light_intensity' => $fridge_light_on, 'zone_id' => 1, 'job_id' => $jobs['fridge_light_on']->id,'spot_address'  => $spots['adam'][1]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
-            // if($chair_moved > 1.2) Acceleration::create(array('acceleration' => $chair_moved, 'zone_id' => 1, 'job_id' => $jobs['chair_moved']->id,'spot_address' => $spots['dom'][0]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
+         //    if($fridge_light_on > 40) Light::create(array('light_intensity' => $fridge_light_on, 'zone_id' => 1, 'job_id' => $jobs['fridge_light_on']->id,'spot_address'  => $spots['adam'][1]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
+         //    if($chair_moved > 1.2) Acceleration::create(array('acceleration' => $chair_moved, 'zone_id' => 1, 'job_id' => $jobs['chair_moved']->id,'spot_address' => $spots['dom'][0]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
 
 
             $carbon->addMinutes(1);

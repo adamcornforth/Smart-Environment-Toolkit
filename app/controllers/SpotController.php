@@ -68,28 +68,48 @@ class SpotController extends BaseController {
 	public function update($id)
 	{
 		$spot = Spot::find($id); 
-		$spot->user_id = (Input::has('user_id')) ? Input::get('user_id') : null;
-		$spot->save(); 
 
+		/**
+		 * Assign user to this SPOT if user is selected
+		 */
+		if(Input::has('user_id')) {
+			$spot->user_id = Input::get('user_id');
+			$spot->save(); 
+		}
+
+		/**
+		 * Create new object and assign this new object to this SPOT if new
+		 * object is created during SPOT configuration
+		 */
 		if(Input::has('object_title')) {
 			$object = new Object(); 
 			$object->title = Input::get('object_title');
 			$object->spot_id = $spot->id;
 			$object->save();
+		
+		/**
+		 * Assign object to this SPOT if object selected from dropdown
+		 */
+		} elseif (Input::has('object_id')) {
+			$object = Object::find(Input::get('object_id'));
+			$object->spot_id = $spot->id; 
+			$object->save();
 		}
 
-		if(Input::has('job_title') && Input::has('object_title') && Input::has('sensor_id')) {
+		/**
+		 * For creating jobs for the SPOT
+		 */
+		if(Input::has('job_title') && Input::has('sensor_id') && count($spot->object)) {
 			$job = new Job(); 
 			$job->title = Input::get('job_title');
-			$job->threshold = NULL;
-			$job->object_id = $object->id;
+			$job->threshold = (Input::has('threshold')) ? Input::get('threshold') : NULL;
+			$job->object_id = $spot->object->id;
 			$job->sensor_id = Input::get('sensor_id');
 			$job->save();
 		}
 
 		Session::forget('notice');
-
-		return View::make('spots.view', array('spot' => $spot));
+		return Redirect::to('spots/'.$spot->id);
 	}
 
 

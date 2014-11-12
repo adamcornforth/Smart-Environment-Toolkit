@@ -45,24 +45,33 @@
 	      			</table>
 			  	</div>
 		  	@else
-		  		<div class='panel panel-default'>
-					<div class='panel-heading'>
-						@if(count($spot->jobs))
-							This SPOT is responsible for sensing the {{ $spot->object->title }}'s <strong>{{ $spot->jobs->first()->title }}</strong> event with the <strong>{{ $spot->jobs->first()->sensor->title }}.
-						@else
-							This SPOT currently has no jobs.
-						@endif
-					</div>
-			  		<table class='table table-striped'>
-				  		<thead>
-							<tr>
-								<th>Event</th>
-								<th>Reading</th>
-								<th>Time &amp; Date</th>
-							</tr>
-						</thead>
-	  					@foreach($spot->jobs as $job)
-	      					@foreach($job->getReadings($job->threshold, $job->sensor->table, $job->sensor->field) as $reading)
+		  		@foreach($spot->jobs as $job)
+			  		<div class='panel panel-default'>
+						<div class='panel-heading'>
+							<div class='btn-group pull-right'>
+				  				<a class='btn btn-xs btn-default' href=''>
+				  					<span class='glyphicon glyphicon-ban-circle'>
+				  					</span>
+				  					Clear
+				  				</a>
+
+								<a class='btn btn-xs btn-danger' href=''>
+				  					<span class='glyphicon glyphicon-trash'>
+				  					</span>
+				  					Delete
+				  				</a>
+				  			</div>
+							<strong>{{ $job->title }}</strong>, tracked using the <strong>{{ $job->sensor->title }}</strong>.
+						</div>
+				  		<table class='table table-striped'>
+					  		<thead>
+								<tr>
+									<th><small>Event</small></th>
+									<th><small>Reading</small></th>
+									<th><small>Time &amp; Date</small></th>
+								</tr>
+							</thead>
+	      					@foreach($job->getReadings($job->threshold, $job->sensor->table, $job->sensor->field)->take(4) as $reading)
 		      					<tr>
 		      						<td>
 		      							{{ $job->title }}
@@ -80,10 +89,157 @@
 	      							</small>
 	      						</td>
 	      					</tr>
-	      				@endforeach
-	      			</table>
-			  	</div>
+		      			</table>
+				  	</div>
+			  	@endforeach
 		  	@endif
+
+		  	@if(count($spot->object))
+			  	<div class='panel panel-primary'>
+					<div class='panel-heading'>
+				  		Add Job to SPOT
+				  	</div>
+
+				  	<div class='panel-body'>
+					  	<br />
+					  	<?php echo Form::horizontal(array('url' => url('spots/'.$spot->id), 'method' => 'PUT')); ?>
+					  	
+					  	<div class='form-group'>
+					  		<?php
+					  			echo Form::label('job_title', 'Name', array('class' => 'col-md-2 control-label'));
+					  		?>
+				  			<div class='col-md-4'>
+					  			<?php 
+					  				echo Form::text('job_title', null, array('placeholder' => 'Event Name e.g. Kettle Boiled'));
+					  			?>
+					  		</div>
+					  		<div class='col-md-6'>
+					  			<p class='text-muted'>
+					  				The name of the event that we're tracking with this job, e.g. Kettle Boiled, Kettle Tilted, Zone Temperature..
+					  			</p>
+					  		</div>
+					  	</div>
+
+					  	<div class='form-group'>
+					  		<?php
+					  			echo Form::label('sensor_id', 'Sensor', array('class' => 'col-md-2 control-label'));
+					  		?>
+				  			<div class='col-md-4'>
+					  			<select name="sensor_id" class='form-control'>
+					  				<option value="" disabled="disabled" selected="selected">Please select a sensor</option>
+					  				@foreach(Sensor::all() as $sensor) 
+					  					<option value="{{ $sensor->id }}">{{ $sensor->title }}</option>
+					  				@endforeach
+					  			</select>
+					  		</div>
+					  		<div class='col-md-6'>
+					  			<p class='text-muted'>
+					  				The SPOT sensor to collect data with. 
+					  			</p>
+					  		</div>
+					  	</div>
+
+					  	<div class='form-group'>
+					  		<?php
+					  			echo Form::label('threshold', 'Threshold', array('class' => 'col-md-2 control-label'));
+					  		?>
+				  			<div class='col-md-4'>
+					  			<?php 
+					  				echo Form::text('threshold', null, array('placeholder' => 'Job Threshold e.g. 30'));
+					  			?>
+					  		</div>
+					  		<div class='col-md-6'>
+					  			<p class='text-muted'>
+					  				The threshold that has to be reached by the sensor for this SPOT to collect data. 
+					  				<br /><br />
+					  				Leave blank to make the SPOT collect data using this sensor periodically. (every 5 minutes)</p>
+					  		</div>
+					  	</div>
+
+					  	<hr />
+
+					  	<div class='form-group'>
+					  		<div class='col-md-offset-2 col-md-10 text-right'>
+						  		<?php
+									echo Button::success("Add Job")->prependIcon(Icon::plus_sign())->submit();
+						  		?>
+						  	</div>
+					  	</div>
+
+
+
+					</div>
+				</div>
+			@else
+				<div class='panel panel-primary'>
+					<div class='panel-heading'>
+						Configure SPOT 
+					</div>
+				  	<div class='panel-body'>
+				  		<br />
+					  	<?php echo Form::horizontal(array('url' => url('spots/'.$spot->id), 'method' => 'PUT')); ?>
+				  		<div class='form-group'>
+					  		<?php
+					  			echo Form::label('user_id', 'Who does this SPOT belong to?', array('class' => 'col-md-4 control-label'));
+					  		?>
+				  			<div class='col-md-3'>
+					  			<select name="user_id" class='form-control'>
+					  				<option value="" disabled="disabled" selected="selected">Please select a user</option>
+					  				@foreach(User::all() as $user) 
+					  					<option {{ ((count($spot->user) && $user->id == $spot->user->id)) ? "selected='selected'" : ""}}value="{{ $user->id }}">{{ $user->first_name }} {{ $user->last_name }}</option>
+					  				@endforeach
+					  			</select>
+					  		</div>
+					  	</div>
+
+					  	<div class='form-group'>
+					  		<?php
+					  			echo Form::label('object_title', 'What object will this SPOT track?', array('class' => 'col-md-4 control-label'));
+					  		?>
+					  		@if(Object::whereNull('spot_id')->count())
+					  			<div class='col-md-3'>
+						  			<select name="object_id" class='form-control'>
+						  				<option value="" disabled="disabled" selected="selected">Please select an object</option>
+						  				@foreach(Object::whereNull('spot_id')->get() as $object) 
+						  					<option {{ ((count($spot->object) && $object->id == $spot->object->id)) ? "selected='selected'" : ""}}value="{{ $object->id }}">{{ $object->title }}</option>
+						  				@endforeach
+						  			</select>
+						  		</div>
+						  		<p class='col-md-1 text-center text-muted control-label'>Or</p>
+					  		@endif
+					  		@if(isset($spot->object) && $spot->object->count())
+					  			<div class='col-md-3'>
+						  			<p class='form-control-static'>
+						  				<strong>{{ $spot->object->title }}</strong> 
+						  				<a class='btn btn-xs btn-danger pull-right' href=''>
+						  					<span class='glyphicon glyphicon-remove'>
+						  					</span>
+						  					Stop Tracking
+						  				</a>
+						  			</p>
+						  		</div>
+						  		<p class='col-md-1 text-center text-muted control-label'>Or</p>
+					  		@endif
+					  		<div class='col-md-3'>
+					  			<?php 
+					  				echo Form::text('object_title', null, array('placeholder' => 'New Object Name e.g. Kettle'));
+					  			?>
+					  		</div>
+					  	</div>
+
+					  	<hr />
+
+					  	<div class='form-group'>
+					  		<div class='col-md-offset-4 col-md-8'>
+						  		<?php
+									echo Button::primary("Save")->prependIcon(Icon::floppy_disk())->submit();
+						  		?>
+						  	</div>
+					  	</div>
+				  	</div>
+				</div>
+			@endif
+
 		</div>
 		<div class='col-md-4'>
 			<div class='panel panel-default'>

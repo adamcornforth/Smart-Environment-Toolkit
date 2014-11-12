@@ -164,7 +164,7 @@
 			  			</tr>
 			  		</thead>
 			  		<tbody>
-			  			@foreach(ZoneSpot::orderBy('id', 'DESC')->take(5)->get() as $zone_change)
+			  			@foreach(ZoneSpot::orderBy('id', 'DESC')->whereJobId('NOT', 'NULL')->take(5)->get() as $zone_change)
 				  			<tr>
 				  				<td>{{ $zone_change->spot->user->first_name }}</td>
 				  				<td>{{ $zone_change->zone->title }}</td>

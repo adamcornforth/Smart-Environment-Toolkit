@@ -4,6 +4,12 @@
 	<h1>{{ $title or "Java Sun SPOTs"}}</h1>
 
 	<br /> 
+	<p class='lead'>
+		Please turn on your Java Sun SPOT to begin auto-discovery of your Sun SPOTs. <br />
+		<small>
+			When a new SPOT is discovered, it will appear on the list below as an "<span class='text-danger'><span class='glyphicon glyphicon-exclamation-sign'></span> Unconfigured SPOT </span>"
+		</small>
+	</p>
 	<div class='row marketing'>
 		<div class='col-md-12'>
 			<div class='panel panel-default'>
@@ -30,15 +36,43 @@
 				  					<small class='text-muted'>
 				  						@if(count($spot->user))
 					  						<span class='glyphicon glyphicon-user'></span> {{ $spot->user->first_name }} {{ $spot->user->last_name }}
+					  						<a href='{{ url('spots/'.$spot->id.'/edit') }}' class='btn btn-default btn-xs pull-right'>
+				  								Edit Owner
+				  								<span class='glyphicon glyphicon-cog'></span>
+				  							</a>
 					  					@else
 					  						No owner
+					  						<a href='{{ url('spots/'.$spot->id.'/edit') }}' class='btn btn-primary btn-xs pull-right'>
+				  								Add Owner
+				  								<span class='glyphicon glyphicon-plus-sign'></span>
+				  							</a>
 					  					@endif
 				  					</small>
 				  				</td>
 				  				<td>
 				  					@if(count($spot->object))
-				  						{{ $spot->object->title }} <br />
-				  						<small class='text-muted'>Tracking "{{ $spot->object->jobs->first()->title }}" event</span>
+				  						<a href='{{ url('spots/'.$spot->id.'/edit') }}' class='btn btn-default btn-xs pull-right'>
+			  								Edit
+			  								<span class='glyphicon glyphicon-cog'></span>
+			  							</a>
+				  						Tracking the <strong>{{ $spot->object->title }}</strong> object
+				  						@if($spot->object->jobs->count())
+					  						<hr />
+					  						<a href='{{ url('spots/'.$spot->id) }}' class='btn btn-success btn-xs pull-right'>
+				  								Add Job
+				  								<span class='glyphicon glyphicon-plus-sign'></span>
+				  							</a>
+				  							@foreach ($spot->object->jobs as $job)
+					  							<small class='text-muted'>Tracking "{{ $job->title }}" event</small><br />
+				  							@endforeach
+				  						@else
+				  							<hr />
+				  							<a href='{{ url('spots/'.$spot->id) }}' class='btn btn-success btn-xs pull-right'>
+				  								Add Job
+				  								<span class='glyphicon glyphicon-plus-sign'></span>
+				  							</a>
+				  							<small class='text-muted'><span class='glyphicon glyphicon-exclamation-sign'></span> This SPOT has no jobs </small>
+				  						@endif
 				  					@else
 				  						<span class='text-danger'>
 				  							<span class='glyphicon glyphicon-exclamation-sign'></span> Unconfigured SPOT 

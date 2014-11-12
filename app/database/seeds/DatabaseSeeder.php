@@ -13,18 +13,93 @@ class DatabaseSeeder extends Seeder {
 	{
 		Eloquent::unguard();
 
-		$this->call('LightHeatSeeder');
+		// $this->call('Initialise');
+        // $this->call('MinimalDataSeeder');
+        $this->call('DataSeeder');
 	}
 
 }
 
-class LightHeatSeeder extends Seeder {
+class Initialise extends Seeder {
 
     public function run()
     {
-    	DB::table('Acceleration')->delete();
-        DB::table('Light')->delete();
-        DB::table('Heat')->delete();
+        DB::table('zone_spot')->delete();
+
+        DB::table('Spot')->delete();
+        DB::table('Zone')->delete();
+        DB::table('Users')->delete();
+
+        /**
+         * Initialise users. In order:
+         * Adam, Dom, Vitali
+         */
+        User::create(array('first_name' => 'Adam', 'last_name' => 'Cornforth', 'password' => Hash::make('password'), 'email' => 'adam@sunspot.app'));
+        User::create(array('first_name' => 'Dominic', 'last_name' => 'Lindsay', 'password' => Hash::make('password'), 'email' => 'dominic@sunspot.app'));
+        User::create(array('first_name' => 'Vitali', 'last_name' => 'Bokov', 'password' => Hash::make('password'), 'email' => 'vitali@sunspot.app'));
+
+        /**
+         * Initialise SPOTs. In order: 
+         * 2x Adam's SPOTs
+         * 2x Dom's SPOTs
+         * 2x Vitali's SPOTs
+         */
+        $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7827', 'user_id' => 1)); // Adam
+        $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.76FF', 'user_id' => 1));
+        $spots['dom'][] = Spot::create(array('spot_address' => '0014.4F01.0000.77A7', 'user_id' => 2)); // Dom
+        $spots['dom'][] = Spot::create(array('spot_address' => '0014.4F01.0000.77C0', 'user_id' => 2));
+        $spots['vitali'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7A12', 'user_id' => 3)); // Vitali
+        $spots['vitali'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7AD7', 'user_id' => 3));
+
+        /**
+         * Initialise Zones
+         */
+        $zones['north'] = Zone::create(array('title' => 'North End of Lab'));
+        $zones['center'] = Zone::create(array('title' => 'Presentation and Touch Table Area'));
+        $zones['south'] = Zone::create(array('title' => 'South End of Lab'));
+        $zones['lab'] = Zone::create(array('title' => 'Lab'));
+
+        /**
+         * Assign spots to Zones
+         */
+        $spot_zone['north'] = ZoneSpot::create(array('spot_id'  => $spots['adam'][1]->id, 'zone_id' => $zones['north']->id));
+        $spot_zone['center'] = ZoneSpot::create(array('spot_id'=> $spots['dom'][1]->id, 'zone_id'   => $zones['center']->id));
+        $spot_zone['south'] = ZoneSpot::create(array('spot_id'  => $spots['adam'][0]->id, 'zone_id' => $zones['south']->id));
+
+        ZoneSpot::create(array('spot_id' => $spots['dom'][0]->id, 'zone_id' => $zones['north']->id));
+        ZoneSpot::create(array('spot_id' => $spots['vitali'][0]->id, 'zone_id' => $zones['north']->id));
+        ZoneSpot::create(array('spot_id' => $spots['vitali'][1]->id, 'zone_id' => $zones['north']->id));
+
+        /**
+         * Create some sensors
+         */
+        $sensors['thermometer'] = Sensor::create(array('title' => 'Thermometer', 'table' => 'Heat', 'field' => 'heat_temperature', 'port_number' => 110));
+        $sensors['photosensor'] = Sensor::create(array('title' => 'Photosensor', 'table' => 'Light', 'field' => 'light_intensity', 'port_number' => 120));
+        $sensors['accelerometer'] = Sensor::create(array('title' => 'Accelerometer', 'table' => 'Acceleration', 'field' => 'acceleration', 'port_number' => 130));
+        $sensors['motion_sensor'] = Sensor::create(array('title' => 'Motion Sensor', 'table' => 'Motion', 'field' => 'motion', 'port_number' => 140));
+
+        $sensors['cell_tower'] = Sensor::create(array('title' => 'Cell Tower', 'table' => 'ZoneSpot', 'field' => 'zone_id', 'port_number' => 150));
+        $sensors['roaming_spot'] = Sensor::create(array('title' => 'Roaming Spot', 'port_number' => 160));
+
+    }
+
+}
+
+class MinimalDataSeeder extends Seeder {
+
+    public function run() 
+    {
+        /**
+         * Create some test objects
+         */
+        $objects['kettle'] = Object::create(array('title' => 'Kettle'));
+    }
+}
+
+class DataSeeder extends Seeder {
+
+    public function run()
+    {
 
         DB::table('zone_spot')->delete();
 
@@ -58,19 +133,34 @@ class LightHeatSeeder extends Seeder {
          */
         $zones['north'] = Zone::create(array('title' => 'North End of Lab'));
         $zones['center'] = Zone::create(array('title' => 'Presentation and Touch Table Area'));
-		$zones['south'] = Zone::create(array('title' => 'South End of Lab'));
+        $zones['south'] = Zone::create(array('title' => 'South End of Lab'));
         $zones['lab'] = Zone::create(array('title' => 'Lab'));
 
-		/**
-		 * Assign spots to Zones
-		 */
-		$spot_zone['north'] = ZoneSpot::create(array('spot_id'	=> $spots['adam'][1]->id, 'zone_id'	=> $zones['north']->id));
-		$spot_zone['center'] = ZoneSpot::create(array('spot_id'=> $spots['dom'][1]->id, 'zone_id'	=> $zones['center']->id));
-		$spot_zone['south'] = ZoneSpot::create(array('spot_id'	=> $spots['adam'][0]->id, 'zone_id'	=> $zones['south']->id));
+        /**
+         * Assign spots to Zones
+         */
+        $spot_zone['north'] = ZoneSpot::create(array('spot_id'  => $spots['adam'][1]->id, 'zone_id' => $zones['north']->id));
+        $spot_zone['center'] = ZoneSpot::create(array('spot_id'=> $spots['dom'][1]->id, 'zone_id'   => $zones['center']->id));
+        $spot_zone['south'] = ZoneSpot::create(array('spot_id'  => $spots['adam'][0]->id, 'zone_id' => $zones['south']->id));
 
         ZoneSpot::create(array('spot_id' => $spots['dom'][0]->id, 'zone_id' => $zones['north']->id));
         ZoneSpot::create(array('spot_id' => $spots['vitali'][0]->id, 'zone_id' => $zones['north']->id));
         ZoneSpot::create(array('spot_id' => $spots['vitali'][1]->id, 'zone_id' => $zones['north']->id));
+
+        /**
+         * Create some sensors
+         */
+        $sensors['thermometer'] = Sensor::create(array('title' => 'Thermometer', 'table' => 'Heat', 'field' => 'heat_temperature', 'port_number' => 110));
+        $sensors['photosensor'] = Sensor::create(array('title' => 'Photosensor', 'table' => 'Light', 'field' => 'light_intensity', 'port_number' => 120));
+        $sensors['accelerometer'] = Sensor::create(array('title' => 'Accelerometer', 'table' => 'Acceleration', 'field' => 'acceleration', 'port_number' => 130));
+        $sensors['motion_sensor'] = Sensor::create(array('title' => 'Motion Sensor', 'table' => 'Motion', 'field' => 'motion', 'port_number' => 140));
+
+        $sensors['cell_tower'] = Sensor::create(array('title' => 'Cell Tower', 'table' => 'ZoneSpot', 'field' => 'zone_id', 'port_number' => 150));
+        $sensors['roaming_spot'] = Sensor::create(array('title' => 'Roaming Spot', 'port_number' => 160));
+
+    	DB::table('Acceleration')->delete();
+        DB::table('Light')->delete();
+        DB::table('Heat')->delete();
 
         /**
          * Create some lab Objects
@@ -85,17 +175,6 @@ class LightHeatSeeder extends Seeder {
         $objects['center_zone'] = Object::create(array('title' => 'Center Zone', 'spot_id' => $spots['dom'][1]->id));
         $objects['roaming_user_1'] = Object::create(array('title' => 'Roaming User (Dom)', 'spot_id' => $spots['dom'][0]->id));
         $objects['roaming_user_2'] = Object::create(array('title' => 'Roaming User (Vitali)', 'spot_id' => $spots['vitali'][0]->id));
-
-        /**
-         * Create some sensors
-         */
-        $sensors['thermometer'] = Sensor::create(array('title' => 'Thermometer', 'table' => 'Heat', 'field' => 'heat_temperature', 'port_number' => 110));
-        $sensors['photosensor'] = Sensor::create(array('title' => 'Photosensor', 'table' => 'Light', 'field' => 'light_intensity', 'port_number' => 120));
-        $sensors['accelerometer'] = Sensor::create(array('title' => 'Accelerometer', 'table' => 'Acceleration', 'field' => 'acceleration', 'port_number' => 130));
-        $sensors['motion_sensor'] = Sensor::create(array('title' => 'Motion Sensor', 'table' => 'Motion', 'field' => 'motion', 'port_number' => 140));
-
-        $sensors['cell_tower'] = Sensor::create(array('title' => 'Cell Tower', 'table' => 'ZoneSpot', 'field' => 'zone_id', 'port_number' => 150));
-        $sensors['roaming_spot'] = Sensor::create(array('title' => 'Roaming Spot', 'port_number' => 160));
 
         /**
          * Create some Jobs

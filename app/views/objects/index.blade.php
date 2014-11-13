@@ -24,14 +24,33 @@
 			  			@foreach($objects as $object)
 				  			<tr>
 				  				<td>{{ $object->id }}</td>
-				  				<td>{{ $object->title }}</td>
+				  				<td>
+				  					{{ $object->title }}
+				  					<a href='{{ url('objects/'.$object->id.'/edit') }}' class='btn btn-default btn-xs pull-right'>
+		  								Edit
+		  								<span class='glyphicon glyphicon-cog'></span>
+		  							</a>
+				  				</td>
 				  				<td>
 				  					@if($object->description)
 				  						{{ $object->description }} <br/ >
 				  				    @endif
 				  					@if(count($object->jobs))
-				  						Tracking "{{ $object->jobs->first()->title }}" event <br />
-				  						<small class='text-muted'><strong>{{ count($object->jobs->first()->getReadings($object->jobs->first()->threshold, $object->jobs->first()->sensor->table, $object->jobs->first()->sensor->field)) }}</strong> readings</small>
+				  						@if($object->jobs->count())
+					  						<a href='{{ url('spots/'.$object->spot->id) }}' class='btn btn-success btn-xs pull-right'>
+				  								Add Job
+				  								<span class='glyphicon glyphicon-plus-sign'></span>
+				  							</a>
+				  							@foreach ($object->jobs as $job)
+					  							<small class='text-muted'>Tracking "{{ $job->title }}" event</small><br />
+				  							@endforeach
+				  						@else
+				  							<a href='{{ url('spots/'.$spot->id) }}' class='btn btn-success btn-xs pull-right'>
+				  								Add Job
+				  								<span class='glyphicon glyphicon-plus-sign'></span>
+				  							</a>
+				  							<small class='text-muted'><span class='glyphicon glyphicon-exclamation-sign'></span> This SPOT has no jobs </small>
+				  						@endif
 				  					@else
 				  						<span class='text-danger'>
 				  							<span class='glyphicon glyphicon-exclamation-sign'></span> Object not being tracked 

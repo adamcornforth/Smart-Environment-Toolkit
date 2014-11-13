@@ -24,6 +24,10 @@ Route::group(array('before' => 'spot'), function() {
 		return View::make('hello');
 	});
 
+	Route::get('touch', function() {
+		return View::make('touch');
+	});
+
 	Route::resource('spots', 'SpotController');
 	Route::resource('objects', 'ObjectController');
 	Route::resource('jobs', 'JobController');

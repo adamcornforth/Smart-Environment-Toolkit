@@ -43,7 +43,7 @@ class ObjectController extends BaseController {
 	 */
 	public function show($id)
 	{
-		//
+		return Redirect::to('objects');
 	}
 
 
@@ -55,7 +55,7 @@ class ObjectController extends BaseController {
 	 */
 	public function edit($id)
 	{
-		//
+		return View::make('objects.edit', array('object' => Object::find($id)));
 	}
 
 
@@ -67,7 +67,17 @@ class ObjectController extends BaseController {
 	 */
 	public function update($id)
 	{
-		//
+		$object = Object::find($id); 
+
+		/**
+		 * Update object title if title supplied
+		 */
+		if(Input::has('title')) {
+			$object->title = Input::get('title');
+			$object->save(); 
+		}
+
+		return Redirect::to('objects/'.$object->id);
 	}
 
 

@@ -17,7 +17,9 @@
 				}
 
 			</style>
-			<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+      <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+			<link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
+      <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 		@show
 	</head>
     <body>

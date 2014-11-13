@@ -1,8 +1,8 @@
 @extends('layouts.master')
 
 @section('content')
-	<h1>{{ $title or "Viewing ".$spot->user->first_name."'s Zone Change History"}}</h1>
-
+	<h1>{{ $title or "Movement History <small>For <em>".$spot->user->first_name." ".$spot->user->last_name."</em></small>"}}</h1>
+	<br />
 	<div class='row'>
 		<div class='col-md-12'>
 			<div class='panel panel-default'>

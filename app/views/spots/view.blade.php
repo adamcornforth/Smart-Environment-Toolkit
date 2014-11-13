@@ -5,7 +5,7 @@
 		<span class='glyphicon glyphicon-pencil'></span>
 		Edit SPOT
 	</a>
-	<h1>{{ $title or "Viewing SPOT <small>".$spot->spot_address."</small>"}}</h1>
+	<h1>{{ $title or "Viewing SPOT <small>".$spot->spot_address." ".((count($spot->object)) ? "&middot; Tracking <strong>".$spot->object->title."</strong>" : "")."</small>"}}</h1>
 
 	<br /> 
 	<div class='row marketing'>
@@ -13,9 +13,6 @@
 		  	@if($spot->zonechanges->count() > 1)
 			  	<div class='panel panel-default'>
 					<div class='panel-heading'>
-						<a href='{{ url("zones/user/".$spot->id)}}' class='btn btn-default btn-small pull-right'>
-	  						View All <span class='glyphicon glyphicon-chevron-right'></span>
-	  					</a>
 						This SPOT is responsible for tracking <strong>{{ $spot->user->first_name }} {{ $spot->user->last_name }}'s</strong> movement throughout the zones in the lab (most recent zone change first).
 					</div>
 			  		<table class='table table-striped'>
@@ -25,7 +22,7 @@
 								<th>Time &amp; Date</th>
 							</tr>
 						</thead>
-	  					@foreach($spot->zonechanges()->orderBy('created_at', 'DESC')->take(5)->get() as $zone_change)
+	  					@foreach($spot->zonechanges()->orderBy('created_at', 'DESC')->take(4)->get() as $zone_change)
 	      					<tr>
 	      						<td>
 	      							{{ $zone_change->zone->title }}
@@ -35,17 +32,20 @@
 	      						</td>
 	      					</tr>
 	  					@endforeach
-	  					<tr>
-	  						<td colspan='3'>
-	  							<small>
-	  								Viewing <strong>5</strong> out of <strong>{{ $spot->zonechanges->count() }}</strong> readings
-	  							</small>
-	  						</td>
-	  					</tr>
 	      			</table>
+	      			<div class='panel-footer'>
+	      				<a href='{{ url("zones/user/".$spot->id)}}' class='btn btn-default btn-sm pull-right'>
+	  						View All <span class='glyphicon glyphicon-chevron-right'></span>
+	  					</a>
+							<p class='form-control-static'>
+								Viewing <strong>4</strong> out of <strong>{{ $spot->zonechanges->count() }}</strong> readings
+							</p>
+	      			</div>
 			  	</div>
-		  	@else
-		  		@foreach($spot->jobs as $job)
+		  	@endif
+
+	  		@foreach($spot->jobs as $job)
+	  			@if($job->sensor->title != "Roaming Spot")
 			  		<div class='panel panel-default'>
 						<div class='panel-heading'>
 							<div class='btn-group pull-right'>
@@ -82,17 +82,19 @@
 		      						</td>
 		      					</tr>
 	      					@endforeach
-	      					<tr>
-	      						<td colspan='3'>
-	      							<small>
-	      								Viewing <strong>{{ count($job->getReadings($job->threshold, $job->sensor->table, $job->sensor->field)) }}</strong> readings
-	      							</small>
-	      						</td>
-	      					</tr>
 		      			</table>
+		      			<div class='panel-footer'>
+		      				<a href='{{ url("spots/".$spot->id)}}' class='btn btn-default btn-sm pull-right'>
+		  						View All <span class='glyphicon glyphicon-chevron-right'></span>
+		  					</a>
+  							<p class='form-control-static'>
+  								Viewing <strong>4</strong> out of <strong>{{ $spot->zonechanges->count() }}</strong> readings
+  							</p>
+		      			</div>
 				  	</div>
-			  	@endforeach
-		  	@endif
+
+			  	@endif
+		  	@endforeach
 
 		  	@if(count($spot->object))
 			  	<div class='panel panel-primary'>

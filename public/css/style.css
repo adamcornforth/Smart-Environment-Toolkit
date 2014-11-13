@@ -1,0 +1,15 @@
+.table {
+	margin-bottom: 0px;
+}
+
+.panel-primary-bg {
+	background: #428bca;
+	text-align: center;
+}
+.panel-primary-bg>li>a {
+	background: #efefef;
+}
+.panel-primary-bg>li {
+	float: none;
+	display: inline-block;
+}

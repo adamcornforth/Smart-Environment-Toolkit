@@ -10,4 +10,8 @@ class ZoneSpot extends Eloquent {
     	return $this->belongsTo('Zone');
     }
 
+    public function job() {
+    	return $this->belongsTo('Job');
+    }
+
 }

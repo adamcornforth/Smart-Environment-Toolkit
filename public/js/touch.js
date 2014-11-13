@@ -52,9 +52,13 @@ $(window).load(function(){
     });
     $('.draggable').hammer(options).bind("swipeleft", function(event) {
     	$('#textbox').html("Swipe left");
+        console.log(event);
+        $(event.target).find('.nav-tabs li.active').next().find('a').click();
     });
     $('.draggable').hammer(options).bind("swiperight", function(event) {
     	$('#textbox').html("Swipe right");
+        console.log(event);
+        $(event.target).find('.nav-tabs li.active').prev().find('a').click();
     });
 
     // Pinc gesture

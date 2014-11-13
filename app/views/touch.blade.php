@@ -11,7 +11,6 @@
 </div>
 <div class='container-fluid'>
 	<div class='col-xs-12'>
-		<small id='textbox'></small>
 		<div class='row'>
 			@foreach($zone_spots as $spot)
 				<div class='col-md-4 draggable'>
@@ -20,24 +19,26 @@
 							<h1 class='text-center'> {{ $spot->object->title }} </h1>
 							<div class='row text-center'>
 								<h1 class='col-md-6'>
-									<span class='glyphicon glyphicon-fire'></span> 10&deg;
+									<span class='glyphicon glyphicon-fire'></span> {{ $spot->object->getLatestHeat() }}
 								</h1> 
 								<h1 class='col-md-6'>
-									<span class='glyphicon glyphicon-flash'></span> 56
+									<span class='glyphicon glyphicon-flash'></span> {{ $spot->object->getLatestLight() }}
 								</h1>
 							</div>
 						</div>
 						<ul class="nav nav-tabs panel-primary-bg" role="tablist">
 							<?php $count = 1; ?>
 							@foreach($spot->jobs as $job)
-								<li role="presentation" class='{{ ($count == 1) ? "active" : "" }}'><a href="#{{ $spot->id }}_{{$job->id }}" aria-controls="{{ $spot->id }}_{{$job->id }}" role="tab" data-toggle="tab">{{$job->title }}</a></li>
+								<li role="presentation" class='{{ ($count == 1) ? "active" : "" }}'>
+									<a href="#{{ $spot->id }}_{{$job->id }}" data-target="#{{ $spot->id }}_{{$job->id }}" aria-controls="{{ $spot->id }}_{{$job->id }}" role="tab" data-toggle="tab">{{$job->title }}</a>
+								</li>
 								<?php $count++; ?>
 							@endforeach
 						</ul>
 							<div class='tab-content'>
 							<?php $count = 1; ?>
 	  						@foreach($spot->jobs as $job)
-								<div role='tabpanel' class='tab-pane {{ ($count == 1) ? "active" : "" }}' id="{{ $spot->id }}_{{$job->id }}">
+								<div role='tabpanel' class='tab-pane {{ ($count == 1) ? "active" : "fade" }}' id="{{ $spot->id }}_{{$job->id }}">
 									<?php $count++; ?>
 									<table class='table table-striped'>
 										<thead>
@@ -78,7 +79,7 @@
 		      			<div class='panel-footer'>
 		      				<h1>Users in Zone</h1>
 		      				@foreach (Spot::getRoamingSpots() as $roaming_spot)
-		      					@if(count($roaming_spot->zonechanges) && $roaming_spot->zonechanges()->orderBy('id', 'DESC')->first()->job->object->title == $spot->object->title)
+		      					@if(count($roaming_spot->zonechanges) && count($roaming_spot->zonechanges()->orderBy('id', 'DESC')->first()->job) && $roaming_spot->zonechanges()->orderBy('id', 'DESC')->first()->job->object->title == $spot->object->title)
 		      						<h3>{{ $roaming_spot->user->first_name }}
 		      						{{ $roaming_spot->user->last_name }} </h3>
 		      					@endif

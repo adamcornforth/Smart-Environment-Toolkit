@@ -73,12 +73,21 @@ class Initialise extends Seeder {
         /**
          * Create some sensors
          */
-        $sensors['thermometer'] = Sensor::create(array('title' => 'Thermometer', 'table' => 'Heat', 'field' => 'heat_temperature', 'port_number' => 110));
-        $sensors['photosensor'] = Sensor::create(array('title' => 'Photosensor', 'table' => 'Light', 'field' => 'light_intensity', 'port_number' => 120));
-        $sensors['accelerometer'] = Sensor::create(array('title' => 'Accelerometer', 'table' => 'Acceleration', 'field' => 'acceleration', 'port_number' => 130));
-        $sensors['motion_sensor'] = Sensor::create(array('title' => 'Motion Sensor', 'table' => 'Motion', 'field' => 'motion', 'port_number' => 140));
+        $sensors['thermometer'] = Sensor::create(array('title' => 'Thermometer', 'table' => 'Heat', 'field' => 'heat_temperature', 
+                                                        'unit' => '&deg;C', 'measures' => 'Temperature', 'decimal_points' => 2, 'port_number' => 110));
 
-        $sensors['cell_tower'] = Sensor::create(array('title' => 'Cell Tower', 'table' => 'ZoneSpot', 'field' => 'zone_id', 'port_number' => 150));
+        $sensors['photosensor'] = Sensor::create(array('title' => 'Photosensor', 'table' => 'Light', 'field' => 'light_intensity', 
+                                                        'unit' => '<em>&Iota;</em><sub>v</sub>','measures' => 'Light Intensity', 'decimal_points' => 0, 'port_number' => 120));
+
+        $sensors['accelerometer'] = Sensor::create(array('title' => 'Accelerometer', 'table' => 'Acceleration', 'field' => 'acceleration', 
+                                                        'unit' => 'g', 'measures' => 'Acceleration', 'decimal_points' => 2, 'port_number' => 130));
+
+        $sensors['motion_sensor'] = Sensor::create(array('title' => 'Motion Sensor', 'table' => 'Motion', 'field' => 'motion', 
+                                                        'unit' => '', 'measures' => 'Motion', 'decimal_points' => 0, 'port_number' => 140));
+
+        $sensors['cell_tower'] = Sensor::create(array('title' => 'Cell Tower', 'table' => 'ZoneSpot', 'field' => 'zone_id', 
+                                                        'unit' => '', 'measures' => 'Zone Entries', 'port_number' => 150));
+
         $sensors['roaming_spot'] = Sensor::create(array('title' => 'Roaming Spot', 'port_number' => 160));
 
     }
@@ -150,12 +159,21 @@ class DataSeeder extends Seeder {
         /**
          * Create some sensors
          */
-        $sensors['thermometer'] = Sensor::create(array('title' => 'Thermometer', 'table' => 'Heat', 'field' => 'heat_temperature', 'port_number' => 110));
-        $sensors['photosensor'] = Sensor::create(array('title' => 'Photosensor', 'table' => 'Light', 'field' => 'light_intensity', 'port_number' => 120));
-        $sensors['accelerometer'] = Sensor::create(array('title' => 'Accelerometer', 'table' => 'Acceleration', 'field' => 'acceleration', 'port_number' => 130));
-        $sensors['motion_sensor'] = Sensor::create(array('title' => 'Motion Sensor', 'table' => 'Motion', 'field' => 'motion', 'port_number' => 140));
+        $sensors['thermometer'] = Sensor::create(array('title' => 'Thermometer', 'table' => 'Heat', 'field' => 'heat_temperature', 
+                                                        'unit' => '&deg;C', 'measures' => 'Temperature', 'decimal_points' => 2, 'port_number' => 110));
 
-        $sensors['cell_tower'] = Sensor::create(array('title' => 'Cell Tower', 'table' => 'ZoneSpot', 'field' => 'zone_id', 'port_number' => 150));
+        $sensors['photosensor'] = Sensor::create(array('title' => 'Photosensor', 'table' => 'Light', 'field' => 'light_intensity', 
+                                                        'unit' => '<em>&Iota;</em><sub>v</sub>','measures' => 'Light Intensity', 'decimal_points' => 0, 'port_number' => 120));
+
+        $sensors['accelerometer'] = Sensor::create(array('title' => 'Accelerometer', 'table' => 'Acceleration', 'field' => 'acceleration', 
+                                                        'unit' => 'g', 'measures' => 'Acceleration', 'decimal_points' => 2, 'port_number' => 130));
+
+        $sensors['motion_sensor'] = Sensor::create(array('title' => 'Motion Sensor', 'table' => 'Motion', 'field' => 'motion', 
+                                                        'unit' => '', 'measures' => 'Motion', 'decimal_points' => 0, 'port_number' => 140));
+
+        $sensors['cell_tower'] = Sensor::create(array('title' => 'Cell Tower', 'table' => 'ZoneSpot', 'field' => 'zone_id', 
+                                                        'unit' => '', 'measures' => 'Zone Entries', 'port_number' => 150));
+
         $sensors['roaming_spot'] = Sensor::create(array('title' => 'Roaming Spot', 'port_number' => 160));
 
     	DB::table('Acceleration')->delete();
@@ -185,9 +203,16 @@ class DataSeeder extends Seeder {
         $jobs['kettle_boiled'] = Job::create(array('title' => 'Kettle boiled', 'object_id' => $objects['kettle']->id, 'sensor_id' => $sensors['thermometer']->id, 'threshold' => 40));
         
         $jobs['center_table_range'] = Job::create(array('title' => 'User Entered Center Zone', 'object_id' => $objects['center_zone']->id, 'sensor_id' => $sensors['cell_tower']->id, 'threshold' => null));
+        $jobs['center_table_temperature'] = Job::create(array('title' => 'Zone Temperature', 'object_id' => $objects['center_zone']->id, 'sensor_id' => $sensors['thermometer']->id, 'threshold' => null));
+        $jobs['center_table_light'] = Job::create(array('title' => 'Zone Light', 'object_id' => $objects['center_zone']->id, 'sensor_id' => $sensors['photosensor']->id, 'threshold' => null));
 
         $jobs['north_zone_range'] = Job::create(array('title' => 'User Entered North Zone', 'object_id' => $objects['north_zone']->id, 'sensor_id' => $sensors['cell_tower']->id, 'threshold' => null));
+        $jobs['north_zone_temperature'] = Job::create(array('title' => 'Zone Temperature', 'object_id' => $objects['north_zone']->id, 'sensor_id' => $sensors['thermometer']->id, 'threshold' => null));
+        $jobs['north_zone_light'] = Job::create(array('title' => 'Zone Light', 'object_id' => $objects['north_zone']->id, 'sensor_id' => $sensors['photosensor']->id, 'threshold' => null));
+
         $jobs['south_zone_range'] = Job::create(array('title' => 'User Entered South Zone', 'object_id' => $objects['south_zone']->id, 'sensor_id' => $sensors['cell_tower']->id, 'threshold' => null));
+        $jobs['south_zone_temperature'] = Job::create(array('title' => 'Zone Temperature', 'object_id' => $objects['south_zone']->id, 'sensor_id' => $sensors['thermometer']->id, 'threshold' => null));
+        $jobs['south_zone_light'] = Job::create(array('title' => 'Zone Light', 'object_id' => $objects['south_zone']->id, 'sensor_id' => $sensors['photosensor']->id, 'threshold' => null));
 
         $jobs['roaming_user_1'] = Job::create(array('title' => 'Roaming User 1 (Dom)', 'object_id' => $objects['roaming_user_1']->id, 'sensor_id' => $sensors['roaming_spot']->id, 'threshold' => null));
         $jobs['roaming_user_2'] = Job::create(array('title' => 'Roaming User 2 (Vitali)', 'object_id' => $objects['roaming_user_2']->id, 'sensor_id' => $sensors['roaming_spot']->id, 'threshold' => null));
@@ -217,7 +242,7 @@ class DataSeeder extends Seeder {
 
             $door_open = (mt_rand(0,300) == 1) ? 1.2+$random_float : $random_float-0.7;
             $kettle_boiled = (mt_rand(0,300) == 1) ? 50-mt_rand(1,5)+$random_float : 28-mt_rand(1,5)+$random_float;
-            $fridge_light_on = (mt_rand(0,300) == 1) ? 120-mt_rand(1,5)+$random_float : 0;
+            $fridge_light_on = (mt_rand(0,300) == 1) ? 120-mt_rand(1,5)+$random_float : 70-mt_rand(1,15)+$random_float;
             $chair_moved = (mt_rand(0,300) == 1) ? 1.2+$random_float : $random_float-0.7;
 
             foreach($user_zone as $key => $user) {
@@ -252,8 +277,16 @@ class DataSeeder extends Seeder {
          //    if($fridge_light_on > 40) Light::create(array('light_intensity' => $fridge_light_on, 'zone_id' => 1, 'job_id' => $jobs['fridge_light_on']->id,'spot_address'  => $spots['adam'][1]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
          //    if($chair_moved > 1.2) Acceleration::create(array('acceleration' => $chair_moved, 'zone_id' => 1, 'job_id' => $jobs['chair_moved']->id,'spot_address' => $spots['dom'][0]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
 
+            Heat::create(array('heat_temperature' => $kettle_boiled, 'zone_id' => 1, 'job_id' => $jobs['north_zone_temperature']->id, 'spot_address'  => $spots['adam'][1]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
+            Heat::create(array('heat_temperature' => $kettle_boiled, 'zone_id' => 1, 'job_id' => $jobs['center_table_temperature']->id, 'spot_address'  => $spots['dom'][1]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
+            Heat::create(array('heat_temperature' => $kettle_boiled, 'zone_id' => 1, 'job_id' => $jobs['south_zone_temperature']->id, 'spot_address'  => $spots['adam'][0]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
 
-            $carbon->addMinutes(1);
+
+            Light::create(array('light_intensity' => $fridge_light_on, 'zone_id' => 1, 'job_id' => $jobs['north_zone_light']->id, 'spot_address'  => $spots['adam'][1]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
+            Light::create(array('light_intensity' => $fridge_light_on, 'zone_id' => 1, 'job_id' => $jobs['center_table_light']->id, 'spot_address'  => $spots['dom'][1]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
+            Light::create(array('light_intensity' => $fridge_light_on, 'zone_id' => 1, 'job_id' => $jobs['south_zone_light']->id, 'spot_address'  => $spots['adam'][0]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
+
+            $carbon->addMinutes(5);
         }
     }
 

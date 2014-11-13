@@ -39,6 +39,9 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 		    $table->string('title');
 		    $table->string('table')->nullable();
 		    $table->string('field')->nullable();
+		    $table->string('unit')->nullable();
+		    $table->string('measures')->nullable();
+		    $table->integer('decimal_points')->nullable();
 		    $table->string('description');
 		    $table->integer('port_number');
 		    $table->timestamps();

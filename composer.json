@@ -7,7 +7,8 @@
 	"require": {
 		"laravel/framework": "4.2.*",
 		"nesbot/Carbon": "*",
-		"patricktalmadge/bootstrapper": "~5"
+		"patricktalmadge/bootstrapper": "~5",
+		"brainboxlabs/brain-socket": "v1.0.0"
 	},
 	"autoload": {
 		"classmap": [

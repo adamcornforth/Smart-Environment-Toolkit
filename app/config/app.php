@@ -122,7 +122,8 @@ return array(
 		'Illuminate\View\ViewServiceProvider',
 		'Illuminate\Workbench\WorkbenchServiceProvider',
 
-		'Bootstrapper\BootstrapperServiceProvider'
+		'Bootstrapper\BootstrapperServiceProvider',
+		'BrainSocket\BrainSocketServiceProvider'
 
 	),
 
@@ -219,7 +220,15 @@ return array(
 		'Table' => 'Bootstrapper\Facades\Table',
 		'Thumbnail' => 'Bootstrapper\Facades\Thumbnail',
 
-		'Carbon'          => 'Carbon\Carbon'
+		/**
+		 * https://github.com/briannesbitt/Carbon
+		 */
+		'Carbon'          => 'Carbon\Carbon',
+
+		/**
+		 * https://github.com/BrainBoxLabs/brain-socket
+		 */
+		'BrainSocket'     => 'BrainSocket\BrainSocketFacade'
 
 	),
 

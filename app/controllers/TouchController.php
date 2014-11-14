@@ -2,7 +2,7 @@
 
 class TouchController extends \BaseController {
 
-	public function getIndex() {
+	private function zone_spots() {
 		$spots = new \Illuminate\Database\Eloquent\Collection;
 		$zone_objects = array(	'North Zone' => 1,
 								'Center Zone' => 2,
@@ -21,7 +21,16 @@ class TouchController extends \BaseController {
 		{
 		    return $zone_objects[$spot->object->title];
 		});
-		return View::make('touch', array('zone_spots' => $spots));
+		return $spots;
+	}
+
+	public function getIndex() {
+		$spots = $this->zone_spots();
+		return View::make('touch.index', array('zone_spots' => $spots));
+	}
+
+	public function getZonejob($spot, $job) {
+		return View::make('touch.tables.zonejob', array('count' => 0, 'spot' => Spot::find($spot), 'job' => Job::find($job)));
 	}
 }
 ?>

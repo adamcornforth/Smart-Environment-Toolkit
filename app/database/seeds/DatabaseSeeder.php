@@ -107,6 +107,31 @@ class MinimalDataSeeder extends Seeder {
 
 class DataSeeder extends Seeder {
 
+    public function notify_curl_socket($socket_id){
+        $url = "http://".Config::get('brainsocket.base-url').':8080/socket/'.$socket_id;
+
+        echo "Hitting url: $url\n";
+        $ch = curl_init();
+        $headers = array(
+        'Accept: application/json',
+        'Content-Type: application/json',
+
+        );
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        $body = '{}';
+
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET"); 
+
+        // Timeout in seconds
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+
+        $authToken = curl_exec($ch);
+
+        return $authToken;
+    }
+
     public function run()
     {
 
@@ -255,11 +280,11 @@ class DataSeeder extends Seeder {
                 if($north_pillar > -7 && $user_zone[$key]['zone'] != 1 && $user_zone[$key]['zone'] == 2) {
                     $user_zone[$key]['zone'] = 1; 
                     $zonechange = ZoneSpot::create(array('spot_id' => $user_zone[$key]['spot'], 'zone_id' => $user_zone[$key]['zone'], 'job_id' => $jobs['north_zone_range']->id, 'created_at' => $carbon->toDateTimeString()));
-                    $event = Event::fire('app.zonechange', array($zonechange));
+                    $this->notify_curl_socket("zonechange");
                 } elseif($north_pillar > -7 && $user_zone[$key]['zone'] != 2 && ($user_zone[$key]['zone'] == 1 || $user_zone[$key]['zone'] == 3)) {
                     $user_zone[$key]['zone'] = 2; 
                     $zonechange = ZoneSpot::create(array('spot_id' => $user_zone[$key]['spot'], 'zone_id' => $user_zone[$key]['zone'], 'job_id' => $jobs['center_table_range']->id, 'created_at' => $carbon->toDateTimeString()));
-                    $event = Event::fire('app.zonechange', array($zonechange));
+                    $this->notify_curl_socket("zonechange");
                 }
 
                 /**
@@ -268,11 +293,11 @@ class DataSeeder extends Seeder {
                 if($south_pillar > -7 && $user_zone[$key]['zone'] != 2 && ($user_zone[$key]['zone'] == 1 || $user_zone[$key]['zone'] == 3)) {
                     $user_zone[$key]['zone'] = 2; 
                     $zonechange = ZoneSpot::create(array('spot_id' => $user_zone[$key]['spot'], 'zone_id' => $user_zone[$key]['zone'], 'job_id' => $jobs['center_table_range']->id, 'created_at' => $carbon->toDateTimeString()));
-                    $event = Event::fire('app.zonechange', array($zonechange));
+                    $this->notify_curl_socket("zonechange");
                 } elseif($south_pillar > -7 && $user_zone[$key]['zone'] != 3 && $user_zone[$key]['zone'] == 2) {
                     $user_zone[$key]['zone'] = 3;
                     $zonechange = ZoneSpot::create(array('spot_id' => $user_zone[$key]['spot'], 'zone_id' => $user_zone[$key]['zone'], 'job_id' => $jobs['south_zone_range']->id, 'created_at' => $carbon->toDateTimeString()));
-                    $event = Event::fire('app.zonechange', array($zonechange));
+                    $this->notify_curl_socket("zonechange");
                 }
             }
 

@@ -86,22 +86,17 @@ $(window).load(function(){
 
     app.BrainSocket.Event.listen('app.zonechange',function(msg)
     {
-        console.log(msg);
+        console.log(msg.client.data.event);
     });
 
-    app.BrainSocket.Event.listen('generic.event',function(msg)
+    app.BrainSocket.Event.listen('app.heat',function(msg)
     {
-        console.log(msg);
+        console.log(msg.client.data.event);
     });
 
-    app.BrainSocket.Event.listen('app.success',function(msg)
+    app.BrainSocket.Event.listen('app.light',function(msg)
     {
-        console.log(msg);
-    });
-
-    app.BrainSocket.Event.listen('app.error',function(msg)
-    {
-        console.log(msg);
+        console.log(msg.client.data.event);
     });
 
 });

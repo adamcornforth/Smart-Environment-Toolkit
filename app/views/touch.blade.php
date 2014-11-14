@@ -4,6 +4,7 @@
 	@parent
 	<script type="text/javascript" src="{{ asset('js/hammer.js')}}"></script>
 	<script type="text/javascript" src="{{ asset('js/jquery.hammer.js')}}"></script>
+	<script type="text/javascript" src="{{ asset('js/brainsocket.min.js') }}" /></script>
 	<script type="text/javascript" src="{{ asset('js/touch.js')}}"></script>
 
 @stop

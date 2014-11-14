@@ -233,3 +233,5 @@ return array(
 	),
 
 );
+
+Config::set('app.bs-base-url', 'scc330-01.lancs.ac.uk');

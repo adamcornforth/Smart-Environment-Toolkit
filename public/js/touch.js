@@ -6,7 +6,10 @@
 //
 // https://github.com/chuvidi2003/GearSwipeTutorial
 $(window).load(function(){
-
+    /**
+     * Touchscreen listeners
+     */
+    
 	//This listens for the back button press
 	document.addEventListener('tizenhwkey', function(e) {
         if(e.keyName == "back")
@@ -67,6 +70,38 @@ $(window).load(function(){
     });
     $('.draggable').hammer(options).bind("pinchout", function(event) {
     	$('#textbox').html("Pinch Out");
+    });
+
+    /**
+     * Brainsocket listeners
+     */
+    window.app = {};
+
+    var baseUrl = $("body").data('bs-base-url');
+
+    app.BrainSocket = new BrainSocket(
+            new WebSocket('ws://' + baseUrl + ':8080'),
+            new BrainSocketPubSub()
+    );
+
+    app.BrainSocket.Event.listen('app.zonechange',function(msg)
+    {
+        console.log(msg);
+    });
+
+    app.BrainSocket.Event.listen('generic.event',function(msg)
+    {
+        console.log(msg);
+    });
+
+    app.BrainSocket.Event.listen('app.success',function(msg)
+    {
+        console.log(msg);
+    });
+
+    app.BrainSocket.Event.listen('app.error',function(msg)
+    {
+        console.log(msg);
     });
 
 });

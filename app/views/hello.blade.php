@@ -34,7 +34,7 @@
 				      							<small>{{ $job->title }}</small>
 				      						</td>
 				      						<td> 
-				      							<small>{{ number_format($reading[$job->sensor->field], 2) }}</small>
+				      							<small>{{ number_format($reading[$job->sensor->field], $job->sensor->decimal_points) }}{{ $job->sensor->unit}}</small>
 				      						</td>
 				      						<td>
 				      							<small>

@@ -6,6 +6,9 @@
 	background: #428bca;
 	text-align: center;
 }
+.panel-primary .panel-heading small {
+	color: #fff;
+}
 .panel-primary-bg>li>a {
 	background: #efefef;
 }

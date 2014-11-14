@@ -19,10 +19,14 @@
 							<h1 class='text-center'> {{ $spot->object->title }} </h1>
 							<div class='row text-center'>
 								<h1 class='col-md-6'>
-									<span class='glyphicon glyphicon-fire'></span> {{ $spot->object->getLatestHeat() }}
+									<small>
+										<span class='glyphicon glyphicon-fire'></span> {{ $spot->object->getLatestHeat() }}
+									</small>
 								</h1> 
 								<h1 class='col-md-6'>
-									<span class='glyphicon glyphicon-flash'></span> {{ $spot->object->getLatestLight() }}
+									<small>
+										<span class='glyphicon glyphicon-flash'></span> {{ $spot->object->getLatestLight() }}
+									</small>
 								</h1>
 							</div>
 						</div>
@@ -30,7 +34,7 @@
 							<?php $count = 1; ?>
 							@foreach($spot->jobs as $job)
 								<li role="presentation" class='{{ ($count == 1) ? "active" : "" }}'>
-									<a href="#{{ $spot->id }}_{{$job->id }}" data-target="#{{ $spot->id }}_{{$job->id }}" aria-controls="{{ $spot->id }}_{{$job->id }}" role="tab" data-toggle="tab">{{$job->title }}</a>
+									<a href="#{{ $spot->id }}_{{$job->id }}" data-target="#{{ $spot->id }}_{{$job->id }}" aria-controls="{{ $spot->id }}_{{$job->id }}" role="tab" data-toggle="tab">{{$job->sensor->measures }}</a>
 								</li>
 								<?php $count++; ?>
 							@endforeach
@@ -52,9 +56,15 @@
 						      					<tr>
 						      						<td>
 						      							<small>{{ $job->title }}</small>
+						      							@if(str_contains($job->title, "User Entered"))
+						      								<br />
+						      								<small class='text-muted'>
+						      									{{ $reading->spot->user->first_name }} {{ $reading->spot->user->last_name}}
+						      								</small>
+						      							@endif
 						      						</td>
 						      						<td> 
-						      							<small>{{ number_format($reading[$job->sensor->field], 2) }}</small>
+						      							<small>{{ number_format($reading[$job->sensor->field], $job->sensor->decimal_points) }}{{ $job->sensor->unit}}</small>
 						      						</td>
 						      						<td>
 						      							<small>
@@ -76,15 +86,36 @@
 					      		</div>
 		      				@endforeach
 		      			</div>
-		      			<div class='panel-footer'>
-		      				<h1>Users in Zone</h1>
-		      				@foreach (Spot::getRoamingSpots() as $roaming_spot)
-		      					@if(count($roaming_spot->zonechanges) && count($roaming_spot->zonechanges()->orderBy('id', 'DESC')->first()->job) && $roaming_spot->zonechanges()->orderBy('id', 'DESC')->first()->job->object->title == $spot->object->title)
-		      						<h3>{{ $roaming_spot->user->first_name }}
-		      						{{ $roaming_spot->user->last_name }} </h3>
-		      					@endif
-		      				@endforeach
+		      			<div class='panel-body'>
+		      				<h3 class='text-center'>Users in Zone</h3>
 		      			</div>
+	      				<table class='table table-striped'>
+							<thead>
+								<tr>
+									<th>User</th>
+									<th>Entered Zone</th>
+								</tr>
+							</thead>
+							<tbody>
+			      				@foreach (Spot::getRoamingSpots() as $roaming_spot)
+			      					@if(count($roaming_spot->zonechanges) && count($roaming_spot->zonechanges()->orderBy('id', 'DESC')->first()->job) && $roaming_spot->zonechanges()->orderBy('id', 'DESC')->first()->job->object->title == $spot->object->title)
+			      						<tr>
+			      							<td>
+			      								<span class='glyphicon glyphicon-user'></span> {{ $roaming_spot->user->first_name }} {{ $roaming_spot->user->last_name }} 
+			      								<br />
+			      								<small class='text-muted'>
+			      									{{ $roaming_spot->spot_address }}
+			      								</small>
+			      							</td>
+			      							<td>
+			      								{{ Carbon::parse($roaming_spot->zonechanges()->orderBy('id', 'DESC')->first()->created_at)->format('G:ia') }}<br />
+					      								<span class='text-muted'>{{ Carbon::parse($roaming_spot->zonechanges()->orderBy('id', 'DESC')->first()->created_at)->format('jS M') }}
+			      							</td>
+		      							</tr>
+			      					@endif
+			      				@endforeach
+			      			</tbody>
+			      		</table>
 					</div>
 				</div>
 			@endforeach			

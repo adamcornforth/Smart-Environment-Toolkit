@@ -76,7 +76,7 @@
 		      						<td>
 		      							{{ $job->title }}
 		      						</td>
-		      						<td> {{ number_format($reading[$job->sensor->field], 2) }}</td>
+		      						<td> {{ number_format($reading[$job->sensor->field], $job->sensor->decimal_points) }}{{ $job->sensor->unit}}</td>
 		      						<td>
 		      							<small>{{ Carbon::parse($reading->created_at)->format('G:ia') }} on {{ Carbon::parse($reading->created_at)->format('jS M') }}</small> 
 		      						</td>

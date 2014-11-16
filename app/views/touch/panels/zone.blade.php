@@ -30,7 +30,7 @@
 				<script type="text/javascript">
 					(function worker() {
 					  $.ajax({
-					    url: "zonejob/{{ $spot->id }}/{{ $job->id }}", 
+					    url: "/touch/zonejob/{{ $spot->id }}/{{ $job->id }}", 
 					    success: function(data) {
 					      $('#table_{{ $spot->id }}_{{ $job->id }}').html(data);
 					    },

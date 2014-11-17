@@ -12,12 +12,6 @@ class ZoneController extends \BaseController {
 		return View::make('zones.index', array('roaming_spots' => Spot::getRoamingSpots()));
 	}
 
-	public function history()
-	{
-		return View::make('zones.history', array('roaming_spots' => Spot::getRoamingSpots()));
-	}
-
-
 	/**
 	 * Show the form for creating a new resource.
 	 *

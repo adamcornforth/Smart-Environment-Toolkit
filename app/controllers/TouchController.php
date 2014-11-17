@@ -32,5 +32,13 @@ class TouchController extends \BaseController {
 	public function getZonejob($spot, $job) {
 		return View::make('touch.tables.zonejob', array('count' => 0, 'spot' => Spot::find($spot), 'job' => Job::find($job)));
 	}
+
+	public function getZonechange($spot) {
+		return View::make('touch.tables.zonechange', array('spot' => Spot::find($spot)));
+	}
+
+	public function getZonelatest($spot) {
+		return View::make('touch.panels.zonelatest', array('spot' => Spot::find($spot)));
+	}
 }
 ?>

@@ -282,10 +282,9 @@
 
 		function startTimer(zoneMovementHistory, users, zones, seats, progress)
 		{
-			var speed_option = document.getElementById("speed_option");
-			var speed_option_value = speed_option.options[speed_option.selectedIndex].value;
-			var speed = speed_option_value * 1000;
-			var speed_for_movement = (speed_option_value * 1000) / 2;
+			var speed_slider_value = 4 - document.getElementById('speed_option_slider').value;
+			var speed = speed_slider_value * 1000;
+			var speed_for_movement = (speed_slider_value * 1000) / 2;
 
 			var date_string = dateToString(zoneMovementHistory[zoneMovementHistory.length-1].created_at);
 			document.getElementById('time').innerHTML = date_string;

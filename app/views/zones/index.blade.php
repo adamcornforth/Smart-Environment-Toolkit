@@ -66,13 +66,17 @@
 							<div class="form-inline text-center">
 								Speed:
 
-								<select id="speed_option" class='form-control'>
+<!-- 								<select id="speed_option" class='form-control'>
 									<option value="4">Slowest</option>
 									<option value="3">Slow</option>
 									<option value="2" selected="selected">Normal</option>
 									<option value="1">Fast</option>
 									<option value="0.5">Fastest</option>
-								</select>
+								</select> -->
+
+								<!-- <input id="speed_option_slider" type="text" class="span2" value="" data-slider-min="-20" data-slider-max="20" data-slider-step="1" data-slider-value="-14" data-slider-orientation="vertical" data-slider-selection="after" data-slider-tooltip="hide"> -->
+								<input id="speed_option_slider" type="text" data-slider-min="0" data-slider-max="3.5" data-slider-step="0.5" data-slider-value="2" data-slider-tooltip="hide" >
+								<!-- <input type="text" class="span2" value="4" id="speed_option_slider" > -->
 							</div>
 						</div>
 					</div>
@@ -215,14 +219,27 @@
 		<hr />
 	<p>&copy; Adam Cornforth, Dominic Lindsay, Vitali Bokov 2014</p>
 	</div>
+
 	{{ HTML::style('https://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/master/build/css/bootstrap-datetimepicker.min.css') }}
 	{{ HTML::script('http://mbostock.github.com/d3/d3.js') }}
 	{{ HTML::script('https://cdn.rawgit.com/moment/moment/develop/min/moment.min.js') }}
 	{{ HTML::script('https://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/master/build/js/bootstrap-datetimepicker.min.js') }}
+	{{ HTML::script('https://cdn.rawgit.com/seiyria/bootstrap-slider/master/js/bootstrap-slider.js') }}
+	{{ HTML::style('https://cdn.rawgit.com/seiyria/bootstrap-slider/master/css/bootstrap-slider.css') }}
 	{{ HTML::script('js/svg_history.js') }}
 
-
 	<script type="text/javascript">
+	// var speed_slider = $("#speed_option_slider").slider();
+	// speed_slider
+	// 	.slider('setValue', 2);
+
+	// $('#speed_option_slider').slider()
+	// .on('slide', function(ev){
+
+	// });
+
+	$('#speed_option_slider').slider({});
+
 		$(function () {
 			$('#day').datetimepicker({
 				pickTime: false

@@ -20,8 +20,8 @@
       <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
 			<link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
       <link href="{{ asset('css/style.css') }}" rel="stylesheet">
-      <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+      <script type="text/javascript" src="{{ asset('js/jquery.min.js') }}"></script>
+      <script type="text/javascript" src="{{ asset('js/bootstrap.min.js') }}"></script>
 		@show
 	</head>
     <body data-bs-base-url="{{ Config::get('brainsocket.base-url') }}">
@@ -33,6 +33,10 @@
                   [
                       'link' => url(''),
                       'title' => 'Dashboard'
+                  ],
+                  [
+                      'link' => url('touch'),
+                      'title' => 'Touch'
                   ],
                   [
                       'link' => url('spots'),

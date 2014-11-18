@@ -134,6 +134,7 @@
 			  			<tr>
 			  				<th>User Details</th>
 			  				<th>Current Zone</th>
+			  				<th>Time of Change</th>
 			  				<th>Zone Changes</th>
 			  				<th>Actions</th>
 			  			</tr>
@@ -141,7 +142,7 @@
 			  		<tbody>
 			  			@foreach($roaming_spots as $spot)
 				  			<tr class="spot_{{ $spot->id }}">
-				  				<td>
+				  				<td class="col-md-2" id="spot_{{ $spot->id }}_name">
 			  						@if(count($spot->user))
 				  						<span class='glyphicon glyphicon-user'></span> {{ $spot->user->first_name }} {{ $spot->user->last_name }}
 				  					@else
@@ -153,20 +154,23 @@
 					  					</a>
 				  					</small>
 				  				</td>
-				  				<td id="spot_{{ $spot->id }}_last_zone">
+				  				<td class="col-md-5" id="spot_{{ $spot->id }}_last_zone">
 				  					@if($day_picked == 0)
 				  						<?php $zone = $spot->zonechanges()->orderBy('id', 'DESC')->first() ?>
 				  						{{ Zone::find($zone['zone_id'])['title'] }}
 				  					@endif
 				  				</td>
-				  				<td>
+				  				<td class="col-md-2" id="spot_{{ $spot->id }}_time_of_change">
+
+				  				</td>
+				  				<td class="col-md-2">
 				  					@if($day_picked == 0)
 				  						<strong>{{ $spot->zonechanges->count() }}</strong> zone changes
 				  					@else
 				  						<strong>{{ $spot->zonechanges()->where('created_at', '>', Carbon::parse($day_picked)->toDateTimeString())->where('created_at', '<', Carbon::parse($day_picked)->endOfDay()->toDateTimeString())->whereNotNull('job_id')->count() }}</strong> zone changes
 				  					@endif
 				  				</td>
-				  				<td class='text-right'>
+				  				<td class='col-md-1 text-right'>
 				  					<a href='{{ url("zones/user/".$spot->id)}}' class='btn btn-default btn-small'>
 				  						View All <span class='glyphicon glyphicon-chevron-right'></span>
 				  					</a>
@@ -228,6 +232,7 @@
 	<script type="text/javascript">
 		var zones = [new SVG_Zone(1, 0, "North End of Lab", "#F0DD08"), new SVG_Zone(2, 35, "Presentation and Touch Table Area", "#56880A"), new SVG_Zone(3, 70, "South End of Lab", "#8F4308")];
 		var users = []; // Create new user
+		var seats = new SVG_Seats(3, 3); // Creates seating system
 
 		var zoneSpot = {{ json_encode($zoneSpotDayHistory) }};
 		var day_picked = {{ $day_picked }};
@@ -243,12 +248,12 @@
 
 			setTimeout(function()
 				{
-					startTime(zoneSpot, users, zones, progress);
+					startTimer(zoneSpot, users, zones, seats, progress);
 				},1000);
 		}
 		else
 		{
-			live(zoneSpot, users, zones);
+			live(zoneSpot, users, zones, seats);
 			setInterval(function() {
                   window.location.reload();
                 }, 1000*5); // Refresh every 5 seconds

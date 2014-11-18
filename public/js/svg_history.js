@@ -166,14 +166,16 @@
 		*/
 		function SVG_Progress(number)
 		{
-			this.number = number;
+			this.max = number;
+			this.current = 0;
 			document.getElementById("zone_change_progress").style.width="0%";
 			document.getElementById("zone_change_progress_parent").style.visibility="visible";
 		}
 
 		SVG_Progress.prototype.update = function(number)
 		{
-			document.getElementById("zone_change_progress").style.width= 100-((number/this.number) *100) + "%";
+			this.current = this.current + number;
+			document.getElementById("zone_change_progress").style.width= ((this.current/this.max) *100) + "%";
 		};
 
 		/*
@@ -303,7 +305,8 @@
 						users[i].moveTo(zoneMovementHistory[zoneMovementHistory.length-1].zone_id, zones, speed_for_movement, date_string);
 						setTimeout(function()
 						{
-							progress.update(zoneMovementHistory.length);
+							// zoneMovementHistory sometimes drops to 1 element
+							progress.update(1);
 						},speed_for_movement+100);
 
 						zoneMovementHistory = zoneMovementHistory.splice(0, zoneMovementHistory.length-1); // Remove 1 object at the end
@@ -326,7 +329,7 @@
 					users_temp[0].create(zoneMovementHistory[zoneMovementHistory.length-1].zone_id, zones, seats, date_string); // Create an SVG object for that user in a zone
 					zoneMovementHistory = zoneMovementHistory.splice(0, zoneMovementHistory.length-1); // Remove 1 object at the end
 					users = users.concat(users_temp);
-					progress.update(zoneMovementHistory.length);
+					progress.update(1);
 				}
 
 				if(zoneMovementHistory.length > 0)

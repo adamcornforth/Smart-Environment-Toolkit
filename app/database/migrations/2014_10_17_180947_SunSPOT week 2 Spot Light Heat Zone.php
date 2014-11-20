@@ -169,6 +169,19 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 		    $table->foreign('job_id')->references('id')->on('Job');
 		    $table->foreign('zone_id')->references('id')->on('Zone');
 		});
+
+		Schema::create('Water', function($table)
+		{
+		    $table->increments('id');
+		    $table->integer('percent');
+		    $table->string('spot_address');
+		    $table->integer('job_id')->unsigned()->nullable();
+		    $table->integer('zone_id')->unsigned()->default(0);
+		    $table->timestamp('created_at'); 
+
+		    $table->foreign('job_id')->references('id')->on('Job');
+		    $table->foreign('zone_id')->references('id')->on('Zone');
+		});
 	}
 
 	/**

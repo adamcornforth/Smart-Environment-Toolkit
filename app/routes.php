@@ -24,6 +24,7 @@ Route::group(array('before' => 'spot'), function() {
 		return View::make('hello');
 	});
 
+	Route::controller('cup', 'CupController');
 	Route::controller('touch', 'TouchController');
 	Route::controller('socket', 'SocketController');
 

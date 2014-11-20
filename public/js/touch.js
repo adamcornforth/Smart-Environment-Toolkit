@@ -1,14 +1,10 @@
-// Gear 2 Swipe Gesture Tutorial
-// ----------------------------------
-//
-// Copyright (c)2014 Dibia Victor, Denvycom
-// Distributed under MIT license
-//
-// https://github.com/chuvidi2003/GearSwipeTutorial
 $(window).load(function(){
     /**
      * Touchscreen listeners
      */
+    
+    var percent = 100;
+    var interval = 10;
     
 	//This listens for the back button press
 	document.addEventListener('tizenhwkey', function(e) {
@@ -20,8 +16,7 @@ $(window).load(function(){
     var options = {
     	  tapHighlightColor: "rgba(5,0,0,0.9)" ,
     		  showTouches: true
-    };
-
+    }; 
 
     $('.draggable').hammer(options).bind("tap", function(event) {
     	$('#textbox').html("Tap");
@@ -64,39 +59,12 @@ $(window).load(function(){
         $(event.target).find('.nav-tabs li.active').prev().find('a').click();
     });
 
-    // Pinc gesture
+    // Pinch gesture
     $('.draggable').hammer(options).bind("pinchin", function(event) {
     	$('#textbox').html("Pinch In");
     });
     $('.draggable').hammer(options).bind("pinchout", function(event) {
     	$('#textbox').html("Pinch Out");
-    });
-
-    /**
-     * Brainsocket listeners
-     */
-    window.app = {};
-
-    var baseUrl = $("body").data('bs-base-url');
-
-    app.BrainSocket = new BrainSocket(
-            new WebSocket('ws://' + baseUrl + ':8080'),
-            new BrainSocketPubSub()
-    );
-
-    app.BrainSocket.Event.listen('app.zonechange',function(msg)
-    {
-        console.log(msg.client.data.event);
-    });
-
-    app.BrainSocket.Event.listen('app.heat',function(msg)
-    {
-        console.log(msg.client.data.event);
-    });
-
-    app.BrainSocket.Event.listen('app.light',function(msg)
-    {
-        console.log(msg.client.data.event);
     });
 
 });

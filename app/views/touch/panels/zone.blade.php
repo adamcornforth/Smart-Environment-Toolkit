@@ -1,6 +1,6 @@
 <div class='panel panel-primary tabpanel'>
 	<div class='panel-heading'>
-		<h1 class='text-center'> {{ $spot->object->title }} </h1>
+		<h2 class='text-center'> {{ $spot->object->title }} </h2>
 		@include('touch.panels.zonelatest')
 		<script type="text/javascript">
 			(function worker() {
@@ -21,7 +21,7 @@
 		<?php $count = 1; ?>
 		@foreach($spot->jobs as $job)
 			<li role="presentation" class='{{ ($count == 1) ? "active" : "" }}'>
-				<a href="#{{ $spot->id }}_{{$job->id }}" data-target="#{{ $spot->id }}_{{$job->id }}" aria-controls="{{ $spot->id }}_{{$job->id }}" role="tab" data-toggle="tab">{{$job->sensor->measures }}</a>
+				<a href="#{{ $spot->id }}_{{$job->id }}" data-target="#{{ $spot->id }}_{{$job->id }}" aria-controls="{{ $spot->id }}_{{$job->id }}" role="tab" data-toggle="tab"><small>{{$job->sensor->measures }}</small></a>
 			</li>
 			<?php $count++; ?>
 		@endforeach
@@ -48,7 +48,6 @@
 			@endforeach
 		</div>
 		<div class='panel-body'>
-			<h3 class='text-center'>Users in Zone</h3>
 		</div>
 		@include('touch.tables.zonechange')
 		<script type="text/javascript">

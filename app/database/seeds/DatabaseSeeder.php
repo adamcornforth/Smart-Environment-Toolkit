@@ -77,7 +77,7 @@ class Initialise extends Seeder {
                                                         'unit' => '&deg;C', 'measures' => 'Temperature', 'decimal_points' => 2, 'port_number' => 110));
 
         $sensors['photosensor'] = Sensor::create(array('title' => 'Photosensor', 'table' => 'Light', 'field' => 'light_intensity', 
-                                                        'unit' => '<em>&Iota;</em><sub>v</sub>','measures' => 'Light Intensity', 'decimal_points' => 0, 'port_number' => 120));
+                                                        'unit' => '<em>&Iota;</em><sub>v</sub>','measures' => 'Light', 'decimal_points' => 0, 'port_number' => 120));
 
         $sensors['accelerometer'] = Sensor::create(array('title' => 'Accelerometer', 'table' => 'Acceleration', 'field' => 'acceleration', 
                                                         'unit' => 'g', 'measures' => 'Acceleration', 'decimal_points' => 2, 'port_number' => 130));
@@ -86,7 +86,7 @@ class Initialise extends Seeder {
                                                         'unit' => '', 'measures' => 'Motion', 'decimal_points' => 0, 'port_number' => 140));
 
         $sensors['cell_tower'] = Sensor::create(array('title' => 'Cell Tower', 'table' => 'ZoneSpot', 'field' => 'zone_id', 
-                                                        'unit' => '', 'measures' => 'Zone Entries', 'port_number' => 150));
+                                                        'unit' => '', 'measures' => 'Entries', 'port_number' => 150));
 
         $sensors['roaming_spot'] = Sensor::create(array('title' => 'Roaming Spot', 'port_number' => 160));
 
@@ -188,7 +188,7 @@ class DataSeeder extends Seeder {
                                                         'unit' => '&deg;C', 'measures' => 'Temperature', 'decimal_points' => 2, 'port_number' => 110));
 
         $sensors['photosensor'] = Sensor::create(array('title' => 'Photosensor', 'table' => 'Light', 'field' => 'light_intensity', 
-                                                        'unit' => '<em>&Iota;</em><sub>v</sub>','measures' => 'Light Intensity', 'decimal_points' => 0, 'port_number' => 120));
+                                                        'unit' => '<em>&Iota;</em><sub>v</sub>','measures' => 'Light', 'decimal_points' => 0, 'port_number' => 120));
 
         $sensors['accelerometer'] = Sensor::create(array('title' => 'Accelerometer', 'table' => 'Acceleration', 'field' => 'acceleration', 
                                                         'unit' => 'g', 'measures' => 'Acceleration', 'decimal_points' => 2, 'port_number' => 130));

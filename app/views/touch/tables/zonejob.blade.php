@@ -1,10 +1,10 @@
 <div role='tabpanel' class='tab-pane {{ ($count == 1) ? "active" : "fade" }}' id="{{ $spot->id }}_{{$job->id }}">
-	<table class='table table-striped' id ="table_{{ $spot->id }}_{{$job->id }}">
+	<table class='table table-striped table-condensed' id ="table_{{ $spot->id }}_{{$job->id }}">
 		<thead>
 			<tr>
-				<th>Event</th>
-				<th>Reading</th>
-				<th>Time</th>
+				<th><small>Event</small></th>
+				<th><small>Reading</small></th>
+				<th><small>Time</small></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -13,9 +13,8 @@
 					<td>
 						<small>{{ $job->title }}</small>
 						@if(str_contains($job->title, "User Entered"))
-							<br />
 							<small class='text-muted'>
-								{{ $reading->spot->user->first_name }} {{ $reading->spot->user->last_name}}
+								({{ $reading->spot->user->first_name }} {{ $reading->spot->user->last_name}})
 							</small>
 						@endif
 					</td>
@@ -24,7 +23,7 @@
 					</td>
 					<td>
 						<small>
-							{{ Carbon::parse($reading->created_at)->format('G:ia') }}<br />
+							{{ Carbon::parse($reading->created_at)->format('G:ia') }} 
 							<span class='text-muted'>{{ Carbon::parse($reading->created_at)->format('jS M') }}</span>
 						</small> 
 					</td>

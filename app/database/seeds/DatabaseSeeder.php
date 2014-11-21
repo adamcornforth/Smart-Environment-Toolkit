@@ -86,9 +86,12 @@ class Initialise extends Seeder {
                                                         'unit' => '', 'measures' => 'Motion', 'decimal_points' => 0, 'port_number' => 140));
 
         $sensors['cell_tower'] = Sensor::create(array('title' => 'Cell Tower', 'table' => 'ZoneSpot', 'field' => 'zone_id', 
-                                                        'unit' => '', 'measures' => 'Entries', 'port_number' => 150));
+                                                        'unit' => '', 'measures' => 'Zone Entries', 'port_number' => 150));
 
         $sensors['roaming_spot'] = Sensor::create(array('title' => 'Roaming Spot', 'port_number' => 160));
+
+        $sensors['smart_cup'] = Sensor::create(array('title' => 'Smart Cup', 'table' => 'Water', 'field' => 'water_percent',
+                                                        'unit' => '%', 'measures' => 'Water Level', 'port_number' => 180));
 
     }
 
@@ -106,31 +109,6 @@ class MinimalDataSeeder extends Seeder {
 }
 
 class DataSeeder extends Seeder {
-
-    public function notify_curl_socket($socket_id){
-        $url = "http://".Config::get('brainsocket.base-url').':8080/socket/'.$socket_id;
-
-        echo "Hitting url: $url\n";
-        $ch = curl_init();
-        $headers = array(
-        'Accept: application/json',
-        'Content-Type: application/json',
-
-        );
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        $body = '{}';
-
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET"); 
-
-        // Timeout in seconds
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-
-        $authToken = curl_exec($ch);
-
-        return $authToken;
-    }
 
     public function run()
     {
@@ -201,6 +179,9 @@ class DataSeeder extends Seeder {
 
         $sensors['roaming_spot'] = Sensor::create(array('title' => 'Roaming Spot', 'port_number' => 160));
 
+        $sensors['smart_cup'] = Sensor::create(array('title' => 'Smart Cup', 'table' => 'Water', 'field' => 'water_percent',
+                                                        'unit' => '%', 'measures' => 'Water Level', 'port_number' => 180));
+
     	DB::table('Acceleration')->delete();
         DB::table('Light')->delete();
         DB::table('Heat')->delete();
@@ -208,7 +189,7 @@ class DataSeeder extends Seeder {
         /**
          * Create some lab Objects
          */
-        $objects['kettle'] = Object::create(array('title' => 'Kettle', 'spot_id' => $spots['vitali'][1]->id));
+        $objects['smart_cup'] = Object::create(array('title' => 'Smart Cup', 'spot_id' => $spots['dom'][0]->id));
         
         // $objects['chair'] = Object::create(array('title' => 'Computer Chair', 'spot_id' => $spots['dom'][0]->id));
         // $objects['fridge_light'] = Object::create(array('title' => 'Fridge Light', 'spot_id' => $spots['dom'][1]->id));
@@ -216,8 +197,8 @@ class DataSeeder extends Seeder {
         $objects['north_zone'] = Object::create(array('title' => 'North Zone', 'spot_id' => $spots['adam'][1]->id));
         $objects['south_zone'] = Object::create(array('title' => 'South Zone', 'spot_id' => $spots['adam'][0]->id));
         $objects['center_zone'] = Object::create(array('title' => 'Center Zone', 'spot_id' => $spots['dom'][1]->id));
-        $objects['roaming_user_1'] = Object::create(array('title' => 'Roaming User (Dom)', 'spot_id' => $spots['dom'][0]->id));
-        $objects['roaming_user_2'] = Object::create(array('title' => 'Roaming User (Vitali)', 'spot_id' => $spots['vitali'][0]->id));
+        $objects['roaming_user_1'] = Object::create(array('title' => 'Roaming User (Vitali)', 'spot_id' => $spots['vitali'][0]->id));
+        $objects['roaming_user_2'] = Object::create(array('title' => 'Roaming User (Vitali)', 'spot_id' => $spots['vitali'][1]->id));
 
         /**
          * Create some Jobs
@@ -225,7 +206,8 @@ class DataSeeder extends Seeder {
         // $jobs['door_open'] = Job::create(array('title' => 'Door open', 'object_id' => $objects['fridge']->id, 'sensor_id' => $sensors['accelerometer']->id, 'threshold' => null));
         // $jobs['chair_moved'] = Job::create(array('title' => 'Chair moved', 'object_id' => $objects['chair']->id, 'sensor_id' => $sensors['accelerometer']->id, 'threshold' => null));
         // 
-        $jobs['kettle_boiled'] = Job::create(array('title' => 'Kettle boiled', 'object_id' => $objects['kettle']->id, 'sensor_id' => $sensors['thermometer']->id, 'threshold' => 40));
+        // $jobs['kettle_boiled'] = Job::create(array('title' => 'Kettle boiled', 'object_id' => $objects['kettle']->id, 'sensor_id' => $sensors['thermometer']->id, 'threshold' => 40));
+        $jobs['cup_drank_from'] = Job::create(array('title' => 'Cup drank to', 'object_id' => $objects['smart_cup']->id, 'sensor_id' => $sensors['smart_cup']->id, 'threshold' => null));
         
         $jobs['center_table_range'] = Job::create(array('title' => 'User Entered Center Zone', 'object_id' => $objects['center_zone']->id, 'sensor_id' => $sensors['cell_tower']->id, 'threshold' => null));
         $jobs['center_table_temperature'] = Job::create(array('title' => 'Zone Temperature', 'object_id' => $objects['center_zone']->id, 'sensor_id' => $sensors['thermometer']->id, 'threshold' => null));
@@ -262,10 +244,14 @@ class DataSeeder extends Seeder {
         $user_zone[1]['zone'] = 1; 
         $user_zone[1]['spot'] = $objects['roaming_user_2']->spot->id;
 
+        $cup_percent = 100;
+
+        Water::create(array('water_percent' => $cup_percent, 'zone_id' => 1, 'job_id' => $jobs['cup_drank_from']->id, 'spot_address'  => $spots['dom'][0]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
+
         while($carbon->lt($now)) {
     		$random_float = rand(0, 10) / 10;
 
-            $door_open = (mt_rand(0,300) == 1) ? 1.2+$random_float : $random_float-0.7;
+            $water_drank = (mt_rand(0,200) == 1) ? 1 : 0;
             $kettle_boiled = (mt_rand(0,300) == 1) ? 50-mt_rand(1,5)+$random_float : 28-mt_rand(1,5)+$random_float;
             $fridge_light_on = (mt_rand(0,300) == 1) ? 120-mt_rand(1,5)+$random_float : 70-mt_rand(1,15)+$random_float;
             $chair_moved = (mt_rand(0,300) == 1) ? 1.2+$random_float : $random_float-0.7;
@@ -280,11 +266,9 @@ class DataSeeder extends Seeder {
                 if($north_pillar > -7 && $user_zone[$key]['zone'] != 1 && $user_zone[$key]['zone'] == 2) {
                     $user_zone[$key]['zone'] = 1; 
                     $zonechange = ZoneSpot::create(array('spot_id' => $user_zone[$key]['spot'], 'zone_id' => $user_zone[$key]['zone'], 'job_id' => $jobs['north_zone_range']->id, 'created_at' => $carbon->toDateTimeString()));
-                    $this->notify_curl_socket("zonechange");
                 } elseif($north_pillar > -7 && $user_zone[$key]['zone'] != 2 && ($user_zone[$key]['zone'] == 1 || $user_zone[$key]['zone'] == 3)) {
                     $user_zone[$key]['zone'] = 2; 
                     $zonechange = ZoneSpot::create(array('spot_id' => $user_zone[$key]['spot'], 'zone_id' => $user_zone[$key]['zone'], 'job_id' => $jobs['center_table_range']->id, 'created_at' => $carbon->toDateTimeString()));
-                    $this->notify_curl_socket("zonechange");
                 }
 
                 /**
@@ -293,12 +277,20 @@ class DataSeeder extends Seeder {
                 if($south_pillar > -7 && $user_zone[$key]['zone'] != 2 && ($user_zone[$key]['zone'] == 1 || $user_zone[$key]['zone'] == 3)) {
                     $user_zone[$key]['zone'] = 2; 
                     $zonechange = ZoneSpot::create(array('spot_id' => $user_zone[$key]['spot'], 'zone_id' => $user_zone[$key]['zone'], 'job_id' => $jobs['center_table_range']->id, 'created_at' => $carbon->toDateTimeString()));
-                    $this->notify_curl_socket("zonechange");
                 } elseif($south_pillar > -7 && $user_zone[$key]['zone'] != 3 && $user_zone[$key]['zone'] == 2) {
                     $user_zone[$key]['zone'] = 3;
                     $zonechange = ZoneSpot::create(array('spot_id' => $user_zone[$key]['spot'], 'zone_id' => $user_zone[$key]['zone'], 'job_id' => $jobs['south_zone_range']->id, 'created_at' => $carbon->toDateTimeString()));
-                    $this->notify_curl_socket("zonechange");
                 }
+            }
+
+            /**
+             * Insert water level data
+             */
+            if($water_drank > 0) {
+                $cup_percent -= 10;
+                echo "Water drank to $cup_percent%\n";
+                Water::create(array('water_percent' => $cup_percent, 'zone_id' => 1, 'job_id' => $jobs['cup_drank_from']->id, 'spot_address'  => $spots['dom'][0]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
+                if($cup_percent < 10) $cup_percent = 100;
             }
 
          //    if($door_open > 1.2) Acceleration::create(array('acceleration' => $door_open, 'zone_id' => 1, 'job_id' => $jobs['door_open']->id,'spot_address' => $spots['adam'][0]->spot_address, 'created_at'    => $carbon->toDateTimeString()));

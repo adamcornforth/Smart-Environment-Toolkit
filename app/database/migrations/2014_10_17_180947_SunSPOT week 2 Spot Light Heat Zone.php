@@ -173,7 +173,7 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 		Schema::create('Water', function($table)
 		{
 		    $table->increments('id');
-		    $table->integer('percent');
+		    $table->integer('water_percent');
 		    $table->string('spot_address');
 		    $table->integer('job_id')->unsigned()->nullable();
 		    $table->integer('zone_id')->unsigned()->default(0);
@@ -191,6 +191,7 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 	 */
 	public function down()
 	{
+		Schema::drop('Water'); 
 		Schema::drop('Motion'); 
 		Schema::drop('Acceleration'); 
 		Schema::drop('Heat'); 

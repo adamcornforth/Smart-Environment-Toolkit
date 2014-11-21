@@ -41,7 +41,7 @@ function drink(percent) {
 	/**
 	 * Calculate amount to roate the cup by
 	 */
-	var rotate = 90 - (90 * (percent / 100));
+	var rotate = 90 - (80 * (percent / 100));
 	if(percent <= 40) rotate -= 35 - 35 * (percent / 35);
 
 	// console.log("Drank cup to " + percent + "% (" + new_ml + "ml, " + new_height_px + "px) angle: " + rotate);

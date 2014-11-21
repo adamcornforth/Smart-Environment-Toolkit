@@ -22,7 +22,7 @@
 			@endforeach			
 		</div>
 		<div class='row'>
-			<div class='col-md-offset-8 col-md-4'>
+			<div class='col-md-offset-8 col-md-4 draggable'>
 				<div class='panel panel-default'>
 					<div class='panel-heading'>
 						SmartCup Water Level

@@ -25,9 +25,10 @@ $(window).load(function(){
         var touch = event.gesture;
         var obj = $(event.target[0]);
         console.log(obj);
+
         // Place element where the finger is
-        obj.css('left', parseInt(obj.css('left')) + touch.deltaX-25);
-        obj.css('top', parseInt(obj.css('top')) + touch.deltaY-25);
+        obj.css('left', parseInt(obj.css('left')) + touch.deltaX-25 + "px");
+        obj.css('top', parseInt(obj.css('top')) + touch.deltaY-25 + "px");
         event.preventDefault();
     });
 

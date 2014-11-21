@@ -3,34 +3,49 @@ $(window).load(function(){
      * Touchscreen listeners
      */
     
-    var percent = 100;
-    var interval = 10;
+    function touchHandler(event)
+    {
+        var touches = event.changedTouches,
+            first = touches[0],
+            type = "";
+             switch(event.type)
+        {
+            case "touchstart": type = "mousedown"; break;
+            case "touchmove":  type="mousemove"; break;        
+            case "touchend":   type="mouseup"; break;
+            default: return;
+        }
+     
+        var simulatedEvent = document.createEvent("MouseEvent");
+        simulatedEvent.initMouseEvent(type, true, true, window, 1, 
+                                  first.screenX, first.screenY, 
+                                  first.clientX, first.clientY, false, 
+                                  false, false, false, 0/*left*/, null);
+        first.target.dispatchEvent(simulatedEvent);
+        event.preventDefault();
+    }
+     
+    function init() 
+    {
+        document.addEventListener("touchstart", touchHandler, true);
+        document.addEventListener("touchmove", touchHandler, true);
+        document.addEventListener("touchend", touchHandler, true);
+        document.addEventListener("touchcancel", touchHandler, true);    
+    }
     
-	//This listens for the back button press
-	document.addEventListener('tizenhwkey', function(e) {
+    $('.draggable').draggable();
+    
+    //This listens for the back button press
+    document.addEventListener('tizenhwkey', function(e) {
         if(e.keyName == "back")
             tizen.application.getCurrentApplication().exit();
     });
 
-	// Tap Gesture Enable
+    // Tap Gesture Enable
     var options = {
-    	  tapHighlightColor: "rgba(5,0,0,0.9)" ,
-    		  showTouches: true
+          tapHighlightColor: "rgba(5,0,0,0.9)" ,
+              showTouches: true
     }; 
-    
-    $('.draggable').css('left', 0); 
-    $('.draggable').css('top', 0); 
-
-    $('.draggable').hammer(options).bind("pan", function(event) {
-        var touch = event.gesture;
-        var obj = $(event.target[0]);
-        console.log(obj);
-
-        // Place element where the finger is
-        obj.css('left', parseInt(obj.css('left')) + touch.deltaX-25 + "px");
-        obj.css('top', parseInt(obj.css('top')) + touch.deltaY-25 + "px");
-        event.preventDefault();
-    });
 
     $('.draggable').hammer(options).bind("swipeleft", function(event) {
     	$('#textbox').html("Swipe left");

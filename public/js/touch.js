@@ -1,9 +1,4 @@
-$(window).load(function(){
-    /**
-     * Touchscreen listeners
-     */
-    
-    function touchHandler(event)
+function touchHandler(event)
     {
         var touches = event.changedTouches,
             first = touches[0],
@@ -32,7 +27,13 @@ $(window).load(function(){
         document.addEventListener("touchend", touchHandler, true);
         document.addEventListener("touchcancel", touchHandler, true);    
     }
+
+$(window).load(function(){
+    /**
+     * Touchscreen listeners
+     */
     
+    init(); 
     $('.draggable').draggable();
     
     //This listens for the back button press

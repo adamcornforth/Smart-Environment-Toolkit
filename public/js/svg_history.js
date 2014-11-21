@@ -6,6 +6,7 @@
 			this.zone_id = zone_id;
 			this.colour = colour;
 			this.name = name;
+			this.place = place;
 
 			this.zone = d3
 				.select("#zone_" + zone_id)
@@ -19,6 +20,8 @@
 
 			this.value = 0;
 
+			var that = this;
+
 			this.count = d3
 				.select("#zone_" + zone_id)
 					.append("text")
@@ -27,6 +30,7 @@
 						.text(this.value)
 						.attr("font-size", "30px")
 						.attr("fill", "white")
+						.on("click", function() { that.switchCountSize() });
 						// .style("stroke-width", 0)
 						// .style("stroke", "#000000");
 
@@ -39,6 +43,24 @@
 
 			this.count
 				.text(this.value);
+		};
+
+		SVG_Zone.prototype.switchCountSize = function()
+		{
+			if(this.count.style("font-size") != "190px")
+			{
+				this.count
+					.attr("x", this.place + 7.5 + "%")
+					.attr("y", "60%")
+					.attr("font-size", "190px");
+			}
+			else
+			{
+				this.count
+					.attr("x", this.place + 1 + "%")
+					.attr("y", "10%")
+					.attr("font-size", "30px");
+			}
 		};
 
 		SVG_Zone.prototype.getName = function()
@@ -225,17 +247,6 @@
 		function getYforZone(rowNumber)
 		{
 			return (rowNumber * 20) + "%"; // 40 Middle or getRandomNumber(15, 67.5)
-		}
-
-		function getRandomY()
-		{
-			var letters = '0123456789ABCDEF'.split('');
-			var color = '#';
-			for (var i = 0; i < 6; i++ )
-			{
-				color += letters[Math.floor(Math.random() * 16)];
-			}
-    		return color;
 		}
 
 		function userExist(spot_id, users)

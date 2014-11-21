@@ -1,7 +1,9 @@
 .table {
 	margin-bottom: 0px;
 }
-
+.draggable {
+	position: relative;
+}
 .panel-primary-bg {
 	background: #428bca;
 	text-align: center;

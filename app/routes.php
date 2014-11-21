@@ -24,6 +24,11 @@ Route::group(array('before' => 'spot'), function() {
 		return View::make('hello');
 	});
 
+	Route::get('hammer', function() {
+		return View::make('hammertest');
+	});
+
+	Route::controller('cup', 'CupController');
 	Route::controller('touch', 'TouchController');
 	Route::controller('socket', 'SocketController');
 

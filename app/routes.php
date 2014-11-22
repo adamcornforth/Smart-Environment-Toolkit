@@ -39,4 +39,7 @@ Route::group(array('before' => 'spot'), function() {
 
 	Route::controller('zones', 'ZoneController');
 	Route::resource('zones', 'ZoneController');
+
+	Route::controller('reports', 'ReportController');
+	Route::resource('reports', 'ReportController');
 });

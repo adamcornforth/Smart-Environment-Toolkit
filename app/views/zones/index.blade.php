@@ -16,7 +16,7 @@
 	<div class='row'>
 		<div class='col-md-12'>
 			<div class="row">
-				<div class="col-md-4" >
+				<div class="col-md-4 draggable" style="z-index:1;">
 					<div class='panel panel-default' style="min-height: 19%">
 						<div class='panel-heading'>
 							Playback Time
@@ -33,7 +33,7 @@
 					</div>
 				</div>
 
-				<div class="col-md-4">
+				<div class="col-md-4 draggable" style="z-index:1;">
 					<div class='panel panel-default' style="min-height: 19%">
 						<div class='panel-heading'>
 							Pick a date
@@ -57,8 +57,8 @@
 					</div>
 				</div>
 
-				<div class="col-md-4">
-					<div class='panel panel-default' style="min-height: 19%">
+				<div class="col-md-4 draggable" style="z-index:1;">
+					<div class='panel panel-default' style="min-height: 19%;">
 						<div class='panel-heading'>
 							Settings
 						</div>
@@ -81,12 +81,9 @@
 						</div>
 					</div>
 				</div>
-				</div>
-			<div class='panel panel-default'>
-			<div class="panel-body">
-
-					<br />
-
+			</div>
+			<div class='panel panel-default draggable'>
+				<div class="panel-body">
 					<div class='row'>
 						@foreach(Zone::where('title', '!=', 'Lab')->get() as $zone)
 							<div class='col-md-4'>
@@ -127,8 +124,8 @@
 		</div>
 	</div>
 
-	<div class='row'>
-		<div class='col-md-12'>
+	<div class='row resizable'>
+		<div class='col-md-12 draggable'>
 			<div class='panel panel-default'>
 				<div class='panel-heading'>
 					Users Being Tracked
@@ -188,29 +185,29 @@
 	</div>
 
 	<div class='row'>
-		<div class='col-md-12'>
+		<div class='col-md-12 draggable'>
 			<div class='panel panel-default'>
 				<div class='panel-heading'>
 					All Zone Changes (Most Recent First)
 				</div>
-			  	<table class='table table-bordered table-striped'>
-			  		<thead>
-			  			<tr>
-			  				<th>User</th>
-			  				<th>Moved to</th>
-			  				<th>Date &amp; Time</th>
-			  			</tr>
-			  		</thead>
-			  		<tbody>
+				<table class='table table-bordered table-striped'>
+					<thead>
+						<tr>
+							<th>User</th>
+							<th>Moved to</th>
+							<th>Date &amp; Time</th>
+						</tr>
+					</thead>
+					<tbody>
 						@foreach($zoneSpotDayHistory as $zone_change)
-				  			<tr>
-				  				<td>{{ $zone_change->spot->user->first_name }}</td>
-				  				<td>{{ $zone_change->zone->title }}</td>
-				  				<td><strong>{{ Carbon::parse($zone_change->created_at)->format('D jS M') }}</strong> at <strong>{{ Carbon::parse($zone_change->created_at)->format('G:ia') }}</strong><br /></td>
-				  			</tr>
-					  	@endforeach
-			  		</tbody>
-			  	</table>
+					  		<tr>
+					  			<td>{{ $zone_change->spot->user->first_name }}</td>
+					  			<td>{{ $zone_change->zone->title }}</td>
+					  			<td><strong>{{ Carbon::parse($zone_change->created_at)->format('D jS M') }}</strong> at <strong>{{ Carbon::parse($zone_change->created_at)->format('G:ia') }}</strong><br /></td>
+					  		</tr>
+						  @endforeach
+					</tbody>
+				</table>
 			</div>
 		</div>
 	</div>
@@ -276,4 +273,16 @@
                 }, 1000*5); // Refresh every 5 seconds
 		}
 	</script>
+  <script>
+  $(function() {
+        $( ".draggable" ).draggable({
+      // connectToSortable: ".draggable",
+      // helper: "clone",
+      // revert: "invalid",
+      snap: true
+    });
+
+    $( ".resizable" ).resizable();
+  });
+  </script>
 @stop

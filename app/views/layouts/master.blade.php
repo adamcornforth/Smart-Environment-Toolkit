@@ -29,7 +29,7 @@
     <body data-bs-base-url="{{ Config::get('brainsocket.base-url') }}">
         @section('nav')
   			<?php
- 
+
     			echo Navbar::withBrand('Java Sun SPOT', url(''))
           ->withContent(Navigation::links([
                   [
@@ -51,6 +51,10 @@
                   [
                       'link' => url('zones'),
                       'title' => 'Zones'
+                  ],
+                  [
+                      'link' => url('reports'),
+                      'title' => 'Reports'
                   ]
                   // [
                   //     'dropdown',

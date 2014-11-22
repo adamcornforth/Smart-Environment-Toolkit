@@ -18,24 +18,20 @@
 @if(Input::has('day_1'))
 	<?php $day_1 = Input::get('day_1'); ?>
 	<?php $day_1_data = Light::where('created_at', '>', Carbon::parse($day_1)->toDateTimeString())->where('created_at', '<', Carbon::parse($day_1)->endOfDay()->toDateTimeString())->orderBy('created_at', 'ASC')->get() ?>
-	<!-- {{ "DAY1" }} -->
-	<!-- {{ $day_1_data }} -->
 @else
 	<?php $day_1 = 0; ?>
 	<?php $day_1_data = []; ?>
 @endif
+
 @if(Input::has('day_2'))
 	<?php $day_2 = Input::get('day_2'); ?>
 	<?php $day_2_data = Light::where('created_at', '>', Carbon::parse($day_2)->toDateTimeString())->where('created_at', '<', Carbon::parse($day_2)->endOfDay()->toDateTimeString())->orderBy('created_at', 'ASC')->get() ?>
-	<!-- {{ "DAY2" }} -->
-	<!-- {{ $day_2_data }} -->
 @else
 	<?php $day_2 = 0; ?>
 	<?php $day_2_data = []; ?>
 @endif
 
 	<h1>{{ $title or "Reports"}}</h1>
-
 	<br />
 	<div class='row marketing'>
 		<div class='col-md-12'>
@@ -49,19 +45,21 @@
 						<p>
 							<div class="form-inline text-center" role="form">
 								<form action="{{ url('reports') }}" method="GET">
-									Day 1: <div class='input-group date'>
-										<input type='text' class="form-control" name="day_1" id="day_1" data-date-format="YYYY-MM-DD" placeholder="YYYY-MM-DD" value="<?php if($day_1 != 0) echo $day_1; ?>"/>
+									Day 1: <div class='input-group date' id="day_picker_day_1_label">
+										<input type='text' class="form-control" name="day_1" id="day_picker_day_1_value" data-date-format="YYYY-MM-DD" placeholder="YYYY-MM-DD" value="<?php if($day_1 != 0) echo $day_1; ?>"/>
 										<span class="input-group-addon">
 											<span class="glyphicon glyphicon-calendar"></span>
 										</span>
 									</div>
 									<br />
-									Day 2: <div class='input-group date'>
-										<input type='text' class="form-control" name="day_2" id="day_2" data-date-format="YYYY-MM-DD" placeholder="YYYY-MM-DD" value="<?php if($day_2 != 0) echo $day_2; ?>"/>
+									<br />
+									Day 2: <div class='input-group date' id="day_picker_day_2_label">
+										<input type='text' class="form-control" name="day_2" id="day_picker_day_2_value" data-date-format="YYYY-MM-DD" placeholder="YYYY-MM-DD" value="<?php if($day_2 != 0) echo $day_2; ?>"/>
 										<span class="input-group-addon">
 											<span class="glyphicon glyphicon-calendar"></span>
 										</span>
 									</div>
+									<br />
 									<br />
 									<button type="submit" class="btn btn-default">Submit</button>
 								{{ Form::close() }}
@@ -78,9 +76,12 @@
 						The Graph
 					</div>
 					<div class='panel-body'>
-						<!-- <canvas id="myChart" width="700" height="400"></canvas> -->
-						<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"
-					</div>
+
+						@if(empty($day_1) && empty($day_2))
+							Please select dates to see a graph
+						@else
+							<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+						@endif
 				</div>
 			</div>
 		</div>
@@ -93,10 +94,10 @@
 
 	<script type="text/javascript">
 		$(function () {
-			$('#day_1').datetimepicker({
+			$('#day_picker_day_1_label').datetimepicker({
 				pickTime: false
 			});
-			$('#day_2').datetimepicker({
+			$('#day_picker_day_2_label').datetimepicker({
 				pickTime: false
 			});
 			 $( ".draggable" ).draggable({
@@ -151,9 +152,16 @@
 		// Get the context of the canvas element we want to select
 		// var ctx = document.getElementById("myChart").getContext("2d");
 
-		var day_1 = document.getElementById('day_1').value;
-		var day_2 = document.getElementById('day_2').value;
-		console.log(day_1);
+		var day_1 = document.getElementById('day_picker_day_1_value').value;
+		if(day_1 == null)
+		{
+			day_1 = 'Day 1'
+		}
+		var day_2 = document.getElementById('day_picker_day_2_value').value;
+		if(day_2 == null)
+		{
+			day_1 = 'Day 2'
+		}
 		var day_1_data = {{ json_encode($day_1_data) }};
 		var day_1_data_to_show = [];
 		var day_1_data_dates = [];
@@ -220,6 +228,9 @@
 		// var myLineChart = new Chart(ctx).Line(data, options);
 
 	 $('#container').highcharts({
+	 	credits: {
+    		enabled: false
+  		},
 		chart: {
 			type: 'area',
 			zoomType: 'x'

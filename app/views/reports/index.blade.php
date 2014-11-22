@@ -17,18 +17,22 @@
 
 @if(Input::has('day_1'))
 	<?php $day_1 = Input::get('day_1'); ?>
-	<?php $day_1_data = Light::where('created_at', '>', Carbon::parse($day_1)->toDateTimeString())->where('created_at', '<', Carbon::parse($day_1)->endOfDay()->toDateTimeString())->orderBy('created_at', 'ASC')->get() ?>
+	<?php $day_1_data_light = Light::where('created_at', '>', Carbon::parse($day_1)->toDateTimeString())->where('created_at', '<', Carbon::parse($day_1)->endOfDay()->toDateTimeString())->orderBy('created_at', 'ASC')->get() ?>
+	<?php $day_1_data_temperature = Heat::where('created_at', '>', Carbon::parse($day_1)->toDateTimeString())->where('created_at', '<', Carbon::parse($day_1)->endOfDay()->toDateTimeString())->orderBy('created_at', 'ASC')->get() ?>
 @else
 	<?php $day_1 = 0; ?>
-	<?php $day_1_data = []; ?>
+	<?php $day_1_data_light = []; ?>
+	<?php $day_1_data_temperature = []; ?>
 @endif
 
 @if(Input::has('day_2'))
 	<?php $day_2 = Input::get('day_2'); ?>
-	<?php $day_2_data = Light::where('created_at', '>', Carbon::parse($day_2)->toDateTimeString())->where('created_at', '<', Carbon::parse($day_2)->endOfDay()->toDateTimeString())->orderBy('created_at', 'ASC')->get() ?>
+	<?php $day_2_data_light = Light::where('created_at', '>', Carbon::parse($day_2)->toDateTimeString())->where('created_at', '<', Carbon::parse($day_2)->endOfDay()->toDateTimeString())->orderBy('created_at', 'ASC')->get() ?>
+	<?php $day_2_data_temperature = Heat::where('created_at', '>', Carbon::parse($day_2)->toDateTimeString())->where('created_at', '<', Carbon::parse($day_2)->endOfDay()->toDateTimeString())->orderBy('created_at', 'ASC')->get() ?>
 @else
 	<?php $day_2 = 0; ?>
-	<?php $day_2_data = []; ?>
+	<?php $day_2_data_light = []; ?>
+	<?php $day_2_data_temperature = []; ?>
 @endif
 
 	<h1>{{ $title or "Reports"}}</h1>
@@ -72,16 +76,27 @@
 
 			<div class="col-md-8 draggable">
 				<div class='panel panel-default' style="min-height: 19%">
-					<div class='panel-heading'>
-						The Graph
+					<div>
+					<ul class="nav nav-tabs" id="graphs">
+				        <li class="active"><a href="#LightGraph">Light</a></li>
+				        <li><a href="#TemperatureGraph">Temperature</a></li>
+				    </ul>
 					</div>
-					<div class='panel-body'>
-
-						@if(empty($day_1) && empty($day_2))
-							Please select dates to see a graph
-						@else
-							<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-						@endif
+					<div class='panel-body tab-content'>
+						<div id="LightGraph" class="tab-pane fade in active">
+							@if(empty($day_1) && empty($day_2))
+								Please select dates to see a graph
+							@else
+								<div id="LightGraphContainer" style="min-width: 700px; height: 400px; margin: 0 auto"></div>
+							@endif
+						</div>
+        				<div id="TemperatureGraph" class="tab-pane fade">
+	        				@if(empty($day_1) && empty($day_2))
+								Please select dates to see a graph
+							@else
+								<div id="TemperatureGraphContainer" style="min-width: 700px; height: 400px; margin: 0 auto"></div>
+							@endif
+						</div>
 				</div>
 			</div>
 		</div>
@@ -100,10 +115,14 @@
 			$('#day_picker_day_2_label').datetimepicker({
 				pickTime: false
 			});
-			 $( ".draggable" ).draggable({
+			$( ".draggable" ).draggable({
 				snap: true,
 				cancel: "div.panel-body"
 			});
+			$('#graphs a').click(function (e) {
+  				e.preventDefault()
+  				$(this).tab('show')
+			})
 		});
 
 		function checkTime(i)
@@ -137,16 +156,16 @@
 
 		function msToHMSAsString(ms)
 		{
-	    // 1- Convert to seconds:
-	    var seconds = ms / 1000;
-	    // 2- Extract hours:
-	    var hours = parseInt( seconds / 3600 ); // 3,600 seconds in 1 hour
-	    seconds = seconds % 3600; // seconds remaining after extracting hours
-	    // 3- Extract minutes:
-	    var minutes = parseInt( seconds / 60 ); // 60 seconds in 1 minute
-	    // 4- Keep only seconds not extracted to minutes:
-	    seconds = seconds % 60;
-	    return hours+":"+minutes+":"+seconds;
+		// 1- Convert to seconds:
+		var seconds = ms / 1000;
+		// 2- Extract hours:
+		var hours = parseInt( seconds / 3600 ); // 3,600 seconds in 1 hour
+		seconds = seconds % 3600; // seconds remaining after extracting hours
+		// 3- Extract minutes:
+		var minutes = parseInt( seconds / 60 ); // 60 seconds in 1 minute
+		// 4- Keep only seconds not extracted to minutes:
+		seconds = seconds % 60;
+		return hours+":"+minutes+":"+seconds;
 		}
 
 		// Get the context of the canvas element we want to select
@@ -162,28 +181,10 @@
 		{
 			day_1 = 'Day 2'
 		}
-		var day_1_data = {{ json_encode($day_1_data) }};
-		var day_1_data_to_show = [];
-		var day_1_data_dates = [];
-
-		// for( var i = 0; i < day_1_data.length ; i++)
-		// {
-		// 	var day_data = day_1_data[i].light_intensity;
-		// 	if(i % 100 === 0)
-		// 	{
-		// 		var day_date = dateToStringOnlyHMS(day_1_data[i].created_at);
-		// 	}
-		// 	else
-		// 	{
-		// 		var day_date = '';
-		// 	}
-
-		// 	day_1_data_to_show = day_1_data_to_show.concat(day_data);
-		// 	day_1_data_dates = day_1_data_dates.concat(day_date);
-		// }
-
-		var day_2_data = {{ json_encode($day_2_data) }};
-		var day_2_data_to_show = [];
+		var day_1_data_light = {{ json_encode($day_1_data_light) }};
+		var day_2_data_light = {{ json_encode($day_2_data_light) }};
+		var day_1_data_temperature = {{ json_encode($day_1_data_temperature) }};
+		var day_2_data_temperature = {{ json_encode($day_2_data_temperature) }};
 
 		// for( var i = 0; i < day_2_data.length ; i++)
 		// {
@@ -227,10 +228,10 @@
 		// };
 		// var myLineChart = new Chart(ctx).Line(data, options);
 
-	 $('#container').highcharts({
-	 	credits: {
-    		enabled: false
-  		},
+	$('#LightGraphContainer').highcharts({
+		credits: {
+			enabled: false
+		},
 		chart: {
 			type: 'area',
 			zoomType: 'x'
@@ -241,7 +242,7 @@
 		xAxis: {
 			type: 'datetime',
 			dateTimeLabelFormats: {
-               	millisecond: '%H:%M:%S.%L',
+				millisecond: '%H:%M:%S.%L',
 				second: '%H:%M:%S',
 				minute: '%H:%M',
 				hour: '%H:%M',
@@ -249,7 +250,7 @@
 				week: '%H:%M',
 				month: '%H:%M',
 				year: '%H:%M'
-            },
+			},
 			tickPixelInterval: 150
 		},
 		yAxis: {
@@ -264,7 +265,7 @@
 		},
 		tooltip: {
 			dateTimeLabelFormats: {
-               	millisecond: '%H:%M:%S.%L',
+				millisecond: '%H:%M:%S.%L',
 				second: '%H:%M:%S',
 				minute: '%H:%M',
 				hour: '%H:%M',
@@ -272,8 +273,8 @@
 				week: '%H:%M',
 				month: '%H:%M',
 				year: '%H:%M'
-            }
-			// pointFormat: '{series.name} produced <b>{point.y:,.0f}</b><br/>warheads in {point.x}'
+			},
+			pointFormat: '{series.name}: <b>{point.y:,.0f}</b>'
 		},
 		plotOptions: {
 			area: {
@@ -297,12 +298,11 @@
 				// generate an array of random data
 				var data = [],
 					i;
-				for(i = 0; i < day_1_data.length ; i++)
+				for(i = 0; i < day_1_data_light.length ; i++)
 				{
 					data.push({
-						x: dateToTimeOnlyHMS(day_1_data[i].created_at),
-						// x: dateToTime(day_1_data[i].created_at),
-						y: day_1_data[i].light_intensity
+						x: dateToTimeOnlyHMS(day_1_data_light[i].created_at),
+						y: day_1_data_light[i].light_intensity
 					});
 				}
 				return data;
@@ -314,11 +314,115 @@
 				// generate an array of random data
 				var data = [],
 					i;
-				for(i = 0; i < day_2_data.length ; i++)
+				for(i = 0; i < day_2_data_light.length ; i++)
 				{
 					data.push({
-						x: dateToTimeOnlyHMS(day_2_data[i].created_at),
-						y: day_2_data[i].light_intensity
+						x: dateToTimeOnlyHMS(day_2_data_light[i].created_at),
+						y: day_2_data_light[i].light_intensity
+					});
+				}
+				return data;
+			}())
+		}]
+		// series: [{
+		//      day_1_data_to_show
+		// }, {
+		//     name: 'Day 2',
+		//     data: day_2_data_to_show
+		// }]
+	});
+
+	$('#TemperatureGraphContainer').highcharts({
+		credits: {
+			enabled: false
+		},
+		chart: {
+			type: 'area',
+			zoomType: 'x'
+		},
+		title: {
+			text: 'Temperature graph'
+		},
+		xAxis: {
+			type: 'datetime',
+			dateTimeLabelFormats: {
+				millisecond: '%H:%M:%S.%L',
+				second: '%H:%M:%S',
+				minute: '%H:%M',
+				hour: '%H:%M',
+				day: '%H:%M',
+				week: '%H:%M',
+				month: '%H:%M',
+				year: '%H:%M'
+			},
+			tickPixelInterval: 150
+		},
+		yAxis: {
+			title: {
+				text: 'Heat value'
+			},
+			labels: {
+				formatter: function () {
+					return this.value;
+				}
+			}
+		},
+		tooltip: {
+			dateTimeLabelFormats: {
+				millisecond: '%H:%M:%S.%L',
+				second: '%H:%M:%S',
+				minute: '%H:%M',
+				hour: '%H:%M',
+				day: '%H:%M',
+				week: '%H:%M',
+				month: '%H:%M',
+				year: '%H:%M'
+			},
+			pointFormat: '{series.name}: <b>{point.y:,.2f}</b>'
+		},
+		plotOptions: {
+			area: {
+				pointStart: 1000,
+				marker: {
+					enabled: false,
+					symbol: 'circle',
+					radius: 2,
+					states: {
+						hover: {
+							enabled: true
+						}
+					}
+				}
+			}
+		},
+		series:
+		[{
+			name: day_1,
+			data: (function () {
+				// generate an array of random data
+				var data = [],
+					i;
+				for(i = 0; i < day_1_data_temperature.length ; i++)
+				{
+					data.push({
+						x: dateToTimeOnlyHMS(day_1_data_temperature[i].created_at),
+						y: day_1_data_temperature[i].heat_temperature
+					});
+				}
+				return data;
+			}())
+		},
+		{
+			name: day_2,
+			data: (function () {
+				// generate an array of random data
+				var data = [],
+					i;
+				for(i = 0; i < day_2_data_temperature.length ; i++)
+				{
+					data.push({
+						x: dateToTimeOnlyHMS(day_2_data_temperature[i].created_at),
+						y: day_2_data_temperature[i].heat_temperature
 					});
 				}
 				return data;

@@ -92,5 +92,12 @@ class ZoneController extends \BaseController {
 		return View::make('zones.user', array('spot' => Spot::find($id)));
 	}
 
+	public function getChanges()
+	{
+		echo ZoneSpot::orderBy('id', 'DESC')->whereNotNull('job_id')->take(10)->get();
+	}
 
+	public function getZonechange() {
+		return View::make('zones.zonechange', array('zoneSpotDayHistory' => ZoneSpot::orderBy('id', 'DESC')->whereNotNull('job_id')->take(10)->get()));
+	}
 }

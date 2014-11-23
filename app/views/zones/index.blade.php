@@ -153,7 +153,7 @@
 							<tr class="spot_{{ $spot->id }}">
 								<td class="col-md-2" id="spot_{{ $spot->id }}_name">
 									@if(count($spot->user))
-										<span class='glyphicon glyphicon-user'></span> {{ $spot->user->first_name }} {{ $spot->user->last_name }}
+										<span class='glyphicon glyphicon-user'></span> <span id="spot_{{ $spot->id }}_full_name">{{ $spot->user->first_name }} {{ $spot->user->last_name }}</span>
 									@else
 										No owner
 									@endif <br />

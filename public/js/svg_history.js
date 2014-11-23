@@ -84,6 +84,9 @@ SVG_User.prototype.create = function(zone_to, zones, seats, date_string)
 	zones[this.zone-1].setCount(1);
 	this.svg_object = d3
 		.select("#zone_svg")
+		.append("g")
+
+	this.svg_object
 		.append("circle")
 			.attr("cx", getXforZone(this.zone, this.seat_X))
 			.attr("cy", getYforZone(this.seat_Y))
@@ -92,6 +95,15 @@ SVG_User.prototype.create = function(zone_to, zones, seats, date_string)
 			.style("stroke", "#000000")
 			.style("stroke-width", 4)
 			.style("fill", this.colour); // "#FFFFCC" or getRandomColor()
+
+	this.svg_object
+		.append("text")
+			.attr("x", (this.svg_object.select("circle").attr("cx").replace("%", "") - 1.375) + "%")
+			.attr("y", (this.svg_object.select("circle").attr("cy").replace("%", "") - (-5.5)) + "%")
+			.attr("font-size", "45px")
+			.attr("fill", "white")
+			.text(document.getElementById("spot_" + this.spot_id + "_full_name").innerHTML.charAt(0));
+
 	this.printColourForZone(zone_to, zones);
 	this.printColourForName();
 	this.printTime(date_string);
@@ -105,13 +117,20 @@ SVG_User.prototype.moveTo = function(zone_to, zones, speed, date_string)
 	this.zone = zone_to;
 	// this.svg_object
 	// 	.style("fill", zones[zone_before-1].getColour());
-	this.svg_object
+	this.svg_object.select("circle")
 		.transition()
 		.attr("cx", getXforZone(this.zone, this.seat_X))
 		// .attr("cy", getYforZone(1))
 		.attr("visibility", "visible")
 		.duration(speed)
-		.ease("linear")
+		.ease("linear");
+
+	this.svg_object.select("text")
+		.transition()
+		.attr("x", (getXforZone(this.zone, this.seat_X).replace("%", "") - 1.5) + "%")
+		.duration(speed)
+		.ease("linear");
+
 		// .style("fill", zones[zone_to-1].getColour());
 	var that = this;
 	setTimeout(function()

@@ -241,17 +241,22 @@
 
 		if(day_picked != 0)
 		{
-			var date_start = d3.time.format("%Y-%m-%d %H:%M:%S");
-			var date_start = date_start.parse(zoneSpot[zoneSpot.length - 1].created_at);
+			if(JSON.stringify(zoneSpot) != '[]')
+			{
+				var date_start = d3.time.format("%Y-%m-%d %H:%M:%S");
+				var date_start = date_start.parse(zoneSpot[zoneSpot.length - 1].created_at);
 
-			var date_start_modified = new Date(date_start.getTime() - 5*60000); // Add 5 mins
+				var date_start_modified = new Date(date_start.getTime() - 5*60000); // Add 5 mins
 
-			var progress = new SVG_Progress(zoneSpot.length);
+				var progress = new SVG_Progress(zoneSpot.length);
 
-			setTimeout(function()
-				{
-					startTimer(zoneSpot);
-				},1000);
+				var is_live = false;
+
+				setTimeout(function()
+					{
+						startTimer(zoneSpot, is_live);
+					},1000);
+			}
 		}
 		else
 		{

@@ -274,6 +274,7 @@
 
 		function live(zoneMovementHistory)
 		{
+			var is_live = true;
 			document.getElementById('time').innerHTML = "Live";
 
 			if(zoneMovementHistory[0].id > last_id)
@@ -312,7 +313,7 @@
 
 					setTimeout(function()
 					{
-						startTimer(zoneMovementHistory_filtered);
+						startTimer(zoneMovementHistory_filtered, is_live);
 					},1000);
 				}
 			}
@@ -337,14 +338,18 @@
 			return day+"."+(month + 1)+"."+year+" "+h+":"+m+":"+s;
 		}
 
-		function startTimer(zoneMovementHistory)
+		function startTimer(zoneMovementHistory, is_live)
 		{
 			var speed_slider_value = document.getElementById('speed_option_slider').value;
 			var speed = speed_slider_value * 1000;
 			var speed_for_movement = (speed_slider_value * 1000) / 2;
 
 			var date_string = dateToString(zoneMovementHistory[zoneMovementHistory.length-1].created_at);
-			document.getElementById('time').innerHTML = date_string;
+
+			if(!is_live)
+			{
+				document.getElementById('time').innerHTML = date_string;
+			}
 
 			var current_user = zoneMovementHistory[zoneMovementHistory.length-1].spot_id;
 
@@ -371,7 +376,7 @@
 					else
 					{
 						skiping_due_to_moving_status = true;
-						setTimeout(function(){startTimer(zoneMovementHistory)}, 100);
+						setTimeout(function(){startTimer(zoneMovementHistory, is_live)}, 100);
 					}
 				}
 			}
@@ -391,19 +396,22 @@
 				{
 					if(current_user == zoneMovementHistory[zoneMovementHistory.length-1].spot_id) // zoneMovementHistory[0].spot_id is the future user
 					{
-						setTimeout(function(){startTimer(zoneMovementHistory)}, speed);
+						setTimeout(function(){startTimer(zoneMovementHistory, is_live)}, speed);
 					}
 					else
 					{
-						setTimeout(function(){startTimer(zoneMovementHistory)}, speed * 0.2); // Make it faster
+						setTimeout(function(){startTimer(zoneMovementHistory, is_live)}, speed * 0.2); // Make it faster
 					}
 				}
 				else
 				{
-					setTimeout(function()
+					if(!is_live)
 					{
-						document.getElementById('time').innerHTML = "Finished!";
-					},speed_for_movement+100);
+						setTimeout(function()
+						{
+							document.getElementById('time').innerHTML = "Finished!";
+						},speed_for_movement+100);
+					}
 				}
 			}
 		}

@@ -1,4 +1,4 @@
-<table class='table table-striped table-condensed' id='table_{{ $spot->id }}_zonechange'>
+<table class='table table-striped table-condensed minimisable' id='table_{{ $spot->id }}_zonechange'>
 <thead>
 	<tr>
 		<th><small>User in Zone</small></th>

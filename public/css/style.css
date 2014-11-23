@@ -4,6 +4,16 @@
 .draggable {
 	position: relative;
 }
+.handle {
+	cursor: move;
+}
+.snappable {
+	border-width: 1px;
+	border-style: dashed;
+	border-color: transparent;
+	position: relative;
+	z-index: 20;
+}
 .panel-primary-bg {
 	background: #428bca;
 	text-align: center;

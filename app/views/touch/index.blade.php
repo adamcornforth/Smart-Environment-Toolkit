@@ -16,15 +16,21 @@
 	<div class='col-xs-12'>
 		<div class='row'>
 			@foreach($zone_spots as $spot)
-				<div class='col-md-4 draggable' id='zone-{{ $spot->id }}'>
+				<div class='col-md-4 snappable' id='zone-{{ $spot->id }}'>
 					@include('touch.panels.zone')
 				</div>
 			@endforeach			
 		</div>
 		<div class='row'>
-			<div class='col-md-offset-8 col-md-4 draggable'>
-				<div class='panel panel-default'>
-					<div class='panel-heading'>
+			<div class='col-md-4 snappable'>
+				<br />
+			</div>
+			<div class='col-md-4 snappable'>
+				<br />
+			</div>
+			<div class='col-md-4 snappable'>
+				<div class='panel panel-default draggable'>
+					<div class='panel-heading handle'>
 						SmartCup Water Level
 					</div>
 					<div class='panel-body'>

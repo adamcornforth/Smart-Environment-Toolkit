@@ -19,6 +19,32 @@ function touchHandler(event)
         first.target.dispatchEvent(simulatedEvent);
         event.preventDefault();
     }
+
+    function touchBind(element) {
+        $(element).hammer().bind("swipeleft", function(ev) {
+            console.log(ev);
+            $(ev.target).find('.nav-tabs li.active').next().find('a').click();
+            console.log('swipeleft'); 
+        });
+
+        $(element).hammer().bind("swiperight", function(ev) {
+            console.log(ev);
+            $(ev.target).find('.nav-tabs li.active').prev().find('a').click();
+            console.log('swiperight'); 
+        }); 
+
+        $(element).hammer().bind("swipeup", function(ev) {
+            console.log(ev);
+            $(ev.target).find('.minimisable').slideUp();
+            console.log('swipeup'); 
+        }); 
+
+        $(element).hammer().bind("swipedown", function(ev) {
+            console.log(ev);
+            $(ev.target).find('.minimisable').slideDown();
+            console.log('swipedown'); 
+        }); 
+    }
      
     function init() 
     {
@@ -26,38 +52,72 @@ function touchHandler(event)
         document.addEventListener("touchmove", touchHandler, true);
         document.addEventListener("touchend", touchHandler, true);
         document.addEventListener("touchcancel", touchHandler, true);    
+
+        $('.draggable').each(function(index, element) {
+            touchBind(element);  
+        });    
+    }
+
+    function draggable() {
+        console.log("Init draggables");
+        $('.draggable').draggable({
+                                snap:".snappable", 
+                                opacity: 0.7, 
+                                handle: ".handle", 
+                                snapMode: "inner"
+                            }); 
+
+         //This listens for the back button press
+        document.addEventListener('tizenhwkey', function(e) {
+            if(e.keyName == "back")
+                tizen.application.getCurrentApplication().exit();
+        });
+
+        $('.draggable').each(function(index, element) {
+            if($(element).data("hammer") === undefined) {
+                touchBind(element);
+            }
+        });
     }
 
 $(window).load(function(){
     /**
      * Touchscreen listeners
      */
-    
+    window.draggable = draggable;
     init(); 
-    $('.draggable').draggable();
-    
-    //This listens for the back button press
-    document.addEventListener('tizenhwkey', function(e) {
-        if(e.keyName == "back")
-            tizen.application.getCurrentApplication().exit();
-    });
+    window.draggable();
 
-    // Tap Gesture Enable
-    var options = {
-          tapHighlightColor: "rgba(5,0,0,0.9)" ,
-              showTouches: true
-    }; 
+    $('.snappable').droppable({ 
+                                accept: '.draggable',
+                                tolerance: 'pointer',
+                                activate: function(event, ui) {
+                                    $('.snappable').animate({'background-color': '#fefefe', 'border-color': '#666'}, 200);
+                                },
+                                deactivate: function(event, ui) {
+                                    $('.snappable').animate({'background-color': 'transparent', 'border-color': 'transparent'}, 200);
+                                },
+                                drop: function(event, ui) {
+                                    // reset this snappable area's panel left/right
+                                    $(this).find('.panel').css('top', '').css('left', '');
 
-    $('.draggable').hammer(options).bind("swipeleft", function(event) {
-    	$('#textbox').html("Swipe left");
-        console.log(event);
-        $(event.target).find('.nav-tabs li.active').next().find('a').click();
-    });
+                                    // make dropped item's parent's html equal this snappable area's html
+                                    $(ui.draggable).parent().html($(this).html());
 
-    $('.draggable').hammer(options).bind("swiperight", function(event) {
-    	$('#textbox').html("Swipe right");
-        console.log(event);
-        $(event.target).find('.nav-tabs li.active').prev().find('a').click();
-    });
+                                    // insert dropped item into snappable area
+                                    $(this).html(ui.draggable);
+
+                                    // reset dropped item top/left as it is snapping
+                                    $(ui.draggable).css('top', '-10px').css('left', '');
+                                    $(ui.draggable).animate({'top' : '0px'});
+
+                                    // reinit draggables
+                                    setTimeout(function() {
+                                        window.draggable();
+                                    }, 250);
+
+                                    
+                                }
+                            });
 
 });

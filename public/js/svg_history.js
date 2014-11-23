@@ -339,7 +339,7 @@
 
 		function startTimer(zoneMovementHistory)
 		{
-			var speed_slider_value = 4 - document.getElementById('speed_option_slider').value;
+			var speed_slider_value = document.getElementById('speed_option_slider').value;
 			var speed = speed_slider_value * 1000;
 			var speed_for_movement = (speed_slider_value * 1000) / 2;
 

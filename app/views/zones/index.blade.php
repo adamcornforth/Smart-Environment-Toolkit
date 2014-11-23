@@ -3,6 +3,14 @@
 @section('content')
 	<h1>{{ $title or "Zones"}}</h1>
 
+	{{ HTML::style('https://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/master/build/css/bootstrap-datetimepicker.min.css') }}
+	{{ HTML::script('http://mbostock.github.com/d3/d3.js') }}
+	{{ HTML::script('https://cdn.rawgit.com/moment/moment/develop/min/moment.min.js') }}
+	{{ HTML::script('https://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/master/build/js/bootstrap-datetimepicker.min.js') }}
+	{{ HTML::script('https://cdn.rawgit.com/seiyria/bootstrap-slider/master/js/bootstrap-slider.js') }}
+	{{ HTML::style('https://cdn.rawgit.com/seiyria/bootstrap-slider/master/css/bootstrap-slider.css') }}
+	{{ HTML::script('js/svg_history.js') }}
+
 	<br />
 
 	@if(Input::has('day'))
@@ -75,7 +83,7 @@
 								</select> -->
 
 								<!-- <input id="speed_option_slider" type="text" class="span2" value="" data-slider-min="-20" data-slider-max="20" data-slider-step="1" data-slider-value="-14" data-slider-orientation="vertical" data-slider-selection="after" data-slider-tooltip="hide"> -->
-								<input id="speed_option_slider" type="text" data-slider-min="0" data-slider-max="3.5" data-slider-step="0.5" data-slider-value="2" data-slider-tooltip="hide" >
+								<input id="speed_option_slider" type="text" data-slider-min="0.5" data-slider-max="4" data-slider-step="0.5" data-slider-value="2" data-slider-tooltip="hide" >
 								<!-- <input type="text" class="span2" value="4" id="speed_option_slider" > -->
 							</div>
 						</div>
@@ -200,14 +208,6 @@
 	<p>&copy; Adam Cornforth, Dominic Lindsay, Vitali Bokov 2014</p>
 	</div>
 
-	{{ HTML::style('https://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/master/build/css/bootstrap-datetimepicker.min.css') }}
-	{{ HTML::script('http://mbostock.github.com/d3/d3.js') }}
-	{{ HTML::script('https://cdn.rawgit.com/moment/moment/develop/min/moment.min.js') }}
-	{{ HTML::script('https://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/master/build/js/bootstrap-datetimepicker.min.js') }}
-	{{ HTML::script('https://cdn.rawgit.com/seiyria/bootstrap-slider/master/js/bootstrap-slider.js') }}
-	{{ HTML::style('https://cdn.rawgit.com/seiyria/bootstrap-slider/master/css/bootstrap-slider.css') }}
-	{{ HTML::script('js/svg_history.js') }}
-
 	<script type="text/javascript">
 	// var speed_slider = $("#speed_option_slider").slider();
 	// speed_slider
@@ -218,7 +218,10 @@
 
 	// });
 
-	$('#speed_option_slider').slider({});
+		var slider = new Slider('#speed_option_slider',
+		{
+			reversed : true
+		});
 
 		$(function () {
 			$('#day').datetimepicker({

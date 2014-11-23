@@ -10,7 +10,7 @@
 		<?php $zoneSpotDayHistory = ZoneSpot::where('created_at', '>', Carbon::parse($day_picked)->toDateTimeString())->where('created_at', '<', Carbon::parse($day_picked)->endOfDay()->toDateTimeString())->whereNotNull('job_id')->orderBy('id', 'DESC')->get() ?>
 	@else
 		<?php $day_picked = 0; ?>
-		<?php $zoneSpotDayHistory = ZoneSpot::orderBy('id', 'DESC')->whereNotNull('job_id')->take(5)->get() ?>
+		<?php $zoneSpotDayHistory = ZoneSpot::orderBy('id', 'DESC')->whereNotNull('job_id')->take(10)->get() ?>
 	@endif
 
 	<div class='row'>
@@ -130,56 +130,56 @@
 				<div class='panel-heading'>
 					Users Being Tracked
 				</div>
-			  	<table class='table table-bordered table-striped'>
-			  		<thead>
-			  			<tr>
-			  				<th>User Details</th>
-			  				<th>Current Zone</th>
-			  				<th>Time of Change</th>
-			  				<th>Zone Changes</th>
-			  				<th>Actions</th>
-			  			</tr>
-			  		</thead>
-			  		<tbody>
-			  			@foreach($roaming_spots as $spot)
-				  			<tr class="spot_{{ $spot->id }}">
-				  				<td class="col-md-2" id="spot_{{ $spot->id }}_name">
-			  						@if(count($spot->user))
-				  						<span class='glyphicon glyphicon-user'></span> {{ $spot->user->first_name }} {{ $spot->user->last_name }}
-				  					@else
-				  						No owner
-				  					@endif <br />
-				  					<small class='text-muted'>
-					  					<a href='{{ url('spots/'.$spot->id) }}'>
-					  						{{ $spot->spot_address }}
-					  					</a>
-				  					</small>
-				  				</td>
-				  				<td class="col-md-5" id="spot_{{ $spot->id }}_last_zone">
-				  					@if($day_picked == 0)
-				  						<?php $zone = $spot->zonechanges()->orderBy('id', 'DESC')->first() ?>
-				  						{{ Zone::find($zone['zone_id'])['title'] }}
-				  					@endif
-				  				</td>
-				  				<td class="col-md-2" id="spot_{{ $spot->id }}_time_of_change">
+				<table class='table table-bordered table-striped'>
+					<thead>
+						<tr>
+							<th>User Details</th>
+							<th>Current Zone</th>
+							<th>Time of Change</th>
+							<th>Zone Changes</th>
+							<th>Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach($roaming_spots as $spot)
+							<tr class="spot_{{ $spot->id }}">
+								<td class="col-md-2" id="spot_{{ $spot->id }}_name">
+									@if(count($spot->user))
+										<span class='glyphicon glyphicon-user'></span> {{ $spot->user->first_name }} {{ $spot->user->last_name }}
+									@else
+										No owner
+									@endif <br />
+									<small class='text-muted'>
+										<a href='{{ url('spots/'.$spot->id) }}'>
+											{{ $spot->spot_address }}
+										</a>
+									</small>
+								</td>
+								<td class="col-md-5" id="spot_{{ $spot->id }}_last_zone">
+									@if($day_picked == 0)
+										<?php $zone = $spot->zonechanges()->orderBy('id', 'DESC')->first() ?>
+										{{ Zone::find($zone['zone_id'])['title'] }}
+									@endif
+								</td>
+								<td class="col-md-2" id="spot_{{ $spot->id }}_time_of_change">
 
-				  				</td>
-				  				<td class="col-md-2">
-				  					@if($day_picked == 0)
-				  						<strong>{{ $spot->zonechanges->count() }}</strong> zone changes
-				  					@else
-				  						<strong>{{ $spot->zonechanges()->where('created_at', '>', Carbon::parse($day_picked)->toDateTimeString())->where('created_at', '<', Carbon::parse($day_picked)->endOfDay()->toDateTimeString())->whereNotNull('job_id')->count() }}</strong> zone changes
-				  					@endif
-				  				</td>
-				  				<td class='col-md-1 text-right'>
-				  					<a href='{{ url("zones/user/".$spot->id)}}' class='btn btn-default btn-small'>
-				  						View All <span class='glyphicon glyphicon-chevron-right'></span>
-				  					</a>
-				  				</td>
-				  			</tr>
-				  		@endforeach
-			  		</tbody>
-			  	</table>
+								</td>
+								<td class="col-md-2">
+									@if($day_picked == 0)
+										<strong>{{ $spot->zonechanges->count() }}</strong> zone changes
+									@else
+										<strong>{{ $spot->zonechanges()->where('created_at', '>', Carbon::parse($day_picked)->toDateTimeString())->where('created_at', '<', Carbon::parse($day_picked)->endOfDay()->toDateTimeString())->whereNotNull('job_id')->count() }}</strong> zone changes
+									@endif
+								</td>
+								<td class='col-md-1 text-right'>
+									<a href='{{ url("zones/user/".$spot->id)}}' class='btn btn-default btn-small'>
+										View All <span class='glyphicon glyphicon-chevron-right'></span>
+									</a>
+								</td>
+							</tr>
+						@endforeach
+					</tbody>
+				</table>
 			</div>
 		</div>
 	</div>
@@ -190,24 +190,7 @@
 				<div class='panel-heading'>
 					All Zone Changes (Most Recent First)
 				</div>
-				<table class='table table-bordered table-striped'>
-					<thead>
-						<tr>
-							<th>User</th>
-							<th>Moved to</th>
-							<th>Date &amp; Time</th>
-						</tr>
-					</thead>
-					<tbody>
-						@foreach($zoneSpotDayHistory as $zone_change)
-					  		<tr>
-					  			<td>{{ $zone_change->spot->user->first_name }}</td>
-					  			<td>{{ $zone_change->zone->title }}</td>
-					  			<td><strong>{{ Carbon::parse($zone_change->created_at)->format('D jS M') }}</strong> at <strong>{{ Carbon::parse($zone_change->created_at)->format('G:ia') }}</strong><br /></td>
-					  		</tr>
-						  @endforeach
-					</tbody>
-				</table>
+				@include('zones.zonechange')
 			</div>
 		</div>
 	</div>
@@ -251,6 +234,8 @@
 		var zoneSpot = {{ json_encode($zoneSpotDayHistory) }};
 		var day_picked = {{ $day_picked }};
 
+		var last_id = 0;
+
 		if(day_picked != 0)
 		{
 			var date_start = d3.time.format("%Y-%m-%d %H:%M:%S");
@@ -262,27 +247,49 @@
 
 			setTimeout(function()
 				{
-					startTimer(zoneSpot, users, zones, seats, progress);
+					startTimer(zoneSpot);
 				},1000);
 		}
 		else
 		{
-			live(zoneSpot, users, zones, seats);
-			setInterval(function() {
-                  window.location.reload();
-                }, 1000*5); // Refresh every 5 seconds
+			var progress = new SVG_Progress(0);
+			refresh();
+			// setInterval(function() {
+   //                window.location.reload();
+   //              }, 1000*5); // Refresh every 5 seconds
 		}
+
+		function refresh() {
+			$.ajax({
+				type: "GET",
+				url: "{{ action('ZoneController@getChanges') }}"
+			})
+			.done(function( data ) {
+				var result = live(JSON.parse(data));
+
+			 	setTimeout(refresh, 3*1000);
+			});
+
+			$.ajax({
+				type: "GET",
+				url: "{{ action('ZoneController@getZonechange') }}"
+			})
+			.done(function( data ) {
+				$('#recent_zone_changes').html(data);
+			});
+		}
+
 	</script>
   <script>
   $(function() {
-        $( ".draggable" ).draggable({
-      // connectToSortable: ".draggable",
-      // helper: "clone",
-      // revert: "invalid",
-      snap: true
-    });
+		$( ".draggable" ).draggable({
+	  // connectToSortable: ".draggable",
+	  // helper: "clone",
+	  // revert: "invalid",
+	  snap: true
+	});
 
-    $( ".resizable" ).resizable();
+	$( ".resizable" ).resizable();
   });
   </script>
 @stop

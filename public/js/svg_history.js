@@ -188,7 +188,7 @@
 		*/
 		function SVG_Progress(number)
 		{
-			this.max = number;
+			this.setMax(number);
 			this.current = 0;
 			document.getElementById("zone_change_progress").style.width="0%";
 			document.getElementById("zone_change_progress_parent").style.visibility="visible";
@@ -198,6 +198,16 @@
 		{
 			this.current = this.current + number;
 			document.getElementById("zone_change_progress").style.width= ((this.current/this.max) *100) + "%";
+		};
+
+		SVG_Progress.prototype.setMax = function(number)
+		{
+			this.max = number;
+		};
+
+		SVG_Progress.prototype.getMax = function()
+		{
+			return this.max;
 		};
 
 		/*
@@ -210,7 +220,7 @@
 
 			for(var i_Y = 1; i_Y <= number_of_Y; i_Y++)
 			{
-				for(var i_X = 1; i_X <= this.seat_per_Y; i_X++)
+				for(var i_X = 0; i_X < this.seat_per_Y; i_X++)
 				{
 					this.seats.push([i_X, i_Y]);
 				}
@@ -229,7 +239,7 @@
 		*/
 		function getXforZone(zone, seat_X)
 		{
-			var difference = 15/seat_X;
+			var difference = 7.5 * seat_X;
 			if (zone == 1 )
 			{
 				return 5 + difference + "%"; //12.5 Middle or getRandomNumber(5, 20)
@@ -262,18 +272,52 @@
 			return false;
 		}
 
-		function live(zoneMovementHistory, users, zones, seats)
+		function live(zoneMovementHistory)
 		{
 			document.getElementById('time').innerHTML = "Live";
-			for(var i = 0; i < zoneMovementHistory.length; i++)
+
+			if(zoneMovementHistory[0].id > last_id)
 			{
-				if(userExist(zoneMovementHistory[i].spot_id, users) == false)
+				if(users.length < 1)
 				{
-					var users_temp = [new SVG_User(zoneMovementHistory[i].spot_id, zoneMovementHistory[i].zone_id)];
-					users_temp[0].create(zoneMovementHistory[i].zone_id, zones, seats); // Create an SVG object for that user in a zone
-					users = users.concat(users_temp);
+					for(var i = 0; i < zoneMovementHistory.length; i++)
+					{
+						if(userExist(zoneMovementHistory[i].spot_id, users) == false)
+						{
+							progress.setMax(progress.getMax() + 1);
+							progress.update(1);
+
+							var users_temp = [new SVG_User(zoneMovementHistory[i].spot_id, zoneMovementHistory[i].zone_id)];
+							var date_string = dateToString(zoneMovementHistory[i].created_at);
+							users_temp[0].create(zoneMovementHistory[i].zone_id, zones, seats, date_string); // Create an SVG object for that user in a zone
+							users = users.concat(users_temp);
+						}
+					}
+
+				}
+				else
+				{
+					var zoneMovementHistory_filtered = [];
+
+					for(var i = 0; i < zoneMovementHistory.length; i++)
+					{
+						if(zoneMovementHistory[i].id > last_id)
+						{
+							zoneMovementHistory_filtered = zoneMovementHistory_filtered.concat(zoneMovementHistory[i]);
+						}
+					}
+
+					progress.update(-(progress.getMax()));
+					progress.setMax(zoneMovementHistory_filtered.length);
+
+					setTimeout(function()
+					{
+						startTimer(zoneMovementHistory_filtered);
+					},1000);
 				}
 			}
+
+			last_id = zoneMovementHistory[0].id; // ID of the last change
 		}
 
 		function dateToString(date_old)
@@ -293,7 +337,7 @@
 			return day+"."+(month + 1)+"."+year+" "+h+":"+m+":"+s;
 		}
 
-		function startTimer(zoneMovementHistory, users, zones, seats, progress)
+		function startTimer(zoneMovementHistory)
 		{
 			var speed_slider_value = 4 - document.getElementById('speed_option_slider').value;
 			var speed = speed_slider_value * 1000;
@@ -327,7 +371,7 @@
 					else
 					{
 						skiping_due_to_moving_status = true;
-						setTimeout(function(){startTimer(zoneMovementHistory, users, zones, seats, progress)}, 100);
+						setTimeout(function(){startTimer(zoneMovementHistory)}, 100);
 					}
 				}
 			}
@@ -347,11 +391,11 @@
 				{
 					if(current_user == zoneMovementHistory[zoneMovementHistory.length-1].spot_id) // zoneMovementHistory[0].spot_id is the future user
 					{
-						setTimeout(function(){startTimer(zoneMovementHistory, users, zones, seats, progress)}, speed);
+						setTimeout(function(){startTimer(zoneMovementHistory)}, speed);
 					}
 					else
 					{
-						setTimeout(function(){startTimer(zoneMovementHistory, users, zones, seats, progress)}, speed * 0.2); // Make it faster
+						setTimeout(function(){startTimer(zoneMovementHistory)}, speed * 0.2); // Make it faster
 					}
 				}
 				else

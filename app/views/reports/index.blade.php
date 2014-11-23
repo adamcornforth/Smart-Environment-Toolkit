@@ -240,7 +240,7 @@
 				{
 					var result = JSON.parse(data);
 
-					console.log("refresh");
+					console.log("refreshed: Light");
 
 					if(light_series == '')
 					{
@@ -293,7 +293,7 @@
 				{
 					var result = JSON.parse(data);
 
-					console.log("refresh");
+					console.log("refreshed: Temperature");
 
 					if(heat_series == '')
 					{
@@ -354,7 +354,7 @@
 								setInterval(function()
 									{
 										light_refresh();
-									}, 1000);
+									}, 3*1000);
 							}
 							else
 							{
@@ -463,7 +463,7 @@
 								setInterval(function()
 									{
 										heat_refresh();
-									}, 1000);
+									}, 3*1000);
 							}
 							else
 							{

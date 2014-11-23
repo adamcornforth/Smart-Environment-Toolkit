@@ -15,6 +15,8 @@
 {{ HTML::style('https://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/master/build/css/bootstrap-datetimepicker.min.css') }}
 {{ HTML::script('https://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/master/build/js/bootstrap-datetimepicker.min.js') }}
 
+{{ HTML::script('js/report_chart.js') }}
+
 @if(Input::has('spot_id'))
 	<?php
 
@@ -25,7 +27,7 @@
 	}
 	else
 	{
-		$spot_address = null;
+		$spot_address = 0;
 	}
 
 	?>
@@ -33,7 +35,7 @@
 	<?php
 
 	$spot_id = 0;
-	$spot_address = null;
+	$spot_address = 0;
 
 	?>
 @endif
@@ -42,7 +44,7 @@
 
 	function getDataForDay($day, $data, $spot_address)
 	{
-		if(!empty($spot_address))
+		if($spot_address != 0)
 		{
 			return $data::where('created_at', '>', Carbon::parse($day)
 				->toDateTimeString())
@@ -76,13 +78,15 @@
 	$day_1_data_light = getDataForDay($day_1, "Light", $spot_address);
 
 	$day_1_data_temperature = getDataForDay($day_1, "Heat", $spot_address);
+	$live = 0;
 	?>
 @else
 	<?php
 
 	$day_1 = 0;
-	$day_1_data_light = [];
+	$day_1_data_light = getDataForDay("2014-11-17", "Light", $spot_address);
 	$day_1_data_temperature = [];
+	$live = 1;
 
 	?>
 @endif
@@ -95,7 +99,7 @@
 	$day_2_data_light = getDataForDay($day_2, "Light", $spot_address);
 
 	$day_2_data_temperature = getDataForDay($day_2, "Heat", $spot_address);
-
+	$live = 0;
 	?>
 @else
 	<?php
@@ -103,6 +107,7 @@
 	$day_2 = 0;
 	$day_2_data_light = [];
 	$day_2_data_temperature = [];
+	$live = 1;
 
 	?>
 @endif
@@ -163,24 +168,16 @@
 				<div class='panel panel-default' style="min-height: 19%">
 					<div>
 					<ul class="nav nav-tabs" id="graphs">
-				        <li class="active"><a href="#LightGraph">Light</a></li>
-				        <li><a href="#TemperatureGraph">Temperature</a></li>
-				    </ul>
+						<li class="active"><a href="#LightGraph">Light</a></li>
+						<li><a href="#TemperatureGraph">Temperature</a></li>
+					</ul>
 					</div>
 					<div class='panel-body tab-content'>
 						<div id="LightGraph" class="tab-pane fade in active">
-							@if(empty($day_1) && empty($day_2))
-								Please select dates to see a graph
-							@else
-								<div id="LightGraphContainer" style="min-width: 700px; height: 400px; margin: 0 auto"></div>
-							@endif
+							<div id="LightGraphContainer" style="min-width: 700px; height: 400px; margin: 0 auto"></div>
 						</div>
-        				<div id="TemperatureGraph" class="tab-pane fade">
-	        				@if(empty($day_1) && empty($day_2))
-								Please select dates to see a graph
-							@else
-								<div id="TemperatureGraphContainer" style="min-width: 700px; height: 400px; margin: 0 auto"></div>
-							@endif
+						<div id="TemperatureGraph" class="tab-pane fade">
+							<div id="TemperatureGraphContainer" style="min-width: 700px; height: 400px; margin: 0 auto"></div>
 						</div>
 				</div>
 			</div>
@@ -205,56 +202,10 @@
 				cancel: "div.panel-body"
 			});
 			$('#graphs a').click(function (e) {
-  				e.preventDefault()
-  				$(this).tab('show')
+				e.preventDefault()
+				$(this).tab('show')
 			})
 		});
-
-		function checkTime(i)
-		{
-			if (i<10) {i = "0" + i};  // add zero in front of numbers < 10
-			return i;
-		}
-
-		function dateToStringOnlyHMS(date_old)
-		{
-			var date_new = new Date(date_old);
-
-			var h=date_new.getHours();
-			var m=date_new.getMinutes();
-			var s=date_new.getSeconds();
-			m = checkTime(m);
-			s = checkTime(s);
-
-			return h+":"+m+":"+s;
-		}
-
-		function dateToTimeOnlyHMS(date_old)
-		{
-			var date_new = new Date(date_old);
-			var h=date_new.getHours();
-			var m=date_new.getMinutes();
-			var s=date_new.getSeconds();
-
-			return (h * 3600000) + (m * 60000) + (s * 1000);
-		}
-
-		function msToHMSAsString(ms)
-		{
-		// 1- Convert to seconds:
-		var seconds = ms / 1000;
-		// 2- Extract hours:
-		var hours = parseInt( seconds / 3600 ); // 3,600 seconds in 1 hour
-		seconds = seconds % 3600; // seconds remaining after extracting hours
-		// 3- Extract minutes:
-		var minutes = parseInt( seconds / 60 ); // 60 seconds in 1 minute
-		// 4- Keep only seconds not extracted to minutes:
-		seconds = seconds % 60;
-		return hours+":"+minutes+":"+seconds;
-		}
-
-		// Get the context of the canvas element we want to select
-		// var ctx = document.getElementById("myChart").getContext("2d");
 
 		var day_1 = document.getElementById('day_picker_day_1_value').value;
 		if(day_1 == null)
@@ -270,48 +221,118 @@
 		var day_2_data_light = {{ json_encode($day_2_data_light) }};
 		var day_1_data_temperature = {{ json_encode($day_1_data_temperature) }};
 		var day_2_data_temperature = {{ json_encode($day_2_data_temperature) }};
+		var last_id = new Array();
+		last_id['light'] = 0;
+		last_id['heat'] = 0;
+		var live = {{ $live }};
+		var light_series = new Array();
+		var heat_series = new Array();
 
-		// for( var i = 0; i < day_2_data.length ; i++)
-		// {
-		// 	var day_data = day_2_data[i].light_intensity;
-		// 	var day_date = day_2_data[i].created_at;
-		// 	day_2_data_to_show = day_2_data_to_show.concat(day_data);
-		// 	day_2_data_dates = day_2_data_to_show.concat(day_date);
-		// }
+		function light_refresh(series) {
+			if(live)
+			{
+				$.ajax(
+				{
+					type: "GET",
+					url: "{{ action('ReportController@getChanges',['Light', $spot_address]) }}"
+				})
+				.done(function( data )
+				{
+					var result = JSON.parse(data);
 
-		// var data = {
-		//     labels: day_1_data_dates,
-		//     datasets: [
-		//         {
-		//             label: "Day 1 data",
-		//             fillColor: "rgba(220,220,220,0.2)",
-		//             strokeColor: "rgba(220,220,220,1)",
-		//             pointColor: "rgba(220,220,220,1)",
-		//             pointStrokeColor: "#fff",
-		//             pointHighlightFill: "#fff",
-		//             pointHighlightStroke: "rgba(220,220,220,1)",
-		//             data: day_1_data_to_show
-		//         },
-		//         {
-		//             label: "Day 2 data",
-		//             fillColor: "rgba(151,187,205,0.2)",
-		//             strokeColor: "rgba(151,187,205,1)",
-		//             pointColor: "rgba(151,187,205,1)",
-		//             pointStrokeColor: "#fff",
-		//             pointHighlightFill: "#fff",
-		//             pointHighlightStroke: "rgba(151,187,205,1)",
-		//             data: day_2_data_to_show
-		//         }
-		//     ]
-		// };
+					console.log("refresh");
 
-		// var options =
-		// {
-		// 	scaleShowGridLines : false,
-		// 	pointDot : false,
-		// 	datasetStroke : false
-		// };
-		// var myLineChart = new Chart(ctx).Line(data, options);
+					if(light_series == '')
+					{
+						console.log("light_chart: " + light_chart);
+
+						var series_data = [];
+
+						for(var i = result.length-1; i >= 0; i--)
+						{
+							series_data.push(
+							{
+								x: result[i].created_at,
+								y: result[i].light_intensity
+							});
+						}
+
+						light_series[0] = addSeriesToChart(light_chart, 'Live', '#90ed7d', series_data); // Colour: Light Green
+						// last_id['light'] = result[0].id;
+					}
+					else if(result[0].id > last_id['light'])
+					{
+						for(var i = result.length-1; i >= 0; i--)
+						{
+							console.log("last_id['light']: " + last_id['light']);
+							if(result[i].id > last_id['light'])
+							{
+								light_series[0].addPoint(
+								[
+									result[i].created_at,
+									result[i].light_intensity
+								], true, true);
+								console.log(result[i].created_at);
+							}
+						}
+						last_id['light'] = result[0].id;
+					}
+				})
+			}
+		}
+
+		function heat_refresh(series) {
+			if(live)
+			{
+				$.ajax(
+				{
+					type: "GET",
+					url: "{{ action('ReportController@getChanges',['Heat', $spot_address]) }}"
+				})
+				.done(function( data )
+				{
+					var result = JSON.parse(data);
+
+					console.log("refresh");
+
+					if(heat_series == '')
+					{
+						console.log("heat_chart: " + heat_chart);
+
+						var series_data = [];
+
+						for(var i = result.length-1; i >= 0; i--)
+						{
+							series_data.push(
+							{
+								x: result[i].created_at,
+								y: result[i].heat_temperature
+							});
+						}
+
+						heat_series[0] = addSeriesToChart(heat_chart, 'Live', '#90ed7d', series_data); // Colour: Light Green
+						// last_id['heat'] = result[0].id;
+					}
+					else if(result[0].id > last_id['heat'])
+					{
+						for(var i = result.length-1; i >= 0; i--)
+						{
+							console.log("last_id['heat]: " + last_id['heat']);
+							if(result[i].id > last_id['heat'])
+							{
+								heat_series[0].addPoint(
+								[
+									result[i].created_at,
+									result[i].heat_temperature
+								], true, true);
+								console.log(result[i].created_at);
+							}
+						}
+						last_id['heat'] = result[0].id;
+					}
+				})
+			}
+		}
 
 	$('#LightGraphContainer').highcharts({
 		credits: {
@@ -319,7 +340,49 @@
 		},
 		chart: {
 			type: 'area',
-			zoomType: 'x'
+			zoomType: 'x',
+			events: {
+						load: function () {
+							light_chart = this;
+
+							// set up the updating of the chart each second
+							console.log("test");
+							// light_series = this.series[0];
+
+							if(live)
+							{
+								setInterval(function()
+									{
+										light_refresh();
+									}, 1000);
+							}
+							else
+							{
+								var series_data_day_1 = [];
+								var series_data_day_2 = [];
+
+								for(var i = 0; i < day_1_data_light.length ; i++)
+								{
+									series_data_day_1.push({
+										x: dateToTimeOnlyHMS(day_1_data_light[i].created_at),
+										y: day_1_data_light[i].light_intensity
+									});
+								}
+
+								for(i = 0; i < day_2_data_light.length ; i++)
+								{
+									series_data_day_2.push({
+										x: dateToTimeOnlyHMS(day_2_data_light[i].created_at),
+										y: day_2_data_light[i].light_intensity
+									});
+								}
+
+								light_series[0] = addSeriesToChart(this, day_1, '#7cb5ec', series_data_day_1); // Colour: Light Blue
+								light_series[1] = addSeriesToChart(this, day_2, '#434348', series_data_day_2); // Colour: Grey
+
+							}
+						}
+					}
 		},
 		title: {
 			text: 'Light graph'
@@ -377,44 +440,7 @@
 			}
 		},
 		series:
-		[{
-			name: day_1,
-			data: (function () {
-				// generate an array of random data
-				var data = [],
-					i;
-				for(i = 0; i < day_1_data_light.length ; i++)
-				{
-					data.push({
-						x: dateToTimeOnlyHMS(day_1_data_light[i].created_at),
-						y: day_1_data_light[i].light_intensity
-					});
-				}
-				return data;
-			}())
-		},
-		{
-			name: day_2,
-			data: (function () {
-				// generate an array of random data
-				var data = [],
-					i;
-				for(i = 0; i < day_2_data_light.length ; i++)
-				{
-					data.push({
-						x: dateToTimeOnlyHMS(day_2_data_light[i].created_at),
-						y: day_2_data_light[i].light_intensity
-					});
-				}
-				return data;
-			}())
-		}]
-		// series: [{
-		//      day_1_data_to_show
-		// }, {
-		//     name: 'Day 2',
-		//     data: day_2_data_to_show
-		// }]
+		[]
 	});
 
 	$('#TemperatureGraphContainer').highcharts({
@@ -423,7 +449,49 @@
 		},
 		chart: {
 			type: 'area',
-			zoomType: 'x'
+			zoomType: 'x',
+			events: {
+						load: function () {
+							heat_chart = this;
+
+							// set up the updating of the chart each second
+							console.log("test");
+							// light_series = this.series[0];
+
+							if(live)
+							{
+								setInterval(function()
+									{
+										heat_refresh();
+									}, 1000);
+							}
+							else
+							{
+								var series_data_day_1 = [];
+								var series_data_day_2 = [];
+
+								for(i = 0; i < day_1_data_temperature.length ; i++)
+								{
+									series_data_day_1.push({
+										x: dateToTimeOnlyHMS(day_1_data_temperature[i].created_at),
+										y: day_1_data_temperature[i].heat_temperature
+									});
+								}
+
+								for(i = 0; i < day_2_data_temperature.length ; i++)
+								{
+									series_data_day_2.push({
+										x: dateToTimeOnlyHMS(day_2_data_temperature[i].created_at),
+										y: day_2_data_temperature[i].heat_temperature
+									});
+								}
+
+								heat_series[0] = addSeriesToChart(this, day_1, '#7cb5ec', series_data_day_1); // Colour: Light Blue
+								heat_series[1] = addSeriesToChart(this, day_2, '#434348', series_data_day_2); // Colour: Grey
+
+							}
+						}
+					}
 		},
 		title: {
 			text: 'Temperature graph'
@@ -481,44 +549,7 @@
 			}
 		},
 		series:
-		[{
-			name: day_1,
-			data: (function () {
-				// generate an array of random data
-				var data = [],
-					i;
-				for(i = 0; i < day_1_data_temperature.length ; i++)
-				{
-					data.push({
-						x: dateToTimeOnlyHMS(day_1_data_temperature[i].created_at),
-						y: day_1_data_temperature[i].heat_temperature
-					});
-				}
-				return data;
-			}())
-		},
-		{
-			name: day_2,
-			data: (function () {
-				// generate an array of random data
-				var data = [],
-					i;
-				for(i = 0; i < day_2_data_temperature.length ; i++)
-				{
-					data.push({
-						x: dateToTimeOnlyHMS(day_2_data_temperature[i].created_at),
-						y: day_2_data_temperature[i].heat_temperature
-					});
-				}
-				return data;
-			}())
-		}]
-		// series: [{
-		//      day_1_data_to_show
-		// }, {
-		//     name: 'Day 2',
-		//     data: day_2_data_to_show
-		// }]
+		[]
 	});
 	</script>
 @stop

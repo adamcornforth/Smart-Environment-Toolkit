@@ -15,24 +15,96 @@
 {{ HTML::style('https://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/master/build/css/bootstrap-datetimepicker.min.css') }}
 {{ HTML::script('https://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/master/build/js/bootstrap-datetimepicker.min.js') }}
 
-@if(Input::has('day_1'))
-	<?php $day_1 = Input::get('day_1'); ?>
-	<?php $day_1_data_light = Light::where('created_at', '>', Carbon::parse($day_1)->toDateTimeString())->where('created_at', '<', Carbon::parse($day_1)->endOfDay()->toDateTimeString())->orderBy('created_at', 'ASC')->get() ?>
-	<?php $day_1_data_temperature = Heat::where('created_at', '>', Carbon::parse($day_1)->toDateTimeString())->where('created_at', '<', Carbon::parse($day_1)->endOfDay()->toDateTimeString())->orderBy('created_at', 'ASC')->get() ?>
+@if(Input::has('spot_id'))
+	<?php
+
+	$spot_id = Input::get('spot_id');
+	if(!empty($spot_id))
+	{
+		$spot_address = Spot::find($spot_id)->spot_address;
+	}
+	else
+	{
+		$spot_address = null;
+	}
+
+	?>
 @else
-	<?php $day_1 = 0; ?>
-	<?php $day_1_data_light = []; ?>
-	<?php $day_1_data_temperature = []; ?>
+	<?php
+
+	$spot_id = 0;
+	$spot_address = null;
+
+	?>
+@endif
+
+<?php
+
+	function getDataForDay($day, $data, $spot_address)
+	{
+		if(!empty($spot_address))
+		{
+			return $data::where('created_at', '>', Carbon::parse($day)
+				->toDateTimeString())
+				->where('created_at', '<',
+					Carbon::parse($day)
+						->endOfDay()
+						->toDateTimeString())
+				->where('spot_address', '=', $spot_address)
+				->orderBy('created_at', 'ASC')
+				->get();
+		}
+		else
+		{
+			return $data::where('created_at', '>', Carbon::parse($day)
+				->toDateTimeString())
+				->where('created_at', '<',
+					Carbon::parse($day)
+						->endOfDay()
+						->toDateTimeString())
+				->orderBy('created_at', 'ASC')
+				->get();
+		}
+	}
+
+?>
+@if(Input::has('day_1'))
+	<?php
+
+	$day_1 = Input::get('day_1');
+
+	$day_1_data_light = getDataForDay($day_1, "Light", $spot_address);
+
+	$day_1_data_temperature = getDataForDay($day_1, "Heat", $spot_address);
+	?>
+@else
+	<?php
+
+	$day_1 = 0;
+	$day_1_data_light = [];
+	$day_1_data_temperature = [];
+
+	?>
 @endif
 
 @if(Input::has('day_2'))
-	<?php $day_2 = Input::get('day_2'); ?>
-	<?php $day_2_data_light = Light::where('created_at', '>', Carbon::parse($day_2)->toDateTimeString())->where('created_at', '<', Carbon::parse($day_2)->endOfDay()->toDateTimeString())->orderBy('created_at', 'ASC')->get() ?>
-	<?php $day_2_data_temperature = Heat::where('created_at', '>', Carbon::parse($day_2)->toDateTimeString())->where('created_at', '<', Carbon::parse($day_2)->endOfDay()->toDateTimeString())->orderBy('created_at', 'ASC')->get() ?>
+	<?php
+
+	$day_2 = Input::get('day_2');
+
+	$day_2_data_light = getDataForDay($day_2, "Light", $spot_address);
+
+	$day_2_data_temperature = getDataForDay($day_2, "Heat", $spot_address);
+
+	?>
 @else
-	<?php $day_2 = 0; ?>
-	<?php $day_2_data_light = []; ?>
-	<?php $day_2_data_temperature = []; ?>
+	<?php
+
+	$day_2 = 0;
+	$day_2_data_light = [];
+	$day_2_data_temperature = [];
+
+	?>
 @endif
 
 	<h1>{{ $title or "Reports"}}</h1>
@@ -49,7 +121,19 @@
 						<p>
 							<div class="form-inline text-center" role="form">
 								<form action="{{ url('reports') }}" method="GET">
-									Day 1: <div class='input-group date' id="day_picker_day_1_label">
+									Device:
+									<div class='input-group'>
+										<select name="spot_id" class='form-control'>
+											<option value="">All</option>
+											@foreach(Spot::all() as $spot)
+												<option {{ $spot->id == $spot_id ? "selected='selected'" : ""}} value="{{ $spot->id }}">{{ $spot->spot_address }}</option>
+											@endforeach
+										</select>
+									</div>
+									<br />
+									<br />
+									Day 1:
+									<div class='input-group date' id="day_picker_day_1_label">
 										<input type='text' class="form-control" name="day_1" id="day_picker_day_1_value" data-date-format="YYYY-MM-DD" placeholder="YYYY-MM-DD" value="<?php if($day_1 != 0) echo $day_1; ?>"/>
 										<span class="input-group-addon">
 											<span class="glyphicon glyphicon-calendar"></span>
@@ -57,7 +141,8 @@
 									</div>
 									<br />
 									<br />
-									Day 2: <div class='input-group date' id="day_picker_day_2_label">
+									Day 2:
+									<div class='input-group date' id="day_picker_day_2_label">
 										<input type='text' class="form-control" name="day_2" id="day_picker_day_2_value" data-date-format="YYYY-MM-DD" placeholder="YYYY-MM-DD" value="<?php if($day_2 != 0) echo $day_2; ?>"/>
 										<span class="input-group-addon">
 											<span class="glyphicon glyphicon-calendar"></span>

@@ -1,5 +1,5 @@
-<div class='panel panel-primary tabpanel'>
-	<div class='panel-heading'>
+<div class='panel panel-primary tabpanel draggable'>
+	<div class='panel-heading handle'>
 		<h2 class='text-center'> {{ $spot->object->title }} </h2>
 		@include('touch.panels.zonelatest')
 		<script type="text/javascript">
@@ -17,7 +17,7 @@
 			})();
 		</script>
 	</div>
-	<ul class="nav nav-tabs panel-primary-bg" role="tablist">
+	<ul class="nav nav-tabs panel-primary-bg minimisable" role="tablist">
 		<?php $count = 1; ?>
 		@foreach($spot->jobs as $job)
 			<li role="presentation" class='{{ ($count == 1) ? "active" : "" }}'>
@@ -26,7 +26,7 @@
 			<?php $count++; ?>
 		@endforeach
 	</ul>
-		<div class='tab-content'>
+	<div class='tab-content minimisable'>
 		<?php $count = 1; ?>
 			@foreach($spot->jobs as $job)
 				@include('touch.tables.zonejob')
@@ -47,7 +47,7 @@
 				<?php $count++ ?> 
 			@endforeach
 		</div>
-		<div class='panel-body'>
+		<div class='panel-body minimisable'>
 		</div>
 		@include('touch.tables.zonechange')
 		<script type="text/javascript">

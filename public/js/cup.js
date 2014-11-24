@@ -70,7 +70,7 @@ function drink(percent) {
   $.ajax({
     url: "/cup/percent", 
     success: function(data) {
-      // console.log("Data percent: " + data.percent + ", percent: " + current_cup_percent);
+      console.log("Data percent: " + data.percent + ", percent: " + current_cup_percent);
       if(data.percent != current_cup_percent) {
 	      drink(data.percent);
 	      current_cup_percent = data.percent;

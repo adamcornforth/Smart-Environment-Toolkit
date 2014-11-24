@@ -274,7 +274,7 @@
 			})
 			.done(function( data ) {
 				var result = live(JSON.parse(data));
-
+				console.log("refreshed");
 			 	setTimeout(refresh, 3*1000);
 			});
 

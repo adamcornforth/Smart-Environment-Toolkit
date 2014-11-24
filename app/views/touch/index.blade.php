@@ -90,6 +90,7 @@
 					<small class='text-muted'>
 						Minimise panels by dropping them here.
 					</small>
+					<br />
 				</div>
 				<div class='col-md-2 snappable-min'>
 				</div>

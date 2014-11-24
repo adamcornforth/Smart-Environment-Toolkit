@@ -36,8 +36,6 @@ function msToHMSAsString(ms)
 }
 function addSeriesToChart(chart, name, colour, data)
 {
-	console.log("addSeriesToChart - data x: " + data[0].x);
-	console.log("addSeriesToChart - data y: " + data[0].y);
 	var series = chart.addSeries(
 	{
 		name: name,

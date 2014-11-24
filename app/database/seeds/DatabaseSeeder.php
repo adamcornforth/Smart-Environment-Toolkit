@@ -135,10 +135,15 @@ class DataSeeder extends Seeder {
          */
         $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7827', 'user_id' => 1)); // Adam
         $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.76FF', 'user_id' => 1));
+
+        $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7201', 'user_id' => 1)); // Fake SPOT for kettle
+        $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7202', 'user_id' => 1)); // Fake SPOT for chair
+        $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7203', 'user_id' => 1)); // Fake SPOT for door
+
         $spots['dom'][] = Spot::create(array('spot_address' => '0014.4F01.0000.77A7', 'user_id' => 2)); // Dom
         $spots['dom'][] = Spot::create(array('spot_address' => '0014.4F01.0000.77C0', 'user_id' => 2));
         $spots['vitali'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7A12', 'user_id' => 3)); // Vitali
-        $spots['vitali'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7AD7', 'user_id' => 3));
+        $spots['vitali'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7AD7', 'user_id' => 1));
 
         /**
          * Initialise Zones
@@ -190,9 +195,10 @@ class DataSeeder extends Seeder {
          * Create some lab Objects
          */
         $objects['smart_cup'] = Object::create(array('title' => 'Smart Cup', 'spot_id' => $spots['dom'][1]->id));
-        
-        // $objects['chair'] = Object::create(array('title' => 'Computer Chair', 'spot_id' => $spots['dom'][0]->id));
-        // $objects['fridge_light'] = Object::create(array('title' => 'Fridge Light', 'spot_id' => $spots['dom'][1]->id));
+
+        $objects['kettle'] = Object::create(array('title' => 'Kettle', 'spot_id' => $spots['adam'][2]->id));        
+        $objects['chair'] = Object::create(array('title' => 'Computer Chair', 'spot_id' => $spots['adam'][3]->id));
+        $objects['fridge'] = Object::create(array('title' => 'Fridge', 'spot_id' => $spots['adam'][4]->id));
 
         $objects['north_zone'] = Object::create(array('title' => 'North Zone', 'spot_id' => $spots['adam'][1]->id));
         $objects['south_zone'] = Object::create(array('title' => 'South Zone', 'spot_id' => $spots['adam'][0]->id));
@@ -203,10 +209,12 @@ class DataSeeder extends Seeder {
         /**
          * Create some Jobs
          */
-        // $jobs['door_open'] = Job::create(array('title' => 'Door open', 'object_id' => $objects['fridge']->id, 'sensor_id' => $sensors['accelerometer']->id, 'threshold' => null));
-        // $jobs['chair_moved'] = Job::create(array('title' => 'Chair moved', 'object_id' => $objects['chair']->id, 'sensor_id' => $sensors['accelerometer']->id, 'threshold' => null));
-        // 
-        // $jobs['kettle_boiled'] = Job::create(array('title' => 'Kettle boiled', 'object_id' => $objects['kettle']->id, 'sensor_id' => $sensors['thermometer']->id, 'threshold' => 40));
+        $jobs['door_open'] = Job::create(array('title' => 'Door open', 'object_id' => $objects['fridge']->id, 'sensor_id' => $sensors['accelerometer']->id, 'threshold' => null));
+        $jobs['fridge_light_on'] = Job::create(array('title' => 'Light on', 'object_id' => $objects['fridge']->id, 'sensor_id' => $sensors['photosensor']->id, 'threshold' => 10));
+        $jobs['chair_moved'] = Job::create(array('title' => 'Chair moved', 'object_id' => $objects['chair']->id, 'sensor_id' => $sensors['accelerometer']->id, 'threshold' => null));
+        $jobs['kettle_moved'] = Job::create(array('title' => 'Kettle moved', 'object_id' => $objects['kettle']->id, 'sensor_id' => $sensors['accelerometer']->id, 'threshold' => null));
+        $jobs['kettle_boiled'] = Job::create(array('title' => 'Kettle boiled', 'object_id' => $objects['kettle']->id, 'sensor_id' => $sensors['thermometer']->id, 'threshold' => 40));
+
         $jobs['cup_drank_from'] = Job::create(array('title' => 'Cup drank to', 'object_id' => $objects['smart_cup']->id, 'sensor_id' => $sensors['smart_cup']->id, 'threshold' => null));
         
         $jobs['center_table_range'] = Job::create(array('title' => 'User Entered Center Zone', 'object_id' => $objects['center_zone']->id, 'sensor_id' => $sensors['cell_tower']->id, 'threshold' => null));
@@ -246,15 +254,17 @@ class DataSeeder extends Seeder {
 
         $cup_percent = 100;
 
-        Water::create(array('water_percent' => $cup_percent, 'zone_id' => 1, 'job_id' => $jobs['cup_drank_from']->id, 'spot_address'  => $spots['dom'][1]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
-
         while($carbon->lt($now)) {
     		$random_float = rand(0, 10) / 10;
 
-            $water_drank = (mt_rand(0,200) == 1) ? 1 : 0;
+            $water_drank = (mt_rand(0,80) == 1) ? 1 : 0;
             $kettle_boiled = (mt_rand(0,300) == 1) ? 50-mt_rand(1,5)+$random_float : 28-mt_rand(1,5)+$random_float;
-            $fridge_light_on = (mt_rand(0,300) == 1) ? 120-mt_rand(1,5)+$random_float : 70-mt_rand(1,15)+$random_float;
+            $zone_temp = (mt_rand(0,300) == 1) ? 35-mt_rand(1,5)+$random_float : 28-mt_rand(1,5)+$random_float;
+            $fridge_light_on = (mt_rand(0,300) == 1) ? 50-mt_rand(1,5)+$random_float : 0;
+            $zone_light = (mt_rand(0,300) == 1) ? 120-mt_rand(1,5)+$random_float : 70-mt_rand(1,15)+$random_float;
             $chair_moved = (mt_rand(0,300) == 1) ? 1.2+$random_float : $random_float-0.7;
+            $kettle_moved = (mt_rand(0,300) == 1) ? 1.2+$random_float : $random_float-0.7;
+            $door_open = (mt_rand(0,300) == 1) ? 1.2+$random_float : $random_float-0.7;
 
             foreach($user_zone as $key => $user) {
                 $north_pillar = (mt_rand(0,300) == 1) ? -7+mt_rand(1,5)+$random_float : -30-mt_rand(1,5)+$random_float;
@@ -287,25 +297,26 @@ class DataSeeder extends Seeder {
              * Insert water level data
              */
             if($water_drank > 0) {
-                $cup_percent -= 10;
                 echo "Water drank to $cup_percent%\n";
-                Water::create(array('water_percent' => $cup_percent, 'zone_id' => 1, 'job_id' => $jobs['cup_drank_from']->id, 'spot_address'  => $spots['dom'][1]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
-                if($cup_percent < 10) $cup_percent = 100;
+                Water::create(array('water_percent' => $cup_percent, 'zone_id' => 1, 'job_id' => $jobs['cup_drank_from']->id, 'spot_address'  => $spots['dom'][1]->spot_address, 'created_at'    => Carbon::now()->toDateTimeString()));
+                $cup_percent -= 10;
+                if($cup_percent < 0) $cup_percent = 100;
             }
 
-         //    if($door_open > 1.2) Acceleration::create(array('acceleration' => $door_open, 'zone_id' => 1, 'job_id' => $jobs['door_open']->id,'spot_address' => $spots['adam'][0]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
-        	// if($kettle_boiled > 40) Heat::create(array('heat_temperature' => $kettle_boiled, 'zone_id' => 1, 'job_id' => $jobs['kettle_boiled']->id,'spot_address'	=> $spots['adam'][1]->spot_address, 'created_at'	=> $carbon->toDateTimeString()));
-         //    if($fridge_light_on > 40) Light::create(array('light_intensity' => $fridge_light_on, 'zone_id' => 1, 'job_id' => $jobs['fridge_light_on']->id,'spot_address'  => $spots['adam'][1]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
-         //    if($chair_moved > 1.2) Acceleration::create(array('acceleration' => $chair_moved, 'zone_id' => 1, 'job_id' => $jobs['chair_moved']->id,'spot_address' => $spots['dom'][0]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
+         if($kettle_boiled > 40) Heat::create(array('heat_temperature' => $kettle_boiled, 'zone_id' => 1, 'job_id' => $jobs['kettle_boiled']->id,'spot_address' => $spots['adam'][2]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
+         if($fridge_light_on > 40) Light::create(array('light_intensity' => $fridge_light_on, 'zone_id' => 1, 'job_id' => $jobs['fridge_light_on']->id,'spot_address'  => $spots['adam'][1]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
+         if($chair_moved > 1.2) Acceleration::create(array('acceleration' => $chair_moved, 'zone_id' => 1, 'job_id' => $jobs['chair_moved']->id,'spot_address' => $spots['adam'][3]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
+         if($door_open > 1.2) Acceleration::create(array('acceleration' => $door_open, 'zone_id' => 1, 'job_id' => $jobs['door_open']->id,'spot_address' => $spots['adam'][4]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
+         if($kettle_moved > 1.2) Acceleration::create(array('acceleration' => $kettle_moved, 'zone_id' => 1, 'job_id' => $jobs['kettle_moved']->id,'spot_address' => $spots['adam'][2]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
 
-            Heat::create(array('heat_temperature' => $kettle_boiled, 'zone_id' => 1, 'job_id' => $jobs['north_zone_temperature']->id, 'spot_address'  => $spots['adam'][1]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
-            Heat::create(array('heat_temperature' => $kettle_boiled, 'zone_id' => 1, 'job_id' => $jobs['center_table_temperature']->id, 'spot_address'  => $spots['dom'][0]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
-            Heat::create(array('heat_temperature' => $kettle_boiled, 'zone_id' => 1, 'job_id' => $jobs['south_zone_temperature']->id, 'spot_address'  => $spots['adam'][0]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
+            Heat::create(array('heat_temperature' => $zone_temp, 'zone_id' => 1, 'job_id' => $jobs['north_zone_temperature']->id, 'spot_address'  => $spots['adam'][1]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
+            Heat::create(array('heat_temperature' => $zone_temp, 'zone_id' => 1, 'job_id' => $jobs['center_table_temperature']->id, 'spot_address'  => $spots['dom'][0]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
+            Heat::create(array('heat_temperature' => $zone_temp, 'zone_id' => 1, 'job_id' => $jobs['south_zone_temperature']->id, 'spot_address'  => $spots['adam'][0]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
 
 
-            Light::create(array('light_intensity' => $fridge_light_on, 'zone_id' => 1, 'job_id' => $jobs['north_zone_light']->id, 'spot_address'  => $spots['adam'][1]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
-            Light::create(array('light_intensity' => $fridge_light_on, 'zone_id' => 1, 'job_id' => $jobs['center_table_light']->id, 'spot_address'  => $spots['dom'][0]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
-            Light::create(array('light_intensity' => $fridge_light_on, 'zone_id' => 1, 'job_id' => $jobs['south_zone_light']->id, 'spot_address'  => $spots['adam'][0]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
+            Light::create(array('light_intensity' => $zone_light, 'zone_id' => 1, 'job_id' => $jobs['north_zone_light']->id, 'spot_address'  => $spots['adam'][1]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
+            Light::create(array('light_intensity' => $zone_light, 'zone_id' => 1, 'job_id' => $jobs['center_table_light']->id, 'spot_address'  => $spots['dom'][0]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
+            Light::create(array('light_intensity' => $zone_light, 'zone_id' => 1, 'job_id' => $jobs['south_zone_light']->id, 'spot_address'  => $spots['adam'][0]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
 
             $carbon->addMinutes(5);
         }

@@ -5,19 +5,19 @@ function drink(percent) {
 	var bottom_offset_px = 166;
 	var cup_height_px = 155;
 	var cup_full_ml = 330;
-	var current_cup_ml = parseInt($('#water_level').html());
+	var current_cup_ml = parseInt($('.water_level').html());
 	var current_height_px = $('#CupOfCoffee #water').height();
 	var new_ml = cup_full_ml * (percent / 100); 
 
 	/**
 	 * Decrements the ml counter
 	 */
-	$({someValue: current_cup_ml}).stop().animate({someValue: new_ml}, {
+	$({someValue: current_cup_ml}).animate({someValue: new_ml}, {
 		duration: 1000,
 		easing:'swing', // can be anything
 		step: function() { // called on every step
 			// Update the element's text with rounded-up value:
-			$('#water_level').text(Math.ceil(this.someValue) + "ml");
+			$('.water_level').html(Math.ceil(this.someValue) + "ml");
 		}
 	});
 
@@ -70,7 +70,7 @@ function drink(percent) {
   $.ajax({
     url: "/cup/percent", 
     success: function(data) {
-    	console.log("Data percent: " + data.percent + ", percent: " + current_cup_percent);
+      // console.log("Data percent: " + data.percent + ", percent: " + current_cup_percent);
       if(data.percent != current_cup_percent) {
 	      drink(data.percent);
 	      current_cup_percent = data.percent;

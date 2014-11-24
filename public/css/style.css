@@ -1,3 +1,6 @@
+body {
+	padding-bottom: 70px; 
+}
 .table {
 	margin-bottom: 0px;
 }
@@ -7,12 +10,22 @@
 .handle {
 	cursor: move;
 }
-.snappable {
+.snappable, .snappable-min {
 	border-width: 1px;
 	border-style: dashed;
 	border-color: transparent;
 	position: relative;
 	z-index: 20;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	cursor: pointer;
+}
+.dock {
+	padding: 10px;
+	display: none;
+}
+.navbar .snappable-min {
+	padding: 20px 10px 0 10px;
 }
 .panel-primary-bg {
 	background: #428bca;
@@ -27,4 +40,13 @@
 .panel-primary-bg>li {
 	float: none;
 	display: inline-block;
+}
+.navbar-fixed-bottom {
+	background: transparent;
+	border: none;
+}
+.navbar-fixed-bottom .container {
+	background: #f8f8f8;
+	border: 1px solid #e7e7e7;
+	border-radius: 4px 4px 0 0;
 }

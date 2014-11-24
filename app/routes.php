@@ -20,7 +20,6 @@ Route::filter('spot', function() {
 
 Route::group(array('before' => 'spot'), function() {
 	Route::controller('cup', 'CupController');
-	Route::controller('/', 'TouchController');
 
 	Route::resource('spots', 'SpotController');
 	Route::resource('objects', 'ObjectController');
@@ -31,4 +30,6 @@ Route::group(array('before' => 'spot'), function() {
 
 	Route::controller('reports', 'ReportController');
 	Route::resource('reports', 'ReportController');
+	
+	Route::controller('/', 'TouchController');
 });

@@ -253,7 +253,7 @@
 							series_data.push(
 							{
 								x: result[i].created_at,
-								y: result[i].light_intensity
+								y: parseFloat(result[i].light_intensity)
 							});
 						}
 
@@ -306,7 +306,7 @@
 							series_data.push(
 							{
 								x: result[i].created_at,
-								y: result[i].heat_temperature
+								y: parseFloat(result[i].heat_temperature)
 							});
 						}
 
@@ -364,16 +364,16 @@
 								for(var i = 0; i < day_1_data_light.length ; i++)
 								{
 									series_data_day_1.push({
-										x: dateToTimeOnlyHMS(day_1_data_light[i].created_at),
-										y: day_1_data_light[i].light_intensity
+										x: parseInt(dateToTimeOnlyHMS(day_1_data_light[i].created_at)),
+										y: parseFloat(day_1_data_light[i].light_intensity)
 									});
 								}
 
 								for(i = 0; i < day_2_data_light.length ; i++)
 								{
 									series_data_day_2.push({
-										x: dateToTimeOnlyHMS(day_2_data_light[i].created_at),
-										y: day_2_data_light[i].light_intensity
+										x: parseInt(dateToTimeOnlyHMS(day_2_data_light[i].created_at)),
+										y: parseFloat(day_2_data_light[i].light_intensity)
 									});
 								}
 
@@ -473,16 +473,16 @@
 								for(i = 0; i < day_1_data_temperature.length ; i++)
 								{
 									series_data_day_1.push({
-										x: dateToTimeOnlyHMS(day_1_data_temperature[i].created_at),
-										y: day_1_data_temperature[i].heat_temperature
+										x: parseInt(dateToTimeOnlyHMS(day_1_data_temperature[i].created_at)),
+										y: parseFloat(day_1_data_temperature[i].heat_temperature)
 									});
 								}
 
 								for(i = 0; i < day_2_data_temperature.length ; i++)
 								{
 									series_data_day_2.push({
-										x: dateToTimeOnlyHMS(day_2_data_temperature[i].created_at),
-										y: day_2_data_temperature[i].heat_temperature
+										x: parseInt(dateToTimeOnlyHMS(day_2_data_temperature[i].created_at)),
+										y: parseFloat(day_2_data_temperature[i].heat_temperature)
 									});
 								}
 

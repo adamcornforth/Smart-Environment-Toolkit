@@ -347,6 +347,7 @@
 
 							if(live)
 							{
+								light_refresh(); // To avoid waiting for the first load
 								setInterval(function()
 									{
 										light_refresh();
@@ -462,6 +463,7 @@
 
 							if(live)
 							{
+								heat_refresh(); // To avoid waiting for the first load
 								setInterval(function()
 									{
 										heat_refresh();

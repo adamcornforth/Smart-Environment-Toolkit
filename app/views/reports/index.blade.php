@@ -435,7 +435,7 @@
 				month: '%H:%M',
 				year: '%H:%M'
 			},
-			pointFormat: '{series.name}: <b>{point.y:,.0f}</b>'
+			pointFormat: '{series.name}: <b>{point.y:,.0f}</b> <i>I</i><small><sub style="vertical-align: sub; font-size: smaller;">v</sub></small>'
 		},
 		plotOptions: {
 			area: {
@@ -545,7 +545,7 @@
 				month: '%H:%M',
 				year: '%H:%M'
 			},
-			pointFormat: '{series.name}: <b>{point.y:,.2f}</b>'
+			pointFormat: '{series.name}: <b>{point.y:,.2f}</b> ℃'
 		},
 		plotOptions: {
 			area: {

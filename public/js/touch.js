@@ -64,7 +64,8 @@ function touchHandler(event)
                                 snap:".snappable", 
                                 opacity: 0.7, 
                                 handle: ".handle, .dock", 
-                                snapMode: "inner"
+                                snapMode: "inner",
+                                zIndex: 2000
                             }); 
 
          //This listens for the back button press

@@ -63,7 +63,7 @@ function touchHandler(event)
         $('.draggable').draggable({
                                 snap:".snappable", 
                                 opacity: 0.7, 
-                                handle: ".handle", 
+                                handle: ".handle, .dock", 
                                 snapMode: "inner"
                             }); 
 
@@ -101,11 +101,58 @@ $(window).load(function(){
                                     // reset this snappable area's panel left/right
                                     $(this).find('.panel').css('top', '').css('left', '');
 
+                                     // If we're dragging from snappable-min area
+                                    if($(ui.draggable).parent().hasClass('snappable-min')) {
+                                        $(this).find('.panel > div, .panel > table, .panel > ul').hide();
+                                        $(this).find('.panel > div.dock').show();
+                                    }
+
                                     // make dropped item's parent's html equal this snappable area's html
                                     $(ui.draggable).parent().html($(this).html());
 
                                     // insert dropped item into snappable area
                                     $(this).html(ui.draggable);
+
+                                    // reset dropped item top/left as it is snapping
+                                    $(ui.draggable).css('top', '-10px').css('left', '').find('> div, > table, > ul').show();
+                                    $(ui.draggable).animate({'top' : '0px'}).find('div.dock').hide();
+
+                                    // reinit draggables
+                                    setTimeout(function() {
+                                        window.draggable();
+                                    }, 250);
+
+                                    
+                                }
+                            });
+
+                            $('.snappable-min').droppable({ 
+                                accept: '.draggable',
+                                tolerance: 'pointer',
+                                activate: function(event, ui) {
+                                    $('.snappable-min').animate({'background-color': '#fefefe', 'border-color': '#666'}, 200);
+                                },
+                                deactivate: function(event, ui) {
+                                    $('.snappable-min').animate({'background-color': 'transparent', 'border-color': 'transparent'}, 200);
+                                },
+                                drop: function(event, ui) {
+                                    // reset this snappable area's panel left/right
+                                    $(this).find('.panel').css('top', '').css('left', '');
+
+                                    // If we're dragging from snappable area
+                                    if($(ui.draggable).parent().hasClass('snappable')) {
+                                        $(this).find('.panel > div, .panel > table, .panel > ul').show();
+                                        $(this).find('.panel > div.dock').hide();
+                                    }
+
+                                    // make dropped item's parent's html equal this snappable area's html
+                                    $(ui.draggable).parent().html($(this).html());
+
+                                    // insert dropped item into snappable area
+                                    $(this).html(ui.draggable);
+
+                                    $(ui.draggable).find('> div, > table, > ul').hide();
+                                    $(ui.draggable).find('div.dock').show();
 
                                     // reset dropped item top/left as it is snapping
                                     $(ui.draggable).css('top', '-10px').css('left', '');

@@ -37,10 +37,6 @@
                       'title' => 'Dashboard'
                   ],
                   [
-                      'link' => url('touch'),
-                      'title' => 'Touch'
-                  ],
-                  [
                       'link' => url('spots'),
                       'title' => 'Spots'
                   ],

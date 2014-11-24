@@ -22,16 +22,22 @@
 			@endforeach			
 		</div>
 		<div class='row'>
-			<div class='col-md-4 snappable'>
-				<br />
-			</div>
-			<div class='col-md-4 snappable'>
-				<br />
-			</div>
+			@foreach($spots as $spot)
+				<div class='col-md-4 snappable' id='spot-{{ $spot->id }}'>
+					@include('touch.panels.spot')
+				</div>
+			@endforeach	
 			<div class='col-md-4 snappable'>
 				<div class='panel panel-default draggable'>
+					<div class='dock text-center'>
+						<p>
+							Smart Cup
+							<br />
+							<span id='water_level'>330ml</span>
+						</p>
+					</div>
 					<div class='panel-heading handle'>
-						SmartCup Water Level
+						SmartCup Water Level &middot; <a href='{{ url("spots/".$spot->id."")}}'>{{ $spot->spot_address}}</a>
 					</div>
 					<div class='panel-body'>
 						<div class='row'>
@@ -57,9 +63,27 @@
 			</div>
 		</div>
 
-		<div class="footer">
-			<hr />
-		<p>&copy; Adam Cornforth, Dominic Lindsay, Vitali Bokov 2014</p>
+		<nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+			<div class='container'>
+				<div class='col-md-2'>
+					<br />
+					Dock 
+					<br /> 
+					<small class='text-muted'>
+						Minimise panels by dropping them here.
+					</small>
+				</div>
+				<div class='col-md-2 snappable-min'>
+				</div>
+				<div class='col-md-2 snappable-min'>
+				</div>
+				<div class='col-md-2 snappable-min'>
+				</div>
+				<div class='col-md-2 snappable-min'>
+				</div>
+				<div class='col-md-2 snappable-min'>
+				</div>
+			</div>
+		</nav>
 		</div>
-	</div>
 @stop

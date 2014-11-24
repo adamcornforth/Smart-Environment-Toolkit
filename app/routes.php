@@ -19,23 +19,12 @@ Route::filter('spot', function() {
 });
 
 Route::group(array('before' => 'spot'), function() {
-	Route::get('/', function()
-	{
-		return View::make('hello');
-	});
-
-	Route::get('hammer', function() {
-		return View::make('hammertest');
-	});
-
 	Route::controller('cup', 'CupController');
-	Route::controller('touch', 'TouchController');
-	Route::controller('socket', 'SocketController');
+	Route::controller('/', 'TouchController');
 
 	Route::resource('spots', 'SpotController');
 	Route::resource('objects', 'ObjectController');
 	Route::resource('jobs', 'JobController');
-
 
 	Route::controller('zones', 'ZoneController');
 	Route::resource('zones', 'ZoneController');

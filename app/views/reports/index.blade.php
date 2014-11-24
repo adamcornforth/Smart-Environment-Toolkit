@@ -252,7 +252,7 @@
 						{
 							series_data.push(
 							{
-								x: new Date(result[i].created_at),
+								x: new Date(result[i].created_at).getTime(),
 								y: parseFloat(result[i].light_intensity)
 							});
 						}
@@ -266,15 +266,23 @@
 						{
 							if(result[i].id > last_id['light'])
 							{
-								light_series[0].addPoint(
+								var shift = light_series[0].data.length > 20;
+
+								light_chart.series[0].addPoint(
 								[
-									result[i].created_at,
-									result[i].light_intensity
-								], true, true);
+									new Date(result[i].created_at).getTime(),
+									parseFloat(result[i].light_intensity)
+								], true, shift);
 							}
 						}
 						last_id['light'] = result[0].id;
 					}
+
+						// light_series[0].addPoint(
+						// 	[
+						// 		new Date().getTime(),
+						// 		parseFloat((Math.random() * (90.000 - 40.00) + 40.00).toFixed(2))
+						// 	], true, shift);
 				})
 			}
 		}
@@ -303,7 +311,7 @@
 						{
 							series_data.push(
 							{
-								x: new Date(result[i].created_at),
+								x: new Date(result[i].created_at).getTime(),
 								y: parseFloat(result[i].heat_temperature)
 							});
 						}
@@ -317,11 +325,13 @@
 						{
 							if(result[i].id > last_id['heat'])
 							{
+								var shift = heat_series[0].data.length > 20;
+
 								heat_series[0].addPoint(
 								[
-									result[i].created_at,
-									result[i].heat_temperature
-								], true, true);
+									new Date(result[i].created_at).getTime(),
+									parseFloat(result[i].heat_temperature)
+								], true, shift);
 							}
 						}
 						last_id['heat'] = result[0].id;

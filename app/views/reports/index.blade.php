@@ -252,31 +252,37 @@
 						{
 							series_data.push(
 							{
-								x: result[i].created_at,
-								y: result[i].light_intensity
+								x: new Date(result[i].created_at).getTime(),
+								y: parseFloat(result[i].light_intensity)
 							});
 						}
 
 						light_series[0] = addSeriesToChart(light_chart, 'Live', '#90ed7d', series_data); // Colour: Light Green
-						// last_id['light'] = result[0].id;
+						last_id['light'] = result[0].id;
 					}
 					else if(result[0].id > last_id['light'])
 					{
 						for(var i = result.length-1; i >= 0; i--)
 						{
-							console.log("last_id['light']: " + last_id['light']);
 							if(result[i].id > last_id['light'])
 							{
-								light_series[0].addPoint(
+								var shift = light_series[0].data.length > 20;
+
+								light_chart.series[0].addPoint(
 								[
-									result[i].created_at,
-									result[i].light_intensity
-								], true, true);
-								console.log(result[i].created_at);
+									new Date(result[i].created_at).getTime(),
+									parseFloat(result[i].light_intensity)
+								], true, shift);
 							}
 						}
 						last_id['light'] = result[0].id;
 					}
+
+						// light_series[0].addPoint(
+						// 	[
+						// 		new Date().getTime(),
+						// 		parseFloat((Math.random() * (90.000 - 40.00) + 40.00).toFixed(2))
+						// 	], true, shift);
 				})
 			}
 		}
@@ -305,27 +311,27 @@
 						{
 							series_data.push(
 							{
-								x: result[i].created_at,
-								y: result[i].heat_temperature
+								x: new Date(result[i].created_at).getTime(),
+								y: parseFloat(result[i].heat_temperature)
 							});
 						}
 
 						heat_series[0] = addSeriesToChart(heat_chart, 'Live', '#90ed7d', series_data); // Colour: Light Green
-						// last_id['heat'] = result[0].id;
+						last_id['heat'] = result[0].id;
 					}
 					else if(result[0].id > last_id['heat'])
 					{
 						for(var i = result.length-1; i >= 0; i--)
 						{
-							console.log("last_id['heat]: " + last_id['heat']);
 							if(result[i].id > last_id['heat'])
 							{
+								var shift = heat_series[0].data.length > 20;
+
 								heat_series[0].addPoint(
 								[
-									result[i].created_at,
-									result[i].heat_temperature
-								], true, true);
-								console.log(result[i].created_at);
+									new Date(result[i].created_at).getTime(),
+									parseFloat(result[i].heat_temperature)
+								], true, shift);
 							}
 						}
 						last_id['heat'] = result[0].id;
@@ -351,6 +357,7 @@
 
 							if(live)
 							{
+								light_refresh(); // To avoid waiting for the first load
 								setInterval(function()
 									{
 										light_refresh();
@@ -364,16 +371,16 @@
 								for(var i = 0; i < day_1_data_light.length ; i++)
 								{
 									series_data_day_1.push({
-										x: dateToTimeOnlyHMS(day_1_data_light[i].created_at),
-										y: day_1_data_light[i].light_intensity
+										x: new Date(dateToTimeOnlyHMS(day_1_data_light[i].created_at)).getTime(),
+										y: parseFloat(day_1_data_light[i].light_intensity)
 									});
 								}
 
 								for(i = 0; i < day_2_data_light.length ; i++)
 								{
 									series_data_day_2.push({
-										x: dateToTimeOnlyHMS(day_2_data_light[i].created_at),
-										y: day_2_data_light[i].light_intensity
+										x: new Date(dateToTimeOnlyHMS(day_2_data_light[i].created_at)).getTime(),
+										y: parseFloat(day_2_data_light[i].light_intensity)
 									});
 								}
 
@@ -412,7 +419,13 @@
 			}
 		},
 		tooltip: {
-			dateTimeLabelFormats: {
+            // formatter: function() {
+            //     return  '<b>' + this.series.name +'</b><br/>' +
+            //         Highcharts.dateFormat('%e - %b - %Y',
+            //                               new Date(this.x))
+            //     + ' date, ' + this.y + ' Kg.';
+            // },
+            dateTimeLabelFormats: {
 				millisecond: '%H:%M:%S.%L',
 				second: '%H:%M:%S',
 				minute: '%H:%M',
@@ -460,6 +473,7 @@
 
 							if(live)
 							{
+								heat_refresh(); // To avoid waiting for the first load
 								setInterval(function()
 									{
 										heat_refresh();
@@ -473,16 +487,16 @@
 								for(i = 0; i < day_1_data_temperature.length ; i++)
 								{
 									series_data_day_1.push({
-										x: dateToTimeOnlyHMS(day_1_data_temperature[i].created_at),
-										y: day_1_data_temperature[i].heat_temperature
+										x: new Date(dateToTimeOnlyHMS(day_1_data_temperature[i].created_at)).getTime(),
+										y: parseFloat(day_1_data_temperature[i].heat_temperature)
 									});
 								}
 
 								for(i = 0; i < day_2_data_temperature.length ; i++)
 								{
 									series_data_day_2.push({
-										x: dateToTimeOnlyHMS(day_2_data_temperature[i].created_at),
-										y: day_2_data_temperature[i].heat_temperature
+										x: new Date(dateToTimeOnlyHMS(day_2_data_temperature[i].created_at)).getTime(),
+										y: parseFloat(day_2_data_temperature[i].heat_temperature)
 									});
 								}
 

@@ -85,7 +85,7 @@ class ReportController extends \BaseController {
 	{
 		if($spot_address == 0)
 		{
-			echo $data::orderBy('created_at', 'DESC')->take(1000)->get();
+			echo $data::orderBy('created_at', 'DESC')->take(600)->get();
 		}
 		else
 		{

@@ -252,7 +252,7 @@
 						{
 							series_data.push(
 							{
-								x: parseInt(dateToTimeOnlyHMS(result[i].created_at)),
+								x: "" + result[i].created_at + "",
 								y: parseFloat(result[i].light_intensity)
 							});
 						}
@@ -305,7 +305,7 @@
 						{
 							series_data.push(
 							{
-								x: parseInt(dateToTimeOnlyHMS(result[i].created_at)),
+								x: result[i].created_at,
 								y: parseFloat(result[i].heat_temperature)
 							});
 						}

@@ -254,12 +254,10 @@ class DataSeeder extends Seeder {
 
         $cup_percent = 100;
 
-        Water::create(array('water_percent' => $cup_percent, 'zone_id' => 1, 'job_id' => $jobs['cup_drank_from']->id, 'spot_address'  => $spots['dom'][1]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
-
         while($carbon->lt($now)) {
     		$random_float = rand(0, 10) / 10;
 
-            $water_drank = (mt_rand(0,200) == 1) ? 1 : 0;
+            $water_drank = (mt_rand(0,80) == 1) ? 1 : 0;
             $kettle_boiled = (mt_rand(0,300) == 1) ? 50-mt_rand(1,5)+$random_float : 28-mt_rand(1,5)+$random_float;
             $zone_temp = (mt_rand(0,300) == 1) ? 35-mt_rand(1,5)+$random_float : 28-mt_rand(1,5)+$random_float;
             $fridge_light_on = (mt_rand(0,300) == 1) ? 50-mt_rand(1,5)+$random_float : 0;
@@ -299,10 +297,10 @@ class DataSeeder extends Seeder {
              * Insert water level data
              */
             if($water_drank > 0) {
-                $cup_percent -= 10;
                 echo "Water drank to $cup_percent%\n";
-                Water::create(array('water_percent' => $cup_percent, 'zone_id' => 1, 'job_id' => $jobs['cup_drank_from']->id, 'spot_address'  => $spots['dom'][1]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
-                if($cup_percent < 10) $cup_percent = 100;
+                Water::create(array('water_percent' => $cup_percent, 'zone_id' => 1, 'job_id' => $jobs['cup_drank_from']->id, 'spot_address'  => $spots['dom'][1]->spot_address, 'created_at'    => Carbon::now()->toDateTimeString()));
+                $cup_percent -= 10;
+                if($cup_percent < 0) $cup_percent = 100;
             }
 
          if($kettle_boiled > 40) Heat::create(array('heat_temperature' => $kettle_boiled, 'zone_id' => 1, 'job_id' => $jobs['kettle_boiled']->id,'spot_address' => $spots['adam'][2]->spot_address, 'created_at'    => $carbon->toDateTimeString()));

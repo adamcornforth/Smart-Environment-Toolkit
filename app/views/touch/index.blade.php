@@ -33,16 +33,16 @@
 						<p>
 							Smart Cup
 							<br />
-							<span id='water_level'>330ml</span>
+							<span class='water_level'>330ml</span>
 						</p>
 					</div>
 					<div class='panel-heading handle'>
-						SmartCup Water Level &middot; <a href='{{ url("spots/".$spot->id."")}}'>{{ $spot->spot_address}}</a>
+						SmartCup Water Level &middot; <a href='{{ url("spots/".Spot::whereSpotAddress('0014.4F01.0000.77C0')->first()->id."")}}'>{{ Spot::whereSpotAddress('0014.4F01.0000.77C0')->first()->spot_address}}</a>
 					</div>
 					<div class='panel-body'>
 						<div class='row'>
 							<div class='col-sm-4 text-center'>
-								<h2> <span id='water_level'>330ml</span> <br /><small>Left in cup</small></h2>
+								<h2> <span class='water_level'>330ml</span> <br /><small>Left in cup</small></h2>
 							</div>
 							<div id="CupOfCoffee" class='col-sm-2 col-sm-offset-1 col-md-offset-0 col-md-4'>
 								<div id="lid">
@@ -55,8 +55,26 @@
 								<div id="sleeve"></div>
 							</div>
 							<div class='col-sm-offset-1 col-md-offset-0 col-sm-4 text-center'>
-								<h2> 2/6 cups <br /><small>Drank today</small></h2>
+								<h2> 
+									<span id='cup_no'>{{ Water::whereWaterPercent('0')->whereBetween('created_at', array(Carbon::now()->startOfDay()->toDateTimeString(), Carbon::now()->endOfDay()->toDateTimeString()))->get()->count() }}</span>/6 cups 
+									<br />
+									<small>Drank today</small>
+								</h2>
 							</div>
+							<script type="text/javascript">
+								(function worker() {
+								  $.ajax({
+								    url: "/cup/cupsno", 
+								    success: function(data) {
+								      $('#cup_no').html(data.cups);
+								    },
+								    complete: function() {
+								      // Schedule the next request when the current one's complete
+								      setTimeout(worker, 2500);
+								    }
+								  });
+								})();
+							</script>
 						</div>
 					</div>
 				</div>

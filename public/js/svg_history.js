@@ -11,21 +11,29 @@ function SVG_Zone(zone_id, place, name, colour)
 		.select("#zone_" + zone_id)
 			.append("rect")
 				.attr("x", place + "%")
-				.attr("width", 250)
-				.attr("height", 250)
+				.attr("y", "10%")
+				.attr("width", 260)
+				.attr("height", 260)
 				.style("fill", this.colour)
 				.style("stroke-width", 3)
 				.style("stroke", "#000000");
 	this.value = 0;
 	var that = this;
+
+	this.circle_lable_size_difference_small = 12;
+	this.circle_lable_size_difference_big = 7.5;
+	this.count_isbig = false;
 	this.count = d3
 		.select("#zone_" + zone_id)
 			.append("text")
-				.attr("x", place + 1 + "%")
-				.attr("y", "10%")
-				.text(this.value)
+				.attr("x", this.place + this.circle_lable_size_difference_small + "%")
+				.attr("y", "9%")
 				.attr("font-size", "30px")
-				.attr("fill", "white")
+				// .attr("x", this.place + this.circle_lable_size_difference + "%")
+				// .attr("y", "60%")
+				// .attr("font-size", "190px")
+				.text(this.value)
+				.attr("fill", "black")
 				.on("click", function() { that.switchCountSize() });
 				// .style("stroke-width", 0)
 				// .style("stroke", "#000000");
@@ -34,6 +42,23 @@ function SVG_Zone(zone_id, place, name, colour)
 SVG_Zone.prototype.setCount = function(number)
 {
 	this.value = this.value + number;
+	if(this.value == 10)
+	{
+		this.circle_lable_size_difference_small = this.circle_lable_size_difference_small / 1.1;
+		this.circle_lable_size_difference_big = this.circle_lable_size_difference_big / 2;
+		if(this.count_isbig)
+		{
+			this.count
+				.attr("x", this.place + this.circle_lable_size_difference_big + "%")
+				// .attr("x", this.place + this.circle_lable_size_difference_small + "%");
+		}
+		else
+		{
+			this.count
+				.attr("x", this.place + this.circle_lable_size_difference_small + "%")
+
+		}
+	}
 	this.count
 		.text(this.value);
 };
@@ -41,16 +66,18 @@ SVG_Zone.prototype.switchCountSize = function()
 {
 	if(this.count.style("font-size") != "190px")
 	{
+		this.count_isbig = true;
 		this.count
-			.attr("x", this.place + 7.5 + "%")
-			.attr("y", "60%")
+			.attr("x", this.place + this.circle_lable_size_difference_big + "%")
+			.attr("y", "70%")
 			.attr("font-size", "190px");
 	}
 	else
 	{
+		this.count_isbig = false;
 		this.count
-			.attr("x", this.place + 1 + "%")
-			.attr("y", "10%")
+			.attr("x", this.place + this.circle_lable_size_difference_small + "%")
+			.attr("y", "9%")
 			.attr("font-size", "30px");
 	}
 };
@@ -90,17 +117,19 @@ SVG_User.prototype.create = function(zone_to, zones, seats, date_string)
 		.append("circle")
 			.attr("cx", getXforZone(this.zone, this.seat_X))
 			.attr("cy", getYforZone(this.seat_Y))
-			.attr("r", "25")
+			.attr("r", circle_size)
 			// .attr("visibility", "hidden")
 			.style("stroke", "#000000")
-			.style("stroke-width", 4)
+			.style("stroke-width", circle_stroke_size + "px")
 			.style("fill", this.colour); // "#FFFFCC" or getRandomColor()
 
 	this.svg_object
 		.append("text")
-			.attr("x", (this.svg_object.select("circle").attr("cx").replace("%", "") - 1.375) + "%")
-			.attr("y", (this.svg_object.select("circle").attr("cy").replace("%", "") - (-5.5)) + "%")
-			.attr("font-size", "45px")
+			// .attr("x", (this.svg_object.select("circle").attr("cx").replace("%", "") / 1.4) + "%")
+			// .attr("y", (this.svg_object.select("circle").attr("cy").replace("%", "") * 1.3) + "%")
+			.attr("x", (this.svg_object.select("circle").attr("cx").replace("%", "") - text_position_difference_X) + "%")
+			.attr("y", (this.svg_object.select("circle").attr("cy").replace("%", "") - text_position_difference_Y) + "%")
+			.attr("font-size", circle_label_size + "px")
 			.attr("fill", "white")
 			.text(document.getElementById("spot_" + this.spot_id + "_full_name").innerHTML.charAt(0));
 
@@ -142,6 +171,25 @@ SVG_User.prototype.moveTo = function(zone_to, zones, speed, date_string)
 			that.printTime(date_string);
 			that.setMovingStatus(false);
 		},speed+100);
+};
+SVG_User.prototype.shrink = function()
+{
+	var seat = seats.takeSeat();
+	this.seat_X = seat[0];
+	this.seat_Y = seat[1];
+
+	this.svg_object.select("circle")
+		.attr("cx", getXforZone(this.zone, this.seat_X))
+		.attr("cy", getYforZone(this.seat_Y))
+		.attr("r", circle_size)
+		.style("stroke-width", circle_stroke_size + "px");
+
+	this.svg_object.select("text")
+		.attr("font-size", circle_label_size + "px")
+		.attr("x", (this.svg_object.select("circle").attr("cx").replace("%", "") - text_position_difference_X) + "%")
+		.attr("y", (this.svg_object.select("circle").attr("cy").replace("%", "") - text_position_difference_Y) + "%");
+		// .attr("x", (this.svg_object.select("circle").attr("cx").replace("%", "") - 1) + "%")
+		// .attr("y", (this.svg_object.select("circle").attr("cy").replace("%", "") - (-2.5)) + "%");
 };
 SVG_User.prototype.getId = function()
 {
@@ -201,43 +249,106 @@ SVG_Progress.prototype.getMax = function()
 function SVG_Seats(seat_per_Y, number_of_Y)
 {
 	this.seat_per_Y = seat_per_Y;
-	this.seats = new Array();
-	for(var i_Y = 1; i_Y <= number_of_Y; i_Y++)
-	{
-		for(var i_X = 0; i_X < this.seat_per_Y; i_X++)
-		{
-			this.seats.push([i_X, i_Y]);
-		}
-	}
+	this.number_of_Y = number_of_Y;
+	this.set(seat_per_Y, number_of_Y);
 }
 SVG_Seats.prototype.takeSeat = function()
 {
 	var seat = this.seats[0];
 	this.seats.shift();
+
+	if(seat == null)
+	{
+		this.seat_per_Y = this.seat_per_Y * 1.25;
+		this.number_of_Y = this.number_of_Y * 1.25;
+		console.log("seat_per_Y: " + this.seat_per_Y);
+		console.log("number_of_Y: " + this.number_of_Y);
+		this.set(this.seat_per_Y, this.number_of_Y);
+		shrinkAll();
+		seat = this.seats[0];
+		this.seats.shift();
+	}
+
 	return seat;
+};
+SVG_Seats.prototype.set = function(seat_per_Y, number_of_Y)
+{
+	this.seat_per_Y = seat_per_Y;
+	this.seats = new Array();
+	for(var i_Y = 1; i_Y < number_of_Y+1; i_Y++)
+		{
+			for(var i_X = 0; i_X < this.seat_per_Y; i_X++)
+			{
+				this.seats.push([i_X, i_Y]);
+			}
+		}
 };
 /*
 ** Class: General functions
 */
+function shrinkAll()
+{
+	difference_in_position_X = difference_in_position_X / 1.25;
+	difference_in_position_Y = difference_in_position_Y / 1.25;
+	X_start_position_for_zone = X_start_position_for_zone / 1.25;
+	circle_size = circle_size / 1.25;
+	circle_stroke_size = circle_stroke_size / 1.25;
+	circle_label_size = circle_label_size / 1.25;
+	text_position_difference_X = text_position_difference_X / 1.25;
+	text_position_difference_Y = text_position_difference_Y / 1.25;
+	difference_in_position_Y = difference_in_position_Y * 1.01;
+	difference_in_position_Y_constant = difference_in_position_Y_constant * 1.1;
+	console.log("difference_in_position_Y_constant: " + difference_in_position_Y_constant);
+
+	for(var i = 0; i < users.length; i++)
+	{
+		users[i].shrink();
+	}
+	return false;
+}
+
 function getXforZone(zone, seat_X)
 {
-	var difference = 7.5 * seat_X;
+	if(difference_in_position_X == null)
+	{
+		difference_in_position_X = 7.5;
+	}
+	if(X_start_position_for_zone == null)
+	{
+		X_start_position_for_zone = 5;
+	}
+
+	var difference = difference_in_position_X * seat_X;
 	if (zone == 1 )
 	{
-		return 5 + difference + "%"; //12.5 Middle or getRandomNumber(5, 20)
+		return X_start_position_for_zone + difference + "%"; //12.5 Middle or getRandomNumber(5, 20)
 	}
 	else if (zone == 2 )
 	{
-		return 40 + difference + "%"; //47.5 Middle or getRandomNumber(40, 55)
+		return (X_start_position_for_zone * 8) + difference + "%"; //47.5 Middle or getRandomNumber(40, 55)
 	}
 	else if (zone == 3 )
 	{
-		return 75 + difference + "%"; //82.5 Middle or getRandomNumber(75, 90)
+		return (X_start_position_for_zone * 15) + difference + "%"; //82.5 Middle or getRandomNumber(75, 90)
 	}
 }
 function getYforZone(rowNumber)
 {
-	return (rowNumber * 20) + "%"; // 40 Middle or getRandomNumber(15, 67.5)
+	if(difference_in_position_Y == null)
+	{
+		difference_in_position_Y = 25;
+	}
+
+	return ((rowNumber * difference_in_position_Y) + difference_in_position_Y_constant) + "%"; // 40 Middle or getRandomNumber(15, 67.5)
+
+	if( rowNumber == 1)
+	{
+		((rowNumber * difference_in_position_Y) + difference_in_position_Y_constant) + "%";
+	}
+	else
+	{
+		((rowNumber * difference_in_position_Y) + 4) + "%";
+	}
 }
 function userExist(spot_id, users)
 {

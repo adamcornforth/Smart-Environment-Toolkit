@@ -122,8 +122,10 @@ return array(
 		'Illuminate\View\ViewServiceProvider',
 		'Illuminate\Workbench\WorkbenchServiceProvider',
 
+		'Liebig\Cron\CronServiceProvider',
 		'Bootstrapper\BootstrapperServiceProvider',
-		'BrainSocket\BrainSocketServiceProvider'
+		'BrainSocket\BrainSocketServiceProvider',
+		'Thujohn\Twitter\TwitterServiceProvider'
 
 	),
 
@@ -228,7 +230,12 @@ return array(
 		/**
 		 * https://github.com/BrainBoxLabs/brain-socket
 		 */
-		'BrainSocket'     => 'BrainSocket\BrainSocketFacade'
+		'BrainSocket'     => 'BrainSocket\BrainSocketFacade',
+
+		/**
+		 * https://github.com/thujohn/twitter-l4
+		 */
+		'Twitter' => 'Thujohn\Twitter\TwitterFacade',
 
 	),
 

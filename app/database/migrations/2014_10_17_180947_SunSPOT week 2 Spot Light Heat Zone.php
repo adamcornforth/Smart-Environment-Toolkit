@@ -28,6 +28,7 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 			$table->increments('id');
 		    $table->string('spot_address')->unique();
 		    $table->integer('user_id')->unsigned()->nullable();
+		    $table->integer('battery_percent')->nullable();
 		    $table->timestamps();
 
 		    $table->foreign('user_id')->references('id')->on('Users');

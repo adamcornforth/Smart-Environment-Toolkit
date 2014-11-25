@@ -10,7 +10,9 @@
 		"patricktalmadge/bootstrapper": "~5",
 		"brainboxlabs/brain-socket": "v1.0.0",
 		"cboden/Ratchet"    : "0.3.*",
-		"react/zmq": "0.2.*|0.3.*"
+		"react/zmq": "0.2.*|0.3.*",
+		"thujohn/twitter": "dev-master",
+		"liebig/cron": "dev-master"
 	},
 	"autoload": {
 		"classmap": [

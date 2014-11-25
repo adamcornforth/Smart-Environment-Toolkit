@@ -12,6 +12,20 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 	 */
 	public function up()
 	{
+		Schema::create('cron_manager', function($table) {
+                    $table->increments('id');
+                    $table->dateTime('rundate');
+                    $table->float('runtime');
+                });
+
+		Schema::create('cron_job', function($table) {
+                    $table->increments('id');
+                    $table->string('name');
+                    $table->text('return');
+                    $table->float('runtime');
+                    $table->integer('cron_manager_id');
+                });
+
 		Schema::create('Users', function($table)
 		{
 			$table->increments('id');
@@ -28,6 +42,7 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 			$table->increments('id');
 		    $table->string('spot_address')->unique();
 		    $table->integer('user_id')->unsigned()->nullable();
+		    $table->integer('battery_percent')->nullable();
 		    $table->timestamps();
 
 		    $table->foreign('user_id')->references('id')->on('Users');
@@ -182,6 +197,18 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 		    $table->foreign('job_id')->references('id')->on('Job');
 		    $table->foreign('zone_id')->references('id')->on('Zone');
 		});
+
+		Schema::create('Tweet', function($table)
+		{
+		    $table->increments('id');
+		    $table->bigInteger('tweet_id');
+		    $table->string('tweet'); 
+		    $table->string('from');
+		    $table->string('from_url');
+
+		    $table->integer('seen')->default(0); 
+		    $table->integer('replied')->default(0); 
+		});
 	}
 
 	/**
@@ -191,6 +218,7 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 	 */
 	public function down()
 	{
+		Schema::drop('Tweet'); 
 		Schema::drop('Water'); 
 		Schema::drop('Motion'); 
 		Schema::drop('Acceleration'); 
@@ -204,7 +232,10 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 		Schema::drop('Sensor');
 		Schema::drop('Object');
 		Schema::drop('Spot');    
-		Schema::drop('Users');   
+		Schema::drop('Users');  
+
+		Schema::drop('cron_manager');  
+		Schema::drop('cron_job');   
 	}
 
 }

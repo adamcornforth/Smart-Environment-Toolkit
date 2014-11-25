@@ -92,15 +92,15 @@
 					</small>
 					<br /><br />
 				</div>
-				<div class='col-md-2 snappable-min'>
+				<div class='col-xs-2 snappable-min'>
 				</div>
-				<div class='col-md-2 snappable-min'>
+				<div class='col-xs-2 snappable-min'>
 				</div>
-				<div class='col-md-2 snappable-min'>
+				<div class='col-xs-2 snappable-min'>
 				</div>
-				<div class='col-md-2 snappable-min'>
+				<div class='col-xs-2 snappable-min'>
 				</div>
-				<div class='col-md-2 snappable-min'>
+				<div class='col-xs-2 snappable-min'>
 				</div>
 			</div>
 		</nav>

@@ -19,6 +19,12 @@ Route::filter('spot', function() {
 });
 
 Route::group(array('before' => 'spot'), function() {
+	Route::get('twitter', function() {
+		echo Heat::lab(); 
+		echo "<br />";
+		echo Light::lab();
+	});
+
 	Route::controller('cup', 'CupController');
 
 	Route::resource('spots', 'SpotController');

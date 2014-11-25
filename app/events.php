@@ -1,24 +1,57 @@
 <?php
-Event::listen('generic.event',function($client_data){
-    return BrainSocket::message('generic.event',array('message'=>'A message from a generic event fired in Laravel!'));
-});
+Cron::setDisablePreventOverlapping();
 
-Event::listen('app.zonechange',function($client_data){
-    return BrainSocket::message('app.zonechange',array('message'=>'A zonechange occured!'));
-});
+// Every hour 
+Cron::add('cronhour', '0 * * * *', function() {
+	$heat = Heat::average(Carbon::now()->subHour()->toDateTimeString(), Carbon::now()->toDateTimeString());
+	$light = Light::average(Carbon::now()->subHour()->toDateTimeString(), Carbon::now()->toDateTimeString());
+    return Twitter::postTweet(array('status' => Carbon::now()->format('D jS M g:ia').': Average Lab Temp: '.$heat.', Lab Light: '.$light, 'format' => 'json'));
+    return true;
+}); 
 
-Event::listen('app.heat',function($client_data){
-    return BrainSocket::message('app.heat',array('message'=>'Heat data inserted'));
-});
+// Every min 
+function contains($str, array $arr)
+{
+    foreach($arr as $a) {
+        if (stripos($str,$a) !== false) return true;
+    }
+    return false;
+}
+Cron::add('cronmin', '* * * * *', function() {
+    $mentions = Twitter::getMentionsTimeline();
 
-Event::listen('app.light',function($client_data){
-    return BrainSocket::message('app.light',array('message'=>'Light data inserted'));
-});
+    $tweet = null; 
 
-Event::listen('app.success',function($client_data){
-    return BrainSocket::success(array('There was a Laravel App Success Event!'));
-});
+	foreach ($mentions as $mention) {
+			if(Tweet::whereTweetId($mention->id)->get()->count() == 0 && $mention->user->screen_name != "SccSmartLab") {
+				echo $mention->text."<br />";
+				$tweet = Tweet::create(array(
+								'tweet_id' => $mention->id,
+								'tweet' => $mention->text, 
+								'from' => $mention->user->screen_name, 
+								'from_url' => $mention->user->url,
+								'seen' => 1,
+								'replied' => 1
+							)); 
 
-Event::listen('app.error',function($client_data){
-    return BrainSocket::error(array('There was a Laravel App Error!'));
-});
+				// Reply with most recent heat 
+				if(contains($mention->text, array('heat', 'temp', 'hot', 'warm', 'cool'))) {
+					$tweet = Twitter::postTweet(array('status' => 'Hi @'.$mention->user->screen_name.', the average heat of the lab now is '.Heat::lab().' ('.Carbon::now()->format('g:ia').')', 'format' => 'json', 'in_reply_to_status_id' => $mention->id)); 
+
+				// Reply with most recent light
+				} elseif(contains($mention->text, array('light', 'bright', 'dark'))) {
+					$tweet = Twitter::postTweet(array('status' => 'Hi @'.$mention->user->screen_name.', the average light of the lab now is '.Light::lab().' ('.Carbon::now()->format('g:ia').')', 'format' => 'json', 'in_reply_to_status_id' => $mention->id)); 
+				} else {
+					// Reply with most recent light
+					$tweet = Twitter::postTweet(array('status' => 'Hi @'.$mention->user->screen_name.' ('.$mention->text.'), sorry - we could not recognise your request.', 'format' => 'json', 'in_reply_to_status_id' => $mention->id)); 
+				}
+
+			} else {
+				echo "Tweet already read<br />";
+			}
+		}
+
+    return $tweet."\n";
+}); 
+
+?>

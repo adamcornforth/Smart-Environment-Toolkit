@@ -62,4 +62,24 @@ class Spot extends Eloquent {
         return $collection->reverse();
 	}
 
+	/**
+	 * Returns spots that have cell towers in its jobs
+	 */
+	public static function getTowerSpots() 
+	{
+		$spots = DB::table('Spot')
+            ->join('Object', 'Spot.id', '=', 'Object.spot_id')
+            ->join('Job', 'Object.id', '=', 'Job.object_id')
+            ->join('Sensor', 'Job.sensor_id', '=', 'Sensor.id')
+            ->where('Sensor.title', '=', 'Cell Tower')
+            ->groupBy('Spot.id')
+            ->get();
+        $collection = new \Illuminate\Database\Eloquent\Collection;
+        foreach ($spots as $spot) {
+        	$collection->add(Spot::find($spot->spot_id));
+        }
+        
+        return $collection->reverse();
+	}
+
 }

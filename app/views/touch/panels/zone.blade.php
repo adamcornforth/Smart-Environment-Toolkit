@@ -11,7 +11,7 @@
 			    },
 			    complete: function() {
 			      // Schedule the next request when the current one's complete
-			      setTimeout(worker, 2500);
+			      setTimeout(worker, 10000);
 			    }
 			  });
 			})();
@@ -29,7 +29,7 @@
 			    },
 			    complete: function() {
 			      // Schedule the next request when the current one's complete
-			      setTimeout(worker, 2500);
+			      setTimeout(worker, 10000);
 			    }
 			  });
 			})();
@@ -57,7 +57,7 @@
 				    },
 				    complete: function() {
 				      // Schedule the next request when the current one's complete
-				      setTimeout(worker, 2500);
+				      setTimeout(worker, 10000);
 				    }
 				  });
 				})();
@@ -77,7 +77,7 @@
 		    },
 		    complete: function() {
 		      // Schedule the next request when the current one's complete
-		      setTimeout(worker, 2500);
+		      setTimeout(worker, 1500);
 		    }
 		  });
 		})();

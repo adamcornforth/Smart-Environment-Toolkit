@@ -3,7 +3,7 @@
 		<p> {{ $spot->object->title }} </p>
 	</div>
 	<div class='panel-heading handle'>
-		{{ $spot->object->title }}  &middot; <a href='{{ url("spots/".$spot->id."")}}'>{{ $spot->spot_address}}</a>
+		{{ $spot->object->title }}  &middot; <a href='{{ url("spots/".$spot->id."")}}'>{{ $spot->spot_address}}</a> &middot; {{$spot->battery_percent}}% battery remaining
 	</div>
 	@if(count($spot->jobs))
 	<ul class="nav nav-tabs minimisable" role="tablist">

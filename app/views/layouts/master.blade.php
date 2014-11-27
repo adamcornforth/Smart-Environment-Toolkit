@@ -41,6 +41,10 @@
                       'title' => 'Spots'
                   ],
                   [
+                      'link' => url('actuators'),
+                      'title' => 'Actuators'
+                  ],
+                  [
                       'link' => url('objects'),
                       'title' => 'Lab Objects'
                   ],

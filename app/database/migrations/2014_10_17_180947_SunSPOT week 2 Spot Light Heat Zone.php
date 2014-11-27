@@ -73,6 +73,17 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 		    $table->timestamps();
 		});
 
+		Schema::create('Actuator', function($table)
+		{
+			$table->increments('id');
+		    $table->string('actuator_address')->unique();
+		    $table->string('title');
+		    $table->integer('object_id')->unsigned()->nullable();
+		    $table->timestamps();
+
+		    $table->foreign('object_id')->references('id')->on('Object');
+		});
+
 		Schema::create('Job', function($table)
 		{
 		    $table->increments('id');
@@ -84,6 +95,20 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 
 		    $table->foreign('object_id')->references('id')->on('Object');
 		    $table->foreign('sensor_id')->references('id')->on('Sensor');
+		    $table->timestamps();
+		});
+
+		Schema::create('actuator_job', function($table)
+		{
+			$table->increments('id');
+			$table->string('title');
+		    $table->integer('actuator_id')->unsigned();
+		    $table->integer('job_id')->unsigned();
+		    $table->enum('direction', array('ABOVE', 'BELOW'));
+		    $table->float('threshold'); 
+
+		    $table->foreign('actuator_id')->references('id')->on('Actuator');
+		    $table->foreign('job_id')->references('id')->on('Job');
 		    $table->timestamps();
 		});
 
@@ -204,7 +229,7 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 		    $table->bigInteger('tweet_id');
 		    $table->string('tweet'); 
 		    $table->string('from');
-		    $table->string('from_url');
+		    $table->string('from_url')->nullable();
 
 		    $table->integer('seen')->default(0); 
 		    $table->integer('replied')->default(0); 
@@ -228,7 +253,9 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 		Schema::drop('zone_object');
 		Schema::drop('zone_spot'); 
 		Schema::drop('Zone');
+		Schema::drop('actuator_job');
 		Schema::drop('Job'); 
+		Schema::drop('Actuator'); 
 		Schema::drop('Sensor');
 		Schema::drop('Object');
 		Schema::drop('Spot');    

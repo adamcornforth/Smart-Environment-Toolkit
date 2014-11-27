@@ -22,15 +22,6 @@
 			  			</div>
 						<strong>{{ $job->title }}</strong> &middot; <span class='text-muted'>Triggered when  <strong>{{ strtolower($job->job->sensor->measures) }}</strong> goes <strong>{{ strtolower($job->direction) }} {{ $job->threshold }}{{ $job->job->sensor->unit }}</strong></span>
 					</div>
-			  		
-	      			<div class='panel-footer'>
-	      				<a href='{{ url("spots/".$actuator->id)}}' class='btn btn-default btn-sm pull-right'>
-	  						View All <span class='glyphicon glyphicon-chevron-right'></span>
-	  					</a>
-	  					<p class='form-control-static'>
-							<br />
-						</p>
-	      			</div>
 			  	</div>
 		  	@endforeach
 
@@ -65,10 +56,10 @@
 					  			echo Form::label('job_id', 'Job', array('class' => 'col-md-2 control-label'));
 					  		?>
 				  			<div class='col-md-4'>
-					  			<select name="sensor_id" class='form-control'>
+					  			<select name="job_id" class='form-control'>
 					  				<option value="" disabled="disabled" selected="selected">Please select a job</option>
-					  				@foreach(Sensor::all() as $sensor) 
-					  					<option value="{{ $sensor->id }}">{{ $sensor->title }}</option>
+					  				@foreach(Job::whereObjectId($actuator->object_id)->get() as $job) 
+					  					<option value="{{ $job->id }}">{{ $job->title }}</option>
 					  				@endforeach
 					  			</select>
 					  		</div>

@@ -239,6 +239,16 @@
 
 		var last_id = 0;
 
+		var difference_in_position_X = 7.5;
+		var difference_in_position_Y = 25;
+		var X_start_position_for_zone = 5;
+		var circle_size = 25;
+		var circle_stroke_size = 4;
+		var circle_label_size = 45;
+		var text_position_difference_X = 1.375;
+		var text_position_difference_Y = -5.5;
+		var difference_in_position_Y_constant = 4;
+
 		if(day_picked != 0)
 		{
 			if(JSON.stringify(zoneSpot) != '[]')

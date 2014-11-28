@@ -90,3 +90,6 @@ body {
 	position: absolute;
 	border-radius: 1px;
 }
+.hr-small {
+	margin: 10px 0;
+}

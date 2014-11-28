@@ -95,6 +95,19 @@ class ActuatorController extends \BaseController {
 		return Redirect::to('actuators/'.$actuator->id);
 	}
 
+	/**
+	 * Allows changing of actuator status
+	 */
+	public function postSetStatus()
+	{
+		if(Input::has('status') && Input::has('id')) {
+			$actuator = Actuator::find(Input::get('id')); 
+			$actuator->is_on = Input::get('status'); 
+			$actuator->save();
+			return json_encode(array('actuator_id' => $actuator->id, 'status' => $actuator->is_on));
+		}
+	}
+
 
 	/**
 	 * Remove the specified resource from storage.

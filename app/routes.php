@@ -30,6 +30,8 @@ Route::group(array('before' => 'spot'), function() {
 	Route::resource('spots', 'SpotController');
 	Route::resource('objects', 'ObjectController');
 	Route::resource('jobs', 'JobController');
+
+	Route::post('actuators/set_status', 'ActuatorController@postSetStatus');
 	Route::resource('actuators', 'ActuatorController');
 	
 	Route::controller('zones', 'ZoneController');

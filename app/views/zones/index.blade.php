@@ -232,22 +232,26 @@
 	<script type="text/javascript">
 		var zones = [new SVG_Zone(1, 0, "North End of Lab", "#F0DD08"), new SVG_Zone(2, 35, "Presentation and Touch Table Area", "#56880A"), new SVG_Zone(3, 70, "South End of Lab", "#8F4308")];
 		var users = []; // Create new user
-		var seats = new SVG_Seats(3, 3); // Creates seating system
+		var seats = new SVG_Seats(1, 1); // Creates seating system
 
 		var zoneSpot = {{ json_encode($zoneSpotDayHistory) }};
 		var day_picked = {{ $day_picked }};
 
 		var last_id = 0;
 
-		var difference_in_position_X = 7.5;
-		var difference_in_position_Y = 25;
-		var X_start_position_for_zone = 5;
-		var circle_size = 25;
-		var circle_stroke_size = 4;
-		var circle_label_size = 45;
-		var text_position_difference_X = 1.375;
-		var text_position_difference_Y = -5.5;
-		var difference_in_position_Y_constant = 4;
+		var difference_in_position_X = 25;
+		var difference_in_position_Y = 75;
+		var X_start_position_for_zone = 12;
+		var circle_size = 90;
+		var circle_stroke_size = 15;
+		var circle_label_size = 150;
+		var text_position_difference_X = 5;
+		var text_position_difference_Y = -15;
+		var difference_in_position_Y_constant = -20;
+		var seat_decreaser = 1.5;
+
+		var circle_size_decreaser = 3.5;
+		var difference_in_position_Y_increaser = 1.25;
 
 		if(day_picked != 0)
 		{

@@ -102,9 +102,11 @@ class ActuatorController extends \BaseController {
 	{
 		if(Input::has('status') && Input::has('id')) {
 			$actuator = Actuator::find(Input::get('id')); 
-			$actuator->is_on = Input::get('status'); 
+			if(Input::get('status') == "on") $actuator->is_on = 1;
+			if(Input::get('status') == "off") $actuator->is_on = 0;
+			if(Input::get('status') == "auto") $actuator->is_on = null;
 			$actuator->save();
-			return json_encode(array('actuator_id' => $actuator->id, 'status' => $actuator->is_on));
+			return json_encode(array('actuator_id' => $actuator->id, 'status' => $actuator->is_on, 'posted_status' => Input::get('status')));
 		}
 	}
 

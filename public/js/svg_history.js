@@ -12,8 +12,8 @@ function SVG_Zone(zone_id, place, name, colour)
 			.append("rect")
 				.attr("x", place + "%")
 				.attr("y", "10%")
-				.attr("width", 260)
-				.attr("height", 260)
+				.attr("width", 257.5)
+				.attr("height", 257.5)
 				.style("fill", this.colour)
 				.style("stroke-width", 3)
 				.style("stroke", "#000000");
@@ -257,12 +257,18 @@ SVG_Seats.prototype.takeSeat = function()
 	var seat = this.seats[0];
 	this.seats.shift();
 
-	if(seat == null)
+	while(seat == null)
 	{
-		this.seat_per_Y = this.seat_per_Y * 1.25;
-		this.number_of_Y = this.number_of_Y * 1.25;
-		console.log("seat_per_Y: " + this.seat_per_Y);
-		console.log("number_of_Y: " + this.number_of_Y);
+		if((seat_decreaser / 1.075) > 1.13)
+		{
+			seat_decreaser = seat_decreaser / 1.075;
+		}
+
+		this.seat_per_Y = this.seat_per_Y * seat_decreaser;
+		this.number_of_Y = this.number_of_Y * seat_decreaser;
+		console.log("seat_decreaser: " + seat_decreaser);
+		console.log("seat_per_Y: " + Math.floor(this.seat_per_Y));
+		console.log("number_of_Y: " + Math.floor(this.number_of_Y));
 		this.set(this.seat_per_Y, this.number_of_Y);
 		shrinkAll();
 		seat = this.seats[0];
@@ -288,17 +294,41 @@ SVG_Seats.prototype.set = function(seat_per_Y, number_of_Y)
 */
 function shrinkAll()
 {
-	difference_in_position_X = difference_in_position_X / 1.25;
-	difference_in_position_Y = difference_in_position_Y / 1.25;
-	X_start_position_for_zone = X_start_position_for_zone / 1.25;
-	circle_size = circle_size / 1.25;
-	circle_stroke_size = circle_stroke_size / 1.25;
-	circle_label_size = circle_label_size / 1.25;
-	text_position_difference_X = text_position_difference_X / 1.25;
-	text_position_difference_Y = text_position_difference_Y / 1.25;
+	if((circle_size_decreaser / 1.725) > 1)
+	{
+		circle_size_decreaser = circle_size_decreaser / 1.725;
+	}
+	if((difference_in_position_Y_increaser * 1.0275) < 1.4)
+	{
+		difference_in_position_Y_increaser = difference_in_position_Y_increaser * 1.0275;
+	}
+	console.log("circle_size_decreaser: " + circle_size_decreaser);
+	difference_in_position_X = difference_in_position_X / circle_size_decreaser;
+	difference_in_position_Y = difference_in_position_Y / circle_size_decreaser;
+	X_start_position_for_zone = X_start_position_for_zone / circle_size_decreaser;
+	console.log("circle_size_decreaser: " + circle_size_decreaser);
+	circle_size = circle_size / circle_size_decreaser;
+	console.log("circle_size: " + circle_size);
+	circle_stroke_size = circle_stroke_size / circle_size_decreaser;
+	circle_label_size = circle_label_size / circle_size_decreaser;
+	text_position_difference_X = text_position_difference_X / circle_size_decreaser;
+	text_position_difference_Y = text_position_difference_Y / circle_size_decreaser;
 	difference_in_position_Y = difference_in_position_Y * 1.01;
-	difference_in_position_Y_constant = difference_in_position_Y_constant * 1.1;
+
+	if(difference_in_position_Y_constant < 0)
+	{
+		difference_in_position_Y_constant = difference_in_position_Y_constant / 1.25;
+	}
+	if(difference_in_position_Y_constant < 0 && difference_in_position_Y_constant > -17.5)
+	{
+		difference_in_position_Y_constant = 0.25
+	}
+	if(difference_in_position_Y_constant >= 0 && (difference_in_position_Y_constant * difference_in_position_Y_increaser) <= 10)
+	{
+		difference_in_position_Y_constant = difference_in_position_Y_constant * difference_in_position_Y_increaser;
+	}
 	console.log("difference_in_position_Y_constant: " + difference_in_position_Y_constant);
+	// console.log("difference_in_position_Y_constant: " + difference_in_position_Y_constant);
 
 	for(var i = 0; i < users.length; i++)
 	{
@@ -339,16 +369,16 @@ function getYforZone(rowNumber)
 		difference_in_position_Y = 25;
 	}
 
-	return ((rowNumber * difference_in_position_Y) + difference_in_position_Y_constant) + "%"; // 40 Middle or getRandomNumber(15, 67.5)
+	// if( rowNumber == 1)
+	// {
+	// 	return ((rowNumber * difference_in_position_Y) + difference_in_position_Y_constant) + "%";
+	// }
+	// else
+	// {
+	// 	return ((rowNumber * difference_in_position_Y) + 4) + "%";
+	// }
 
-	if( rowNumber == 1)
-	{
-		((rowNumber * difference_in_position_Y) + difference_in_position_Y_constant) + "%";
-	}
-	else
-	{
-		((rowNumber * difference_in_position_Y) + 4) + "%";
-	}
+	return ((rowNumber * difference_in_position_Y) + difference_in_position_Y_constant) + "%"; // 40 Middle or getRandomNumber(15, 67.5)
 }
 function userExist(spot_id, users)
 {

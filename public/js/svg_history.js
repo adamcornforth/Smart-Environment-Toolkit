@@ -156,7 +156,7 @@ SVG_User.prototype.moveTo = function(zone_to, zones, speed, date_string)
 
 	this.svg_object.select("text")
 		.transition()
-		.attr("x", (getXforZone(this.zone, this.seat_X).replace("%", "") - 1.5) + "%")
+		.attr("x", (getXforZone(this.zone, this.seat_X).replace("%", "") - text_position_difference_X) + "%")
 		.duration(speed)
 		.ease("linear");
 
@@ -339,15 +339,6 @@ function shrinkAll()
 
 function getXforZone(zone, seat_X)
 {
-	if(difference_in_position_X == null)
-	{
-		difference_in_position_X = 7.5;
-	}
-	if(X_start_position_for_zone == null)
-	{
-		X_start_position_for_zone = 5;
-	}
-
 	var difference = difference_in_position_X * seat_X;
 	if (zone == 1 )
 	{
@@ -355,11 +346,11 @@ function getXforZone(zone, seat_X)
 	}
 	else if (zone == 2 )
 	{
-		return (X_start_position_for_zone * 8) + difference + "%"; //47.5 Middle or getRandomNumber(40, 55)
+		return ((X_start_position_for_zone + 35) + difference) + "%"; //47.5 Middle or getRandomNumber(40, 55)
 	}
 	else if (zone == 3 )
 	{
-		return (X_start_position_for_zone * 15) + difference + "%"; //82.5 Middle or getRandomNumber(75, 90)
+		return ((X_start_position_for_zone + 70) + difference) + "%"; //82.5 Middle or getRandomNumber(75, 90)
 	}
 }
 function getYforZone(rowNumber)

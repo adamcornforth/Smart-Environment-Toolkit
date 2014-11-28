@@ -207,6 +207,11 @@ class DataSeeder extends Seeder {
         $objects['roaming_user_2'] = Object::create(array('title' => 'Roaming User (Vitali)', 'spot_id' => $spots['vitali'][1]->id));
 
         /**
+         * Attach some actuators
+         */
+        $actuator['light'] = Actuator::create(array('actuator_address' => '10F20', 'title' => 'LED Light', 'object_id' => $objects['north_zone']->id));
+
+        /**
          * Create some Jobs
          */
         $jobs['door_open'] = Job::create(array('title' => 'Door open', 'object_id' => $objects['fridge']->id, 'sensor_id' => $sensors['accelerometer']->id, 'threshold' => null));
@@ -231,6 +236,11 @@ class DataSeeder extends Seeder {
 
         $jobs['roaming_user_1'] = Job::create(array('title' => 'Roaming User 1 (Dom)', 'object_id' => $objects['roaming_user_1']->id, 'sensor_id' => $sensors['roaming_spot']->id, 'threshold' => null));
         $jobs['roaming_user_2'] = Job::create(array('title' => 'Roaming User 2 (Vitali)', 'object_id' => $objects['roaming_user_2']->id, 'sensor_id' => $sensors['roaming_spot']->id, 'threshold' => null));
+
+        /**
+         * Assign actuator jobs
+         */
+        ActuatorJob::create(array('title' => 'Turn LED Light On', 'actuator_id' => $actuator['light']->id, 'job_id' => $jobs['north_zone_light']->id, 'direction' => 'BELOW', 'threshold' => 40));
 
         /**
          * Assign zones to pillars

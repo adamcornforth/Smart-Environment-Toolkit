@@ -50,3 +50,43 @@ body {
 	border: 1px solid #e7e7e7;
 	border-radius: 4px 4px 0 0;
 }
+.battery-percent {
+	position: relative;
+	z-index: 5;
+	font-size: 9px;
+	width: 44px;
+	display: inline-block;
+	top: -4px;
+	text-align: center;
+}
+.battery {
+	position: relative;
+	display: inline-block;
+	margin: 0px 0px 0 -48px;
+	background: #7DCF87;
+	width: 50px;
+	height: 14px;
+   z-index: 2; 
+  
+}
+.battery:before {
+	content: "";
+	display: block;
+	background: transparent;
+	border: 1px solid #4C4C4C;
+	margin: -2px;
+	width: 50px;
+	height: 18px;
+	position: absolute;
+	border-radius: 2px;
+}
+.battery:after {
+	content: "";
+	display: block;
+	background: #4C4C4C;
+	margin: 1px 49px;
+	width: 1px;
+	height: 11px;
+	position: absolute;
+	border-radius: 1px;
+}

@@ -29,7 +29,6 @@ Cron::add('cronmin', '* * * * *', function() {
 								'tweet_id' => $mention->id,
 								'tweet' => $mention->text, 
 								'from' => $mention->user->screen_name, 
-								'from_url' => $mention->user->url,
 								'seen' => 1,
 								'replied' => 1
 							)); 
@@ -43,7 +42,7 @@ Cron::add('cronmin', '* * * * *', function() {
 					$tweet = Twitter::postTweet(array('status' => 'Hi @'.$mention->user->screen_name.', the average light of the lab now is '.Light::lab().' ('.Carbon::now()->format('g:ia').')', 'format' => 'json', 'in_reply_to_status_id' => $mention->id)); 
 				} else {
 					// Reply with most recent light
-					$tweet = Twitter::postTweet(array('status' => 'Hi @'.$mention->user->screen_name.' ('.$mention->text.'), sorry - we could not recognise your request.', 'format' => 'json', 'in_reply_to_status_id' => $mention->id)); 
+					$tweet = Twitter::postTweet(array('status' => 'Hi @'.$mention->user->screen_name.', sorry - we could not recognise your request.', 'format' => 'json', 'in_reply_to_status_id' => $mention->id)); 
 				}
 
 			} else {

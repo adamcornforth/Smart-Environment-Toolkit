@@ -62,7 +62,7 @@ body {
 .battery {
 	position: relative;
 	display: inline-block;
-	margin: 0px 10px 0 -48px;
+	margin: 0px 0px 0 -48px;
 	background: #7DCF87;
 	width: 50px;
 	height: 14px;

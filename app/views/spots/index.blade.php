@@ -84,6 +84,11 @@
 				  					@endif
 				  				</td>
 				  				<td>
+				  					@if($spot->battery_percent)
+										<span class='pull-right'>
+											@include('touch.panels.battery', array('percent' => $spot->battery_percent))
+										</span>
+									@endif
 				  					<strong>{{ Carbon::parse($spot->updated_at)->format('D jS M') }}</strong> at <strong>{{ Carbon::parse($spot->updated_at)->format('G:ia') }}</strong><br />
 				  					<small class='text-muted'>
 				  						First detected {{ Carbon::parse($spot->created_at)->format('d/m/y') }} {{ Carbon::parse($spot->created_at)->format('G:ia') }}

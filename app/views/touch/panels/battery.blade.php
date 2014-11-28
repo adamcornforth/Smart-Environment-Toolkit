@@ -1,1 +1,1 @@
-<small class='text-right'><span class='battery-percent'>{{ $percent }}%</span> <span class='battery' style='width:{{ $percent/2 }}px'></span></small>
+<small class='text-right'><span class='battery-percent'>{{ $percent }}%</span> <span class='battery' style='width:{{ $percent/2.1739130435 }}px'></span></small>

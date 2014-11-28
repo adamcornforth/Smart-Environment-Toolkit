@@ -82,4 +82,9 @@
 		  });
 		})();
 	</script>
+	<div class='panel-footer'>
+		@if($spot->battery_percent)
+			@include('touch.panels.battery', array('percent' => $spot->battery_percent))
+		@endif
+	</div>
 </div>

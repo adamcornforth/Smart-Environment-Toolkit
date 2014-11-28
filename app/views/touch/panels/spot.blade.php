@@ -3,7 +3,7 @@
 		<p> {{ $spot->object->title }} </p>
 	</div>
 	<div class='panel-heading handle'>
-		{{ $spot->object->title }}  &middot; <a href='{{ url("spots/".$spot->id."")}}'>{{ $spot->spot_address}}</a> &middot; {{$spot->battery_percent}}% battery remaining
+		{{ $spot->object->title }}  &middot; <a href='{{ url("spots/".$spot->id."")}}'>{{ $spot->spot_address}}</a>
 	</div>
 	@if(count($spot->jobs))
 	<ul class="nav nav-tabs minimisable" role="tablist">
@@ -37,4 +37,9 @@
 		@endforeach
 	</div>
 	@endif
+	<div class='panel-footer'>
+		@if($spot->battery_percent)
+			@include('touch.panels.battery', array('percent' => $spot->battery_percent))
+		@endif
+	</div>
 </div>

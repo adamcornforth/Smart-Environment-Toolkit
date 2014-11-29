@@ -22,6 +22,9 @@
 			@endforeach			
 		</div>
 		<div class='row'>
+			<div class='col-md-4 snappable'>
+				@include('touch.panels.actuators')
+			</div>
 			@foreach($spots as $spot)
 				<div class='col-md-4 snappable' id='spot-{{ $spot->id }}'>
 					@include('touch.panels.spot')
@@ -76,6 +79,11 @@
 								})();
 							</script>
 						</div>
+					</div>
+					<div class='panel-footer'>
+						@if(Spot::whereSpotAddress('0014.4F01.0000.77C0')->first()->battery_percent)
+							@include('touch.panels.battery', array('percent' => Spot::whereSpotAddress('0014.4F01.0000.77C0')->first()->battery_percent))
+						@endif
 					</div>
 				</div>
 			</div>

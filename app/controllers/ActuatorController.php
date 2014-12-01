@@ -119,7 +119,24 @@ class ActuatorController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
-		//
+
+	}
+
+	/**
+	 * Remove the specified actuator job from storage
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function deleteJob($id) 
+	{
+		if($actuatorJob = ActuatorJob::find($id)) {
+			// Delete associated readings
+			$actuatorJob->delete(); 
+			return Response::json(array('success' => 'Actuator Job '.$actuatorJob->id.' deleted!')); 
+		} else {
+			return Response::json(array('error' => 'Actuator Job '.$id.' could not be found')); 
+		}
 	}
 
 

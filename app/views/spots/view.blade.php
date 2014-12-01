@@ -49,17 +49,17 @@
 			  		<div class='panel panel-default'>
 						<div class='panel-heading'>
 							<div class='btn-group pull-right'>
-				  				<a class='btn btn-xs btn-default' href=''>
+				  				<a class='btn btn-xs btn-default clear-job' data-job-id='{{ $job->id }}'>
 				  					<span class='glyphicon glyphicon-ban-circle'>
 				  					</span>
 				  					Clear
 				  				</a>
 
-								<a class='btn btn-xs btn-danger' href=''>
+								<span class='btn btn-xs btn-danger delete-job' data-job-id='{{ $job->id }}'>
 				  					<span class='glyphicon glyphicon-trash'>
 				  					</span>
 				  					Delete
-				  				</a>
+				  				</span>
 				  			</div>
 							<strong>{{ $job->title }}</strong>, tracked using the <strong>{{ $job->sensor->title }}</strong>.
 						</div>
@@ -95,6 +95,33 @@
 
 			  	@endif
 		  	@endforeach
+		  	<script type="text/javascript">
+				$('.delete-job').click(function(e) {
+					var button = $(e.target);
+					$.ajax({
+					  type: "DELETE",
+					  url: "/jobs/" + button.data('job-id'),
+					  success: function(data) {
+					  	console.log(data);
+					  	location.reload();
+					  }
+					});
+				});
+			</script>
+
+			<script type="text/javascript">
+				$('.clear-job').click(function(e) {
+					var button = $(e.target);
+					$.ajax({
+					  type: "POST",
+					  url: "/jobs/clear/" + button.data('job-id'),
+					  success: function(data) {
+					  	console.log(data);
+					  	location.reload();
+					  }
+					});
+				});
+			</script>
 
 		  	@if(count($spot->object))
 			  	<div class='panel panel-primary'>

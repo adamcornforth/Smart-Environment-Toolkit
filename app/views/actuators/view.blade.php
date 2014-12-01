@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('content')
-	<a href='{{ url('spots/'.$actuator->id.'/edit') }}' class='btn btn-default pull-right'>
+	<a href='{{ url('actuators/'.$actuator->id.'/edit') }}' class='btn btn-default pull-right'>
 		<span class='glyphicon glyphicon-pencil'></span>
 		Edit Actuator
 	</a>
@@ -14,7 +14,7 @@
 		  		<div class='panel panel-default'>
 					<div class='panel-heading'>
 						<div class='btn-group pull-right'>
-							<a class='btn btn-xs btn-danger' href=''>
+							<a class='btn btn-xs btn-danger delete-job' data-job-id="{{ $job->id }}">
 			  					<span class='glyphicon glyphicon-trash'>
 			  					</span>
 			  					Delete
@@ -24,6 +24,20 @@
 					</div>
 			  	</div>
 		  	@endforeach
+
+		  	<script type="text/javascript">
+				$('.delete-job').click(function(e) {
+					var button = $(e.target);
+					$.ajax({
+					  type: "POST",
+					  url: "/actuators/delete_job/" + button.data('job-id'),
+					  success: function(data) {
+					  	console.log(data);
+					  	location.reload();
+					  }
+					});
+				});
+			</script>
 
 		  	@if(count($actuator->object))
 			  	<div class='panel panel-primary'>
@@ -108,34 +122,21 @@
 			@else
 				<div class='panel panel-primary'>
 					<div class='panel-heading'>
-						Configure SPOT 
+						Configure Actuator 
 					</div>
 				  	<div class='panel-body'>
 				  		<br />
-					  	<?php echo Form::horizontal(array('url' => url('spots/'.$actuator->id), 'method' => 'PUT')); ?>
-				  		<div class='form-group'>
-					  		<?php
-					  			echo Form::label('user_id', 'Who does this SPOT belong to?', array('class' => 'col-md-4 control-label'));
-					  		?>
-				  			<div class='col-md-3'>
-					  			<select name="user_id" class='form-control'>
-					  				<option value="" disabled="disabled" selected="selected">Please select a user</option>
-					  				@foreach(User::all() as $user) 
-					  					<option {{ ((count($actuator->user) && $user->id == $actuator->user->id)) ? "selected='selected'" : ""}}value="{{ $user->id }}">{{ $user->first_name }} {{ $user->last_name }}</option>
-					  				@endforeach
-					  			</select>
-					  		</div>
-					  	</div>
-
+					  	<?php echo Form::horizontal(array('url' => url('actuators/'.$actuator->id), 'method' => 'PUT')); ?>
+			
 					  	<div class='form-group'>
 					  		<?php
-					  			echo Form::label('object_title', 'What object will this SPOT track?', array('class' => 'col-md-4 control-label'));
+					  			echo Form::label('object_title', 'What object is this actuator controlled by?', array('class' => 'col-md-4 control-label'));
 					  		?>
-					  		@if(Object::whereNull('spot_id')->count())
+					  		@if(Object::all()->count())
 					  			<div class='col-md-3'>
 						  			<select name="object_id" class='form-control'>
 						  				<option value="" disabled="disabled" selected="selected">Please select an object</option>
-						  				@foreach(Object::whereNull('spot_id')->get() as $object) 
+						  				@foreach(Object::all() as $object) 
 						  					<option {{ ((count($actuator->object) && $object->id == $actuator->object->id)) ? "selected='selected'" : ""}}value="{{ $object->id }}">{{ $object->title }}</option>
 						  				@endforeach
 						  			</select>

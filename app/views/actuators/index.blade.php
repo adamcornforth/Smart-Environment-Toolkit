@@ -76,11 +76,11 @@
 				  					</small>
 				  				</td>
 				  				<td>
-				  					@if($actuator->jobs->count())
 				  						<a href='{{ url('actuators/'.$actuator->id) }}' class='btn btn-success btn-xs pull-right'>
 			  								Add Job
 			  								<span class='glyphicon glyphicon-plus-sign'></span>
 			  							</a>
+				  					@if($actuator->jobs->count())
 				  						@foreach ($actuator->jobs as $job)
 					  						<strong>{{ $job->title }}</strong> event<br />
 					  						<small class='text-muted'>Triggered when  <strong>{{ strtolower($job->job->sensor->measures) }}</strong> goes <strong>{{ strtolower($job->direction) }} {{ $job->threshold }}{{ $job->job->sensor->unit }}</strong></small><br />

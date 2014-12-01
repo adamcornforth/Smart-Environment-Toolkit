@@ -9,6 +9,7 @@
 		<thead>
 			<tr>
 				<th><small>Actuator</small></th>
+				<th><small>Event</small></th>
 				<th><small>Control</small></th>
 			</tr>
 		</thead>
@@ -17,11 +18,18 @@
 				<tr>
 					<td> 
 						<small>
-							{{ $actuator->title }} &middot;
 							<span class='text-muted'>
 								<a href='{{ url("actuators/$actuator->id") }}'>{{ $actuator->actuator_address }}</a>
 							</span>
 						</small>
+					</td>
+					<td>
+						@if($actuator->jobs->count())
+							<small>
+								{{ $actuator->object->title }}<br />
+								<span class='text-muted'>{{ $actuator->jobs->first()->title }} </span>
+							</small>
+						@endif
 					</td>
 					<td> 
 						<div class="btn-group" data-toggle="buttons">

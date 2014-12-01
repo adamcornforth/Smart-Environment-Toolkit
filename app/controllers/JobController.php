@@ -79,7 +79,30 @@ class JobController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
-		//
+		if($job = Job::find($id)) {
+			// Delete associated readings
+			$readings = DB::table($job->sensor->table)->where('job_id', '=', $job->id)->delete();
+			$job->delete(); 
+			return Response::json(array('success' => 'Job '.$job->id.' deleted!')); 
+		} else {
+			return Response::json(array('error' => 'Job '.$id.' could not be found')); 
+		}
+	}
+
+	/**
+	 * Removes the specified job's readings from storage
+	 * @param  int $id job id
+	 * @return Response
+	 */
+	public function clear($id) 
+	{
+		if($job = Job::find($id)) {
+			// Delete associated readings
+			$readings = DB::table($job->sensor->table)->where('job_id', '=', $job->id)->delete();
+			return Response::json(array('success' => 'Job '.$job->id.' readings deleted!')); 
+		} else {
+			return Response::json(array('error' => 'Job '.$id.' could not be found')); 
+		}
 	}
 
 

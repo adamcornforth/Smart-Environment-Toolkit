@@ -23,10 +23,10 @@ class Heat extends Eloquent {
                 if($job->sensor->title == "Cell Tower") $spot_addresses[] = $spot->spot_address;
 
         // Get readings where cell tower spots have written the readings
-        $readings = DB::table('Heat')->whereIn('spot_address', $spot_addresses)->groupBy('spot_address')->orderBy('id', 'DESC')->take(3)->get();
+        $readings = DB::table('Heat')->whereIn('spot_address', $spot_addresses)->groupBy('spot_address')->orderBy('id', 'DESC')->get();
 
         // Average the readings
-        $sum = 0; 
+        $sum = 0;  
         foreach ($readings as $reading) { 
             echo $reading->heat_temperature." ($reading->spot_address)<br />";
             $sum += $reading->heat_temperature; 

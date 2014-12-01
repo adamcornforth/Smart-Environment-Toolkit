@@ -23,7 +23,7 @@ class Light extends Eloquent {
                 if($job->sensor->title == "Cell Tower") $spot_addresses[] = $spot->spot_address;
 
         // Get readings where cell tower spots have written the readings
-        $readings = DB::table('Light')->whereIn('spot_address', $spot_addresses)->groupBy('spot_address')->orderBy('id', 'desc')->take(3)->get();
+        $readings = DB::table('Light')->whereIn('spot_address', $spot_addresses)->groupBy('spot_address')->orderBy('id', 'desc')->get();
 
         // Average the readings
         $sum = 0; 

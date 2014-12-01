@@ -209,7 +209,7 @@ class DataSeeder extends Seeder {
         /**
          * Attach some actuators
          */
-        $actuator['light'] = Actuator::create(array('actuator_address' => '10F20', 'title' => 'LED Light', 'object_id' => $objects['north_zone']->id));
+        // $actuator['light'] = Actuator::create(array('actuator_address' => '10F20', 'title' => 'LED Light', 'object_id' => $objects['north_zone']->id));
 
         /**
          * Create some Jobs
@@ -240,7 +240,7 @@ class DataSeeder extends Seeder {
         /**
          * Assign actuator jobs
          */
-        ActuatorJob::create(array('title' => 'Turn LED Light On', 'actuator_id' => $actuator['light']->id, 'job_id' => $jobs['north_zone_light']->id, 'direction' => 'BELOW', 'threshold' => 40));
+        // ActuatorJob::create(array('title' => 'Turn LED Light On', 'actuator_id' => $actuator['light']->id, 'job_id' => $jobs['north_zone_light']->id, 'direction' => 'BELOW', 'threshold' => 40));
 
         /**
          * Assign zones to pillars

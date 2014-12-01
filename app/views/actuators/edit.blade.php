@@ -34,7 +34,7 @@
 					  				<a class='btn btn-xs btn-danger pull-right' href=''>
 					  					<span class='glyphicon glyphicon-remove'>
 					  					</span>
-					  					Stop Tracking
+					  					Stop Controlling
 					  				</a>
 					  			</p>
 					  		</div>

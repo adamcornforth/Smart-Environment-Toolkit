@@ -27,7 +27,10 @@ class Heat extends Eloquent {
 
         // Average the readings
         $sum = 0; 
-        foreach ($readings as $reading) $sum += $reading->heat_temperature; 
+        foreach ($readings as $reading) { 
+            echo $reading->heat_temperature."<br />";
+            $sum += $reading->heat_temperature; 
+        }
         
         return ($sum > 0) ? number_format(($sum/$readings->count()), 2)."°C" : "--.--°C";
     }

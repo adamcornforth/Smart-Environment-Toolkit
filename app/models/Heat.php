@@ -23,7 +23,7 @@ class Heat extends Eloquent {
                 if($job->sensor->title == "Cell Tower") $spot_addresses[] = $spot->spot_address;
 
         // Get readings where cell tower spots have written the readings
-        $readings = Heat::whereIn('spot_address', $spot_addresses)->groupBy('spot_address')->orderBy('id', 'ASC')->take(3)->get();
+        $readings = Heat::orderBy('id', 'DESC')->whereIn('spot_address', $spot_addresses)->groupBy('spot_address')->take(3)->get();
 
         // Average the readings
         $sum = 0; 

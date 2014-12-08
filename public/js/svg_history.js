@@ -98,44 +98,53 @@ function SVG_User(spot_id, zone_id)
 	this.spot_id = spot_id;
 	this.zone = zone_id;
 	this.colour = getRandomColor();
-	this.setMovingStatus(false);
+	// this.setMovingStatus(false);
 	console.log("Created User with id:" + spot_id);
 }
 // method "create" to create an SVG object for a user at a specified zone
 SVG_User.prototype.create = function(zone_to, zones, seats, date_string)
 {
 	this.zone = zone_to;
+	this.moving = false;
 	var seat = seats.takeSeat();
-	this.seat_X = seat[0];
-	this.seat_Y = seat[1];
-	zones[this.zone-1].setCount(1);
-	this.svg_object = d3
-		.select("#zone_svg")
-		.append("g")
+	if(seat != null)
+	{
+		this.seat_X = seat[0];
+		this.seat_Y = seat[1];
+		zones[this.zone-1].setCount(1);
+		this.svg_object = d3
+			.select("#zone_svg")
+			.append("g")
 
-	this.svg_object
-		.append("circle")
-			.attr("cx", getXforZone(this.zone, this.seat_X))
-			.attr("cy", getYforZone(this.seat_Y))
-			.attr("r", circle_size)
-			// .attr("visibility", "hidden")
-			.style("stroke", "#000000")
-			.style("stroke-width", circle_stroke_size + "px")
-			.style("fill", this.colour); // "#FFFFCC" or getRandomColor()
+		this.svg_object
+			.append("circle")
+				.attr("cx", getXforZone(this.zone, this.seat_X))
+				.attr("cy", getYforZone(this.seat_Y))
+				.attr("r", circle_size)
+				// .attr("visibility", "hidden")
+				.style("stroke", "#000000")
+				.style("stroke-width", circle_stroke_size + "px")
+				.style("fill", this.colour); // "#FFFFCC" or getRandomColor()
 
-	this.svg_object
-		.append("text")
-			// .attr("x", (this.svg_object.select("circle").attr("cx").replace("%", "") / 1.4) + "%")
-			// .attr("y", (this.svg_object.select("circle").attr("cy").replace("%", "") * 1.3) + "%")
-			.attr("x", (this.svg_object.select("circle").attr("cx").replace("%", "") - text_position_difference_X) + "%")
-			.attr("y", (this.svg_object.select("circle").attr("cy").replace("%", "") - text_position_difference_Y) + "%")
-			.attr("font-size", circle_label_size + "px")
-			.attr("fill", "white")
-			.text(document.getElementById("spot_" + this.spot_id + "_full_name").innerHTML.charAt(0));
+		this.svg_object
+			.append("text")
+				// .attr("x", (this.svg_object.select("circle").attr("cx").replace("%", "") / 1.4) + "%")
+				// .attr("y", (this.svg_object.select("circle").attr("cy").replace("%", "") * 1.3) + "%")
+				.attr("x", (this.svg_object.select("circle").attr("cx").replace("%", "") - text_position_difference_X) + "%")
+				.attr("y", (this.svg_object.select("circle").attr("cy").replace("%", "") - text_position_difference_Y) + "%")
+				.attr("font-size", circle_label_size + "px")
+				.attr("fill", "white")
+				.text(document.getElementById("spot_" + this.spot_id + "_full_name").innerHTML.charAt(0));
 
-	this.printColourForZone(zone_to, zones);
-	this.printColourForName();
-	this.printTime(date_string);
+		this.printColourForZone(zone_to, zones);
+		this.printColourForName();
+		this.printTime(date_string);
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 };
 // method "moveTo" to move the SVG object of a user at a specified zone
 SVG_User.prototype.moveTo = function(zone_to, zones, speed, date_string)
@@ -201,6 +210,7 @@ SVG_User.prototype.getColour = function()
 };
 SVG_User.prototype.setMovingStatus = function(moving)
 {
+	something_is_moving = moving;
 	this.moving = moving;
 };
 SVG_User.prototype.isMoving = function()
@@ -257,41 +267,62 @@ SVG_Seats.prototype.takeSeat = function()
 	var seat = this.seats[0];
 	this.seats.shift();
 
-	while(seat == null)
+	if(seat == null && !isAnythingMoving())
 	{
-		if((seat_decreaser / 1.075) > 1.13)
+		while(seat == null)
 		{
-			seat_decreaser = seat_decreaser / 1.075;
+			if((seat_decreaser / 1.075) > 1.13)
+			{
+				seat_decreaser = seat_decreaser / 1.075;
+			}
+			this.seat_per_Y = this.seat_per_Y * seat_decreaser;
+			this.number_of_Y = this.number_of_Y * seat_decreaser;
+			// console.log("seat_decreaser: " + seat_decreaser);
+			// console.log("seat_per_Y: " + Math.floor(this.seat_per_Y));
+			// console.log("number_of_Y: " + Math.floor(this.number_of_Y));
+			this.set(this.seat_per_Y, this.number_of_Y);
+			shrinkAll();
+			seat = this.seats[0];
+			this.seats.shift();
 		}
-
-		this.seat_per_Y = this.seat_per_Y * seat_decreaser;
-		this.number_of_Y = this.number_of_Y * seat_decreaser;
-		console.log("seat_decreaser: " + seat_decreaser);
-		console.log("seat_per_Y: " + Math.floor(this.seat_per_Y));
-		console.log("number_of_Y: " + Math.floor(this.number_of_Y));
-		this.set(this.seat_per_Y, this.number_of_Y);
-		shrinkAll();
-		seat = this.seats[0];
-		this.seats.shift();
 	}
-
 	return seat;
 };
+// SVG_Seats.prototype.takeSeatAndShrink = function(seat)
+// {
+// 	console.log(isAnythingMoving());
+// 	if(isAnythingMoving())
+// 	{
+// 		setTimeout(function(){
+// 			this.takeSeatAndShrink();
+// 		}, 100);
+// 	}
+// 	else
+// 	{
+
+// 	}
+
+// 	return seat;
+// };
 SVG_Seats.prototype.set = function(seat_per_Y, number_of_Y)
 {
 	this.seat_per_Y = seat_per_Y;
 	this.seats = new Array();
 	for(var i_Y = 1; i_Y < number_of_Y+1; i_Y++)
+	{
+		for(var i_X = 0; i_X < this.seat_per_Y; i_X++)
 		{
-			for(var i_X = 0; i_X < this.seat_per_Y; i_X++)
-			{
-				this.seats.push([i_X, i_Y]);
-			}
+			this.seats.push([i_X, i_Y]);
 		}
+	}
 };
 /*
 ** Class: General functions
 */
+function isAnythingMoving()
+{
+	return something_is_moving;
+};
 function shrinkAll()
 {
 	if((circle_size_decreaser / 1.725) > 1)
@@ -473,35 +504,46 @@ function startTimer(zoneMovementHistory, is_live)
 			}
 		}
 	}
+
 	if(skiping_due_to_moving_status == false)
 	{
 		if(anythingChanged === false)
 		{
 			var users_temp = [new SVG_User(zoneMovementHistory[zoneMovementHistory.length-1].spot_id, zoneMovementHistory[zoneMovementHistory.length-1].zone_id)];
-			users_temp[0].create(zoneMovementHistory[zoneMovementHistory.length-1].zone_id, zones, seats, date_string); // Create an SVG object for that user in a zone
-			zoneMovementHistory = zoneMovementHistory.splice(0, zoneMovementHistory.length-1); // Remove 1 object at the end
-			users = users.concat(users_temp);
-			progress.update(1);
-		}
-		if(zoneMovementHistory.length > 0)
-		{
-			if(current_user == zoneMovementHistory[zoneMovementHistory.length-1].spot_id) // zoneMovementHistory[0].spot_id is the future user
+			if(users_temp[0].create(zoneMovementHistory[zoneMovementHistory.length-1].zone_id, zones, seats, date_string)) // Create an SVG object for that user in a zone
 			{
-				setTimeout(function(){startTimer(zoneMovementHistory, is_live)}, speed);
+				zoneMovementHistory = zoneMovementHistory.splice(0, zoneMovementHistory.length-1); // Remove 1 object at the end
+				users = users.concat(users_temp);
+				progress.update(1);
+			}
+			// else
+			// {
+			// 	// skiping_due_to_moving_status = true;
+			// 	// setTimeout(function(){startTimer(zoneMovementHistory, is_live)}, 100);
+			// }
+		}
+		if(skiping_due_to_moving_status == false)
+		{
+			if(zoneMovementHistory.length > 0)
+			{
+				if(current_user == zoneMovementHistory[zoneMovementHistory.length-1].spot_id) // zoneMovementHistory[0].spot_id is the future user
+				{
+					setTimeout(function(){startTimer(zoneMovementHistory, is_live)}, speed);
+				}
+				else
+				{
+					setTimeout(function(){startTimer(zoneMovementHistory, is_live)}, speed * 0.2); // Make it faster
+				}
 			}
 			else
 			{
-				setTimeout(function(){startTimer(zoneMovementHistory, is_live)}, speed * 0.2); // Make it faster
-			}
-		}
-		else
-		{
-			if(!is_live)
-			{
-				setTimeout(function()
+				if(!is_live)
 				{
-					document.getElementById('time').innerHTML = "Finished!";
-				},speed_for_movement+100);
+					setTimeout(function()
+					{
+						document.getElementById('time').innerHTML = "Finished!";
+					},speed_for_movement+100);
+				}
 			}
 		}
 	}

@@ -3,15 +3,17 @@
 		<p> {{ $spot->object->title }} </p>
 			@include('touch.panels.zonelatest-min')
 			<script type="text/javascript">
-			(function worker() {
+			(function worker(timestamp) {
 			  $.ajax({
 			    url: "/zonelatestmin/{{ $spot->id }}", 
+			    data: {'timestamp' : timestamp},
+			    async: true,
 			    success: function(data) {
-			      $('#panel_{{ $spot->id }}_zonelatest_min').replaceWith(data);
+			      $('#panel_{{ $spot->id }}_zonelatest_min').replaceWith(data.data);
+			      worker(data.timestamp);
 			    },
-			    complete: function() {
-			      // Schedule the next request when the current one's complete
-			      setTimeout(worker, 10000);
+			    complete: function(data) {
+			      
 			    }
 			  });
 			})();
@@ -21,15 +23,17 @@
 		<h2 class='text-center'> {{ $spot->object->title }} </h2>
 		@include('touch.panels.zonelatest')
 		<script type="text/javascript">
-			(function worker() {
+			(function worker(timestamp) {
 			  $.ajax({
 			    url: "/zonelatest/{{ $spot->id }}", 
+			    data: {'timestamp' : timestamp},
+			    async: true,
 			    success: function(data) {
-			      $('#panel_{{ $spot->id }}_zonelatest').replaceWith(data);
+			      $('#panel_{{ $spot->id }}_zonelatest').replaceWith(data.data);
+			      worker(data.timestamp);
 			    },
-			    complete: function() {
-			      // Schedule the next request when the current one's complete
-			      setTimeout(worker, 10000);
+			    complete: function(data) {
+			      
 			    }
 			  });
 			})();
@@ -49,15 +53,17 @@
 		@foreach($spot->jobs as $job)
 			@include('touch.tables.zonejob')
 			<script type="text/javascript">
-				(function worker() {
+				(function worker(timestamp) {
 				  $.ajax({
 				    url: "/zonejob/{{ $spot->id }}/{{ $job->id }}", 
+				    data: {'timestamp' : timestamp},
+				    async: true,
 				    success: function(data) {
-				      $('#table_{{ $spot->id }}_{{ $job->id }}').html(data);
+				      $('#table_{{ $spot->id }}_{{ $job->id }}').html(data.data);
+				      worker(data.timestamp);
 				    },
-				    complete: function() {
-				      // Schedule the next request when the current one's complete
-				      setTimeout(worker, 10000);
+				    complete: function(data) {
+				      
 				    }
 				  });
 				})();
@@ -69,15 +75,17 @@
 	</div>
 	@include('touch.tables.zonechange')
 	<script type="text/javascript">
-		(function worker() {
+		(function worker(timestamp) {
 		  $.ajax({
 		    url: "/zonechange/{{ $spot->id }}", 
+		    data: {'timestamp' : timestamp},
+		    async: true,
 		    success: function(data) {
-		      $('#table_{{ $spot->id }}_zonechange').html(data);
+		      $('#table_{{ $spot->id }}_zonechange').html(data.data);
+		      worker(data.timestamp);
 		    },
-		    complete: function() {
-		      // Schedule the next request when the current one's complete
-		      setTimeout(worker, 1500);
+		    complete: function(data) {
+		      
 		    }
 		  });
 		})();

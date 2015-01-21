@@ -15,21 +15,21 @@
 <div class='container-fluid'>
 	<div class='col-xs-12'>
 		<div class='row'>
-			@foreach($zone_spots as $spot)
+			@foreach($zone_spots->take(1) as $spot)
 				<div class='col-md-4 snappable' id='zone-{{ $spot->id }}'>
 					@include('touch.panels.zone')
 				</div>
-			@endforeach			
+			@endforeach		
 		</div>
 		<div class='row'>
 			<div class='col-md-4 snappable'>
 				@include('touch.panels.actuators')
 			</div>
-			@foreach($spots as $spot)
+			{{-- @foreach($spots as $spot)
 				<div class='col-md-4 snappable' id='spot-{{ $spot->id }}'>
 					@include('touch.panels.spot')
 				</div>
-			@endforeach	
+			@endforeach	--}}
 			<div class='col-md-4 snappable'>
 				<div class='panel panel-default draggable'>
 					<div class='dock text-center'>
@@ -68,6 +68,7 @@
 								(function worker() {
 								  $.ajax({
 								    url: "/cup/cupsno", 
+								    async: true,
 								    success: function(data) {
 								      $('#cup_no').html(data.cups);
 								    },

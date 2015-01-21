@@ -23,6 +23,7 @@
 				(function worker() {
 				  $.ajax({
 				    url: "/zonejob/{{ $spot->id }}/{{ $job->id }}", 
+				    async: true,
 				    success: function(data) {
 				      $('#table_{{ $spot->id }}_{{ $job->id }}').html(data);
 				    },

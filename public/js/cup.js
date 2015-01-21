@@ -69,6 +69,7 @@ function drink(percent) {
 (function worker() {
   $.ajax({
     url: "/cup/percent", 
+    async: true,
     success: function(data) {
       console.log("Data percent: " + data.percent + ", percent: " + current_cup_percent);
       if(data.percent != current_cup_percent) {

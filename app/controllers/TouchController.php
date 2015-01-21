@@ -33,20 +33,116 @@ class TouchController extends \BaseController {
 		return View::make('touch.index', array('zone_spots' => $spots['zone_spots'], 'spots' => $spots['spots']));
 	}
 
+	private function getZonejob_time($spot, $job) {
+		$job = Job::find($job);
+		$reading = $job->getReadings($job->threshold, $job->sensor->table, $job->sensor->field)->take(1); 
+		if(!isset($reading->first()->created_at)) return null;
+		return Carbon::parse($reading->first()->created_at)->toDateTimeString();
+	}
+
 	public function getZonejob($spot, $job) {
-		return View::make('touch.tables.zonejob', array('count' => 0, 'spot' => Spot::find($spot), 'job' => Job::find($job)));
+		$seconds = 0;
+		while(true) {
+			$last_ajax_call = Input::get('timestamp'); 
+
+			$last_reading_update_time = $this->getZonejob_time($spot, $job);
+
+			if($last_reading_update_time !== null && (!Input::has('timestamp') || $last_reading_update_time > $last_ajax_call || $seconds > 20)) {
+				$response = Response::json(
+					array(
+						'timestamp' => $last_reading_update_time, 
+						'data' => View::make('touch.tables.zonejob', array('count' => 0, 'spot' => Spot::find($spot), 'job' => Job::find($job)))->render()
+					));
+				$response->header('Transfer-Encoding', 'chunked');
+				return $response;
+			} else {
+				usleep(1000);
+				$seconds++;
+				continue;
+			}
+		}
+	}
+
+	private function getZonechange_time($spot) {
+		$spot = Spot::find($spot); 
+		foreach (Spot::getRoamingSpots() as $roaming_spot) {
+			if(count($roaming_spot->zonechanges) && count($roaming_spot->zonechanges()->orderBy('id', 'DESC')->first()->job) && $roaming_spot->zonechanges()->orderBy('id', 'DESC')->first()->job->object->title == $spot->object->title) {
+				return $roaming_spot->zonechanges()->orderBy('id', 'DESC')->first()->created_at;
+			}
+		}
 	}
 
 	public function getZonechange($spot) {
-		return View::make('touch.tables.zonechange', array('spot' => Spot::find($spot)));
+		$seconds = 0;
+		while(true) {
+			$last_ajax_call = Input::get('timestamp'); 
+
+			$last_reading_update_time = $this->getZonechange_time($spot);
+
+			if($last_reading_update_time !== null && (!Input::has('timestamp') || $last_reading_update_time > $last_ajax_call || $seconds > 20)) {
+				$response = Response::json(
+					array(
+						'timestamp' => $last_reading_update_time, 
+						'data' => View::make('touch.tables.zonechange', array('spot' => Spot::find($spot)))->render()
+					));
+				$response->header('Transfer-Encoding', 'chunked');
+				return $response;
+			} else {
+				usleep(1000);
+				$seconds++;
+				continue;
+			}
+		}
+	}
+
+	private function getZonelatest_time($spot) {
+		$spot = Spot::find($spot); 
+		return Carbon::parse($spot->object->getLatestReadingTime())->toDateTimeString();
 	}
 
 	public function getZonelatest($spot) {
-		return View::make('touch.panels.zonelatest', array('spot' => Spot::find($spot)));
+		$seconds = 0;
+		while(true) {
+			$last_ajax_call = Input::get('timestamp'); 
+
+			$last_reading_update_time = $this->getZonelatest_time($spot);
+			if($last_reading_update_time !== null && (!Input::has('timestamp') || $last_reading_update_time > $last_ajax_call || $seconds > 20)) {
+				$response = Response::json(
+					array(
+						'timestamp' => $last_reading_update_time, 
+						'data' => View::make('touch.panels.zonelatest', array('spot' => Spot::find($spot)))->render()
+					));
+				$response->header('Transfer-Encoding', 'chunked');
+				return $response;
+			} else {
+				usleep(1000);
+				$seconds++;
+				continue;
+			}
+		}
 	}
 
 	public function getZonelatestmin($spot) {
-		return View::make('touch.panels.zonelatest-min', array('spot' => Spot::find($spot)));
+		$seconds = 0;
+		while(true) {
+			$last_ajax_call = Input::get('timestamp'); 
+
+			$last_reading_update_time = $this->getZonelatest_time($spot);
+
+			if($last_reading_update_time !== null && (!Input::has('timestamp') || $last_reading_update_time > $last_ajax_call || $seconds > 20)) {
+				$response = Response::json(
+					array(
+						'timestamp' => $last_reading_update_time, 
+						'data' => View::make('touch.panels.zonelatest-min', array('spot' => Spot::find($spot)))->render()
+					));
+				$response->header('Transfer-Encoding', 'chunked');
+				return $response;
+			} else {
+				usleep(1000);
+				$seconds++;
+				continue;
+			}
+		}
 	}
 }
 ?>

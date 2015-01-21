@@ -53,10 +53,10 @@ class TouchController extends \BaseController {
 						'timestamp' => $last_reading_update_time, 
 						'data' => View::make('touch.tables.zonejob', array('count' => 0, 'spot' => Spot::find($spot), 'job' => Job::find($job)))->render()
 					));
-				
+
 				return $response;
 			} else {
-				usleep(1000);
+				sleep(1);
 				$seconds++;
 				continue;
 			}
@@ -67,7 +67,7 @@ class TouchController extends \BaseController {
 		$spot = Spot::find($spot); 
 		foreach (Spot::getRoamingSpots() as $roaming_spot) {
 			if(count($roaming_spot->zonechanges) && count($roaming_spot->zonechanges()->orderBy('id', 'DESC')->first()->job) && $roaming_spot->zonechanges()->orderBy('id', 'DESC')->first()->job->object->title == $spot->object->title) {
-				return $roaming_spot->zonechanges()->orderBy('id', 'DESC')->first()->created_at;
+				return Carbon::parse($roaming_spot->zonechanges()->orderBy('id', 'DESC')->first()->created_at)->toDateTimeString();
 			}
 		}
 	}
@@ -85,10 +85,10 @@ class TouchController extends \BaseController {
 						'timestamp' => $last_reading_update_time, 
 						'data' => View::make('touch.tables.zonechange', array('spot' => Spot::find($spot)))->render()
 					));
-				
+
 				return $response;
 			} else {
-				usleep(1000);
+				sleep(1);
 				$seconds++;
 				continue;
 			}
@@ -112,10 +112,10 @@ class TouchController extends \BaseController {
 						'timestamp' => $last_reading_update_time, 
 						'data' => View::make('touch.panels.zonelatest', array('spot' => Spot::find($spot)))->render()
 					));
-				
+
 				return $response;
 			} else {
-				usleep(1000);
+				sleep(1);
 				$seconds++;
 				continue;
 			}
@@ -135,10 +135,10 @@ class TouchController extends \BaseController {
 						'timestamp' => $last_reading_update_time, 
 						'data' => View::make('touch.panels.zonelatest-min', array('spot' => Spot::find($spot)))->render()
 					));
-				
+
 				return $response;
 			} else {
-				usleep(1000);
+				sleep(1);
 				$seconds++;
 				continue;
 			}

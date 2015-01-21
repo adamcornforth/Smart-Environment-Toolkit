@@ -54,6 +54,7 @@ class TouchController extends \BaseController {
 						'data' => View::make('touch.tables.zonejob', array('count' => 0, 'spot' => Spot::find($spot), 'job' => Job::find($job)))->render()
 					));
 				$response->header('Transfer-Encoding', 'chunked');
+				$response->header('Cache-Control', 'no-cache');
 				return $response;
 			} else {
 				usleep(1000);
@@ -86,6 +87,7 @@ class TouchController extends \BaseController {
 						'data' => View::make('touch.tables.zonechange', array('spot' => Spot::find($spot)))->render()
 					));
 				$response->header('Transfer-Encoding', 'chunked');
+				$response->header('Cache-Control', 'no-cache');
 				return $response;
 			} else {
 				usleep(1000);
@@ -113,6 +115,7 @@ class TouchController extends \BaseController {
 						'data' => View::make('touch.panels.zonelatest', array('spot' => Spot::find($spot)))->render()
 					));
 				$response->header('Transfer-Encoding', 'chunked');
+				$response->header('Cache-Control', 'no-cache');
 				return $response;
 			} else {
 				usleep(1000);
@@ -136,6 +139,7 @@ class TouchController extends \BaseController {
 						'data' => View::make('touch.panels.zonelatest-min', array('spot' => Spot::find($spot)))->render()
 					));
 				$response->header('Transfer-Encoding', 'chunked');
+				$response->header('Cache-Control', 'no-cache');
 				return $response;
 			} else {
 				usleep(1000);

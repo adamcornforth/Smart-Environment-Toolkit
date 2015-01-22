@@ -2,44 +2,12 @@
 	<div class='dock text-center'>
 		<p> {{ $spot->object->title }} </p>
 			@include('touch.panels.zonelatest-min')
-			<script type="text/javascript">
-			(function worker(timestamp) {
-			  $.ajax({
-			    url: "/zonelatestmin/{{ $spot->id }}", 
-			    data: {'timestamp' : timestamp},
-			    async: true,
-			    success: function(data) {
-			      $('#panel_{{ $spot->id }}_zonelatest_min').replaceWith(data.data);
-			      worker(data.timestamp);
-			    },
-			    complete: function(data) {
-			      
-			    }
-			  });
-			})();
-		</script>
 	</div>
 	<div class='panel-heading handle'>
 		<h2 class='text-center'> {{ $spot->object->title }} </h2>
 		@include('touch.panels.zonelatest')
-		<script type="text/javascript">
-			(function worker(timestamp) {
-			  $.ajax({
-			    url: "/zonelatest/{{ $spot->id }}", 
-			    data: {'timestamp' : timestamp},
-			    async: true,
-			    success: function(data) {
-			      $('#panel_{{ $spot->id }}_zonelatest').replaceWith(data.data);
-			      worker(data.timestamp);
-			    },
-			    complete: function(data) {
-			      
-			    }
-			  });
-			})();
-		</script>
 	</div>
-	<ul class="nav nav-tabs panel-primary-bg minimisable" role="tablist">
+	<!-- <ul class="nav nav-tabs panel-primary-bg minimisable" role="tablist">
 		<?php $count = 1; ?>
 		@foreach($spot->jobs as $job)
 			<li role="presentation" class='{{ ($count == 1) ? "active" : "" }}'>
@@ -47,49 +15,33 @@
 			</li>
 			<?php $count++; ?>
 		@endforeach
-	</ul>
+	</ul> 
 	<div class='tab-content minimisable'>
 	<?php $count = 1; ?>
 		@foreach($spot->jobs as $job)
 			@include('touch.tables.zonejob')
 			<script type="text/javascript">
-				(function worker(timestamp) {
-				  $.ajax({
-				    url: "/zonejob/{{ $spot->id }}/{{ $job->id }}", 
-				    data: {'timestamp' : timestamp},
-				    async: true,
-				    success: function(data) {
-				      $('#table_{{ $spot->id }}_{{ $job->id }}').html(data.data);
-				      worker(data.timestamp);
-				    },
-				    complete: function(data) {
+				// (function worker(timestamp) {
+				//   $.ajax({
+				//     url: "/zonejob/{{ $spot->id }}/{{ $job->id }}", 
+				//     data: {'timestamp' : timestamp},
+				//     async: true,
+				//     success: function(data) {
+				//       $('#table_{{ $spot->id }}_{{ $job->id }}').html(data.data);
+				//       worker(data.timestamp);
+				//     },
+				//     complete: function(data) {
 				      
-				    }
-				  });
-				})();
+				//     }
+				//   });
+				// })();
 			</script>
 			<?php $count++ ?> 
 		@endforeach
-	</div>
+	</div> 
 	<div class='panel-body minimisable'>
-	</div>
+	</div> !-->
 	@include('touch.tables.zonechange')
-	<script type="text/javascript">
-		(function worker(timestamp) {
-		  $.ajax({
-		    url: "/zonechange/{{ $spot->id }}", 
-		    data: {'timestamp' : timestamp},
-		    async: true,
-		    success: function(data) {
-		      $('#table_{{ $spot->id }}_zonechange').html(data.data);
-		      worker(data.timestamp);
-		    },
-		    complete: function(data) {
-		      
-		    }
-		  });
-		})();
-	</script>
 	<div class='panel-footer'>
 		@if($spot->battery_percent)
 			@include('touch.panels.battery', array('percent' => $spot->battery_percent))

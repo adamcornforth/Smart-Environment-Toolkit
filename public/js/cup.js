@@ -66,20 +66,20 @@ function drink(percent) {
 /**
  * Worker function to poll for water percent changes every 2.5s
  */
-(function worker() {
-  $.ajax({
-    url: "/cup/percent", 
-    async: true,
-    success: function(data) {
-      console.log("Data percent: " + data.percent + ", percent: " + current_cup_percent);
-      if(data.percent != current_cup_percent) {
-	      drink(data.percent);
-	      current_cup_percent = data.percent;
-	  }
-    },
-    complete: function() {
-      // Schedule the next request when the current one's complete
-      setTimeout(worker, 500);
-    }
-  });
-})();
+// (function worker() {
+//   $.ajax({
+//     url: "/cup/percent", 
+//     async: true,
+//     success: function(data) {
+//       console.log("Data percent: " + data.percent + ", percent: " + current_cup_percent);
+//       if(data.percent != current_cup_percent) {
+// 	      drink(data.percent);
+// 	      current_cup_percent = data.percent;
+// 	  }
+//     },
+//     complete: function() {
+//       // Schedule the next request when the current one's complete
+//       setTimeout(worker, 500);
+//     }
+//   });
+// })();

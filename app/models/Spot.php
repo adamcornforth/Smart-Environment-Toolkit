@@ -53,7 +53,7 @@ class Spot extends Eloquent {
             ->join('Sensor', 'Job.sensor_id', '=', 'Sensor.id')
             ->where('Sensor.title', '=', 'Roaming Spot')
             ->groupBy('Spot.id')
-            ->get();
+            ->remember(10)->get();
         $collection = new \Illuminate\Database\Eloquent\Collection;
         foreach ($spots as $spot) {
         	$collection->add(Spot::find($spot->spot_id));
@@ -73,7 +73,7 @@ class Spot extends Eloquent {
             ->join('Sensor', 'Job.sensor_id', '=', 'Sensor.id')
             ->where('Sensor.title', '=', 'Cell Tower')
             ->groupBy('Spot.id')
-            ->get();
+            ->remember(10)->get();
         $collection = new \Illuminate\Database\Eloquent\Collection;
         foreach ($spots as $spot) {
         	$collection->add(Spot::find($spot->spot_id));

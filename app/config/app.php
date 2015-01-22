@@ -125,7 +125,8 @@ return array(
 		'Liebig\Cron\CronServiceProvider',
 		'Bootstrapper\BootstrapperServiceProvider',
 		'BrainSocket\BrainSocketServiceProvider',
-		'Thujohn\Twitter\TwitterServiceProvider'
+		'Thujohn\Twitter\TwitterServiceProvider',
+		'Barryvdh\Debugbar\ServiceProvider'
 
 	),
 
@@ -236,6 +237,11 @@ return array(
 		 * https://github.com/thujohn/twitter-l4
 		 */
 		'Twitter' => 'Thujohn\Twitter\TwitterFacade',
+
+		/**
+		 * https://github.com/barryvdh/laravel-debugbar
+		 */
+		'Debugbar' => 'Barryvdh\Debugbar\Facade',
 
 	),
 

@@ -12,7 +12,8 @@
 		"cboden/Ratchet"    : "0.3.*",
 		"react/zmq": "0.2.*|0.3.*",
 		"thujohn/twitter": "dev-master",
-		"liebig/cron": "dev-master"
+		"liebig/cron": "dev-master",
+		"barryvdh/laravel-debugbar": "~1.8"
 	},
 	"autoload": {
 		"classmap": [

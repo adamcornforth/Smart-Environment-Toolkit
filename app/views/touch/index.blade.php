@@ -15,12 +15,34 @@
 <div class='container-fluid'>
 	<div class='col-xs-12'>
 		<div class='row'>
-			@foreach($zone_spots->take(1) as $spot)
+			@foreach($zone_spots as $spot)
 				<div class='col-md-4 snappable' id='zone-{{ $spot->id }}'>
 					@include('touch.panels.zone')
 				</div>
 			@endforeach		
 		</div>
+		<script type="text/javascript">
+			(function worker(timestamp) {
+			  $.ajax({
+			    url: "/ajaxspot", 
+			    data: {'timestamp' : timestamp},
+			    async: true,
+			    success: function(data) {
+			      console.log(data);
+			      worker(data.timestamp);
+			      if(!data.nodata) {
+			      	$.each(data.html, function(html, data) {
+					    $(html).replaceWith(data);
+					    console.log(html + " replaced");
+					});
+			      }
+			    },
+			    error: function() {
+			    	worker(); 
+			    }
+			  });
+			})();
+		</script>
 		<div class='row'>
 			<div class='col-md-4 snappable'>
 				@include('touch.panels.actuators')
@@ -65,19 +87,19 @@
 								</h2>
 							</div>
 							<script type="text/javascript">
-								(function worker() {
-								  $.ajax({
-								    url: "/cup/cupsno", 
-								    async: true,
-								    success: function(data) {
-								      $('#cup_no').html(data.cups);
-								    },
-								    complete: function() {
-								      // Schedule the next request when the current one's complete
-								      setTimeout(worker, 2500);
-								    }
-								  });
-								})();
+								// (function worker() {
+								//   $.ajax({
+								//     url: "/cup/cupsno", 
+								//     async: true,
+								//     success: function(data) {
+								//       $('#cup_no').html(data.cups);
+								//     },
+								//     complete: function() {
+								//       // Schedule the next request when the current one's complete
+								//       setTimeout(worker, 2500);
+								//     }
+								//   });
+								// })();
 							</script>
 						</div>
 					</div>

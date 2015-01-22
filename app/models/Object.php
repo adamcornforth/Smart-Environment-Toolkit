@@ -21,11 +21,11 @@ class Object extends Eloquent {
 	/**
 	 * Get the latest reading for this object, given a sensor name
 	 */
-	private function getSensorLatestReading($sensor_name, $created_at=null) {
+	private function getSensorLatestReading($sensor_name, $limit=null, $created_at=null) {
 		$jobs = Job::whereObjectId($this->id)->get(); 
 		foreach ($jobs as $job) {
 			if($job->sensor->title == $sensor_name) {
-				foreach($job->getReadings($job->threshold, $job->sensor->table, $job->sensor->field)->take(1) as $reading) {
+				foreach($job->getReadings($job->threshold, $job->sensor->table, $job->sensor->field, $limit)->take(1) as $reading) {
 					// return created at
 					if($created_at)
 						return $reading["created_at"];
@@ -37,26 +37,28 @@ class Object extends Eloquent {
 		}
 	}
 
-	public function getLatestReadingTime() {
-		$latestHeatTime = $this->getSensorLatestReading("Thermometer", TRUE); 
-		$latestLightTime = $this->getSensorLatestReading("Photosensor", TRUE);
+	public function getLatestReadingTime($limit=null) {
+		$latestHeatTime = $this->getSensorLatestReading("Thermometer", $limit, TRUE); 
+		$latestLightTime = $this->getSensorLatestReading("Photosensor", $limit, TRUE);
 		return ($latestHeatTime > $latestLightTime) ? $latestHeatTime : $latestLightTime;  
 	}
 
 	/**
 	 * Get this object's latest heat reading
 	 */
-	public function getLatestHeat() 
+	public function getLatestHeat($limit=null) 
 	{
-		return ($this->getSensorLatestReading("Thermometer")) ? $this->getSensorLatestReading("Thermometer") : "--";
+		$latest = $this->getSensorLatestReading("Thermometer", $limit, null); 
+		return ($latest) ? $latest : "--";
 	}
 
 	/**
 	 * Get this object's latest light reading
 	 */
-	public function getLatestLight() 
+	public function getLatestLight($limit=null) 
 	{
-		return ($this->getSensorLatestReading("Photosensor")) ? $this->getSensorLatestReading("Photosensor") : "--";
+		$latest = $this->getSensorLatestReading("Photosensor", $limit, null); 
+		return ($latest) ? $latest : "--";
 	}
 
 }

@@ -286,9 +286,11 @@ class DataSeeder extends Seeder {
                 if($north_pillar > -7 && $user_zone[$key]['zone'] != 1 && $user_zone[$key]['zone'] == 2) {
                     $user_zone[$key]['zone'] = 1; 
                     $zonechange = ZoneSpot::create(array('spot_id' => $user_zone[$key]['spot'], 'zone_id' => $user_zone[$key]['zone'], 'job_id' => $jobs['north_zone_range']->id, 'created_at' => $carbon->toDateTimeString()));
+                    echo "Zonechange\n";
                 } elseif($north_pillar > -7 && $user_zone[$key]['zone'] != 2 && ($user_zone[$key]['zone'] == 1 || $user_zone[$key]['zone'] == 3)) {
                     $user_zone[$key]['zone'] = 2; 
                     $zonechange = ZoneSpot::create(array('spot_id' => $user_zone[$key]['spot'], 'zone_id' => $user_zone[$key]['zone'], 'job_id' => $jobs['center_table_range']->id, 'created_at' => $carbon->toDateTimeString()));
+                    echo "Zonechange\n";
                 }
 
                 /**
@@ -297,9 +299,11 @@ class DataSeeder extends Seeder {
                 if($south_pillar > -7 && $user_zone[$key]['zone'] != 2 && ($user_zone[$key]['zone'] == 1 || $user_zone[$key]['zone'] == 3)) {
                     $user_zone[$key]['zone'] = 2; 
                     $zonechange = ZoneSpot::create(array('spot_id' => $user_zone[$key]['spot'], 'zone_id' => $user_zone[$key]['zone'], 'job_id' => $jobs['center_table_range']->id, 'created_at' => $carbon->toDateTimeString()));
+                    echo "Zonechange\n";
                 } elseif($south_pillar > -7 && $user_zone[$key]['zone'] != 3 && $user_zone[$key]['zone'] == 2) {
                     $user_zone[$key]['zone'] = 3;
                     $zonechange = ZoneSpot::create(array('spot_id' => $user_zone[$key]['spot'], 'zone_id' => $user_zone[$key]['zone'], 'job_id' => $jobs['south_zone_range']->id, 'created_at' => $carbon->toDateTimeString()));
+                    echo "Zonechange\n";
                 }
             }
 

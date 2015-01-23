@@ -46,6 +46,23 @@ class SpotController extends BaseController {
 		return View::make('spots.view', array('spot' => Spot::find($id)));
 	}
 
+	/**
+	 * Display a job on this spot
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function getJob($spot_id, $job_id)
+	{
+		if(($object = Object::whereSpotId($spot_id)->first())) {
+			$object_id = $object->id;
+			if(Job::whereId($job_id)->whereObjectId($object_id)->exists())
+				return View::make('spots.job', array('spot' => Spot::find($spot_id), 'job' => Job::find($job_id)));
+			else 
+				return App::abort(404);
+		}
+	}
+
 
 	/**
 	 * Show the form for editing the specified resource.
@@ -75,6 +92,13 @@ class SpotController extends BaseController {
 		if(Input::has('user_id')) {
 			$spot->user_id = Input::get('user_id');
 			$spot->save(); 
+
+			if(!ZoneSpot::whereSpotId($spot->id)->exists()) {
+				$zonespot = new ZoneSpot(); 
+				$zonespot->zone_id = 1; 
+				$zonespot->spot_id = $spot->id; 
+				$zonespot->save(); 
+			}
 		}
 
 		/**

@@ -28,6 +28,7 @@ Route::group(array('before' => 'spot'), function() {
 	Route::controller('cup', 'CupController');
 
 	Route::resource('spots', 'SpotController');
+	Route::controller('spots', 'SpotController');
 	Route::resource('objects', 'ObjectController');
 
 	Route::post('jobs/clear/{id}', 'JobController@clear');

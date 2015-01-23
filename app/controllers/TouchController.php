@@ -37,25 +37,41 @@ class TouchController extends \BaseController {
 		$seconds = 0; 
 		$response = array(); 
 		$zone_spots = $this->zone_spots(); 
-		$timestamp = Carbon::now()->toDateTimeString();
+		$timestamp = 0;
 		while($seconds < 10) {
+			$data = array(); 
 			$zonechange = null; 
-			foreach($zone_spots['zone_spots'] as $spot) {
-				$data = array();
 
+			// Cups stuff
+			$data["#cup_no"] = $this->getCupsNo(); 
+			$data["#cup_percent"] = $this->getCupPercent(); 
+
+			foreach($zone_spots['zone_spots'] as $spot) {
 				$data["#table_".$spot->id."_zonechange"] = $this->getZonechange($spot->id); 
 				$data["#panel_".$spot->id."_zonelatest"] = $this->getZonelatest($spot->id); 
 				$data["#panel_".$spot->id."_zonelatest_min"] = $this->getZonelatestmin($spot->id); 
 
-				foreach ($data as $key => $json) {
-					if($json['data'] != false) {
-						$response[$key] = $json['data']; 
-						$timestamp = ($timestamp > $json['timestamp']) ? $json['timestamp'] : $timestamp; 
+				// zonechange detected
+				if($data["#panel_".$spot->id."_zonelatest_min"]['data'] == true) $zonechange = true;
+			}
 
-						// Zonechange detected
-						if($key == "#table_".$spot->id."_zonechange") $zonechange = $spot->id; 
-					} 
+			/**
+			 * Loop all spots checking for job data
+			 */
+			foreach ($zone_spots['spots'] as $spot) {
+				foreach($spot->jobs as $job) {
+					$data["#table_".$spot->id."_".$job->id] = $this->getZonejob($spot->id, $job->id); 
 				}
+			}
+
+			/**
+			 * Loop all data and check for returns
+			 */
+			foreach ($data as $key => $json) {
+				if($json['data'] != false) {
+					$response[$key] = $json['data']; 
+					$timestamp = ($timestamp < $json['timestamp']) ? $json['timestamp'] : $timestamp; 
+				} 
 			}
 
 			// If we have detect a zonechange, we need to update all zones 
@@ -78,6 +94,39 @@ class TouchController extends \BaseController {
 
 
 		return Response::json(array('nodata' => true, 'timestamp' => Input::get('timestamp')));
+	}
+
+	private function cup_time() {
+		if(Water::orderBy('id', 'DESC')->first()->exists())
+			return Carbon::parse(Water::orderBy('id', 'DESC')->first()->created_at)->toDateTimeString();
+		else
+			return null;
+	}
+
+	private function getCupPercent() {
+		$seconds = 0;
+		$last_ajax_call = Input::get('timestamp'); 
+
+		$last_reading_update_time = $this->cup_time();
+
+		if($last_reading_update_time !== null && (!Input::has('timestamp') || $last_reading_update_time > $last_ajax_call)) {
+			return array('data' => Water::orderBy('id', 'DESC')->first()->water_percent, 'timestamp' => $last_reading_update_time);
+		} else {
+			return false; 
+		}
+	}
+
+	private function getCupsno() {
+		$seconds = 0;
+		$last_ajax_call = Input::get('timestamp'); 
+
+		$last_reading_update_time = $this->cup_time();
+
+		if($last_reading_update_time !== null && (!Input::has('timestamp') || $last_reading_update_time > $last_ajax_call)) {
+			return array('data' => "<span id='cup_no'>".Water::whereWaterPercent('0')->whereBetween('created_at', array(Carbon::now()->startOfDay()->toDateTimeString(), Carbon::now()->endOfDay()->toDateTimeString()))->get()->count()."</span>", 'timestamp' => $last_reading_update_time);
+		} else {
+			return false; 
+		}
 	}
 
 	private function getZonejob_time($spot, $job) {

@@ -164,6 +164,10 @@ class DataSeeder extends Seeder {
         ZoneSpot::create(array('spot_id' => $spots['vitali'][0]->id, 'zone_id' => $zones['north']->id));
         ZoneSpot::create(array('spot_id' => $spots['vitali'][1]->id, 'zone_id' => $zones['north']->id));
 
+        ZoneSpot::create(array('spot_id' => $spots['adam'][2]->id, 'zone_id' => $zones['north']->id));
+        ZoneSpot::create(array('spot_id' => $spots['adam'][3]->id, 'zone_id' => $zones['north']->id));
+        ZoneSpot::create(array('spot_id' => $spots['adam'][4]->id, 'zone_id' => $zones['north']->id));
+
         /**
          * Create some sensors
          */
@@ -312,7 +316,7 @@ class DataSeeder extends Seeder {
              */
             if($water_drank > 0) {
                 echo "Water drank to $cup_percent%\n";
-                Water::create(array('water_percent' => $cup_percent, 'zone_id' => 1, 'job_id' => $jobs['cup_drank_from']->id, 'spot_address'  => $spots['dom'][1]->spot_address, 'created_at'    => Carbon::now()->toDateTimeString()));
+                Water::create(array('water_percent' => $cup_percent, 'zone_id' => 1, 'job_id' => $jobs['cup_drank_from']->id, 'spot_address'  => $spots['dom'][1]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
                 $cup_percent -= 10;
                 if($cup_percent < 0) $cup_percent = 100;
             }

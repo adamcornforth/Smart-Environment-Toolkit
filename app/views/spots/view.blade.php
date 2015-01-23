@@ -38,7 +38,7 @@
 	  						View All <span class='glyphicon glyphicon-chevron-right'></span>
 	  					</a>
 							<p class='form-control-static'>
-								Viewing <strong>4</strong> out of <strong>{{ $spot->zonechanges->count() }}</strong> readings
+								Viewing <strong>{{ ($spot->zonechanges->count() > 4) ? 4 : $spot->zonechanges->count() > 4 }}</strong> out of <strong>{{ $spot->zonechanges->count() }}</strong> readings
 							</p>
 	      			</div>
 			  	</div>
@@ -84,11 +84,11 @@
 	      					@endforeach
 		      			</table>
 		      			<div class='panel-footer'>
-		      				<a href='{{ url("spots/".$spot->id)}}' class='btn btn-default btn-sm pull-right'>
+		      				<a href='{{ url("spots/job/".$spot->id."/".$job->id)}}' class='btn btn-default btn-sm pull-right'>
 		  						View All <span class='glyphicon glyphicon-chevron-right'></span>
 		  					</a>
   							<p class='form-control-static'>
-  								Viewing <strong>4</strong> out of <strong>{{ $spot->zonechanges->count() }}</strong> readings
+  								Viewing <strong>{{ (count($job->getReadings($job->threshold, $job->sensor->table, $job->sensor->field)) > 4) ? 4 : count($job->getReadings($job->threshold, $job->sensor->table, $job->sensor->field)) }}</strong> out of <strong>{{ count($job->getReadings($job->threshold, $job->sensor->table, $job->sensor->field)) }}</strong> readings
   							</p>
 		      			</div>
 				  	</div>

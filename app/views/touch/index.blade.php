@@ -32,8 +32,15 @@
 			      worker(data.timestamp);
 			      if(!data.nodata) {
 			      	$.each(data.html, function(html, data) {
-					    $(html).replaceWith(data);
+					    $(html).html(data);
 					    console.log(html + " replaced");
+
+					    if(html === "#cup_percent") {
+							if(data != current_cup_percent) {
+						        drink(data);
+						        current_cup_percent = data.percent;
+							}
+					    }
 					});
 			      }
 			    },
@@ -47,11 +54,11 @@
 			<div class='col-md-4 snappable'>
 				@include('touch.panels.actuators')
 			</div>
-			{{-- @foreach($spots as $spot)
+			@foreach($spots as $spot)
 				<div class='col-md-4 snappable' id='spot-{{ $spot->id }}'>
 					@include('touch.panels.spot')
 				</div>
-			@endforeach	--}}
+			@endforeach	
 			<div class='col-md-4 snappable'>
 				<div class='panel panel-default draggable'>
 					<div class='dock text-center'>

@@ -30,10 +30,10 @@
 				</tr>
 			@endforeach
 			<tr>
-				<td colspan='3'>
+				<td colspan='3'> 
 					<small>
-						Viewing <strong>4</strong> out of <strong>{{ count($job->getReadings($job->threshold, $job->sensor->table, $job->sensor->field)) }}</strong> readings
-						<a href='{{ url("spots/".$spot->id)}}' class='pull-right'>View all <span class='glyphicon glyphicon-chevron-right'></span></a>
+						Viewing <strong>{{ ($job->getReadings($job->threshold, $job->sensor->table, $job->sensor->field)->count() > 4) ? 4 : $job->getReadings($job->threshold, $job->sensor->table, $job->sensor->field)->count() }}</strong> out of <strong>{{ $job->getReadings($job->threshold, $job->sensor->table, $job->sensor->field)->count() }}</strong> readings
+						<a href='{{ url("spots/job/".$spot->id."/".$job->id)}}' class='pull-right'>View all <span class='glyphicon glyphicon-chevron-right'></span></a>
 					</small>
 				</td>
 			</tr>

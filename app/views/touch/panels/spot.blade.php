@@ -19,21 +19,6 @@
 	<?php $count = 1; ?>
 		@foreach($spot->jobs as $job)
 			@include('touch.tables.zonejob')
-			<script type="text/javascript">
-				(function worker() {
-				  $.ajax({
-				    url: "/zonejob/{{ $spot->id }}/{{ $job->id }}", 
-				    async: true,
-				    success: function(data) {
-				      $('#table_{{ $spot->id }}_{{ $job->id }}').html(data);
-				    },
-				    complete: function() {
-				      // Schedule the next request when the current one's complete
-				      setTimeout(worker, 2500);
-				    }
-				  });
-				})();
-			</script>
 			<?php $count++ ?> 
 		@endforeach
 	</div>

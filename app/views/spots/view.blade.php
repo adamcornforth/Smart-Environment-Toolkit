@@ -44,6 +44,29 @@
 			  	</div>
 		  	@endif
 
+		  	<script type="text/javascript">
+				(function worker(timestamp) {
+				  $.ajax({
+				    url: "/ajaxspot/{{ $spot->id }}", 
+				    data: {'timestamp' : timestamp},
+				    async: true,
+				    success: function(data) {
+				      console.log(data);
+				      worker(data.timestamp);
+				      if(!data.nodata) {
+				      	$.each(data.html, function(html, data) {
+						    $(html).html(data);
+						    console.log(html + " replaced");
+						});
+				      }
+				    },
+				    error: function() {
+				    	worker(); 
+				    }
+				  });
+				})();
+			</script>
+
 	  		@foreach($spot->jobs as $job)
 	  			@if($job->sensor->title != "Roaming Spot")
 			  		<div class='panel panel-default'>

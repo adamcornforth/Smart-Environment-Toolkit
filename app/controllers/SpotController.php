@@ -12,7 +12,6 @@ class SpotController extends BaseController {
 		return View::make('spots.index', array('spots' => Spot::all()));
 	}
 
-
 	/**
 	 * Show the form for creating a new resource.
 	 *

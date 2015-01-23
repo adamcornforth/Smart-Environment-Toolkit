@@ -33,7 +33,48 @@ class TouchController extends \BaseController {
 		return View::make('touch.index', array('zone_spots' => $spots['zone_spots'], 'spots' => $spots['spots']));
 	}
 
-	public function getAjaxspot() {
+		/**
+	 * Long polling: get ajax data for this spot
+	 * @return  JSON response
+	 */
+	public function getAjaxspot($spot_id) 
+	{
+		$seconds = 0; 
+		$response = array(); 
+		$spot = Spot::find($spot_id); 
+
+		while($seconds < 10) {
+
+			// Job data
+			foreach($spot->jobs as $job) {
+				$data["#table_".$spot->id."_".$job->id] = $this->getZonejob($spot->id, $job->id); 
+			}
+
+			/**
+			 * Loop all data and check for returns
+			 */
+			foreach ($data as $key => $json) {
+				if($json['data'] != false) {
+					$response[$key] = $json['data']; 
+					$timestamp = ($timestamp < $json['timestamp']) ? $json['timestamp'] : $timestamp; 
+				} 
+			}
+
+			if(count($response)) {
+				return Response::json(
+					array(	'timestamp' => $timestamp, 
+							'html' => $response));
+			}
+			
+			sleep(1); 
+			$seconds++; 
+
+		}
+
+		return Response::json(array('nodata' => true, 'timestamp' => Input::get('timestamp')));
+	}
+
+	public function getAjax() {
 		$seconds = 0; 
 		$response = array(); 
 		$zone_spots = $this->zone_spots(); 

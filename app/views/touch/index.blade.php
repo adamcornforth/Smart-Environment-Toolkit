@@ -24,7 +24,7 @@
 		<script type="text/javascript">
 			(function worker(timestamp) {
 			  $.ajax({
-			    url: "/ajaxspot", 
+			    url: "/ajax", 
 			    data: {'timestamp' : timestamp},
 			    async: true,
 			    success: function(data) {

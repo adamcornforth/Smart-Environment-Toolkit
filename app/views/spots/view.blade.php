@@ -86,7 +86,7 @@
 				  			</div>
 							<strong>{{ $job->title }}</strong>, tracked using the <strong>{{ $job->sensor->title }}</strong>.
 						</div>
-				  		<table class='table table-striped'>
+				  		<table class='table table-striped' id='table_{{ $spot->id }}_{{$job->id }}'>
 					  		<thead>
 								<tr>
 									<th><small>Event</small></th>

@@ -47,8 +47,10 @@ class TouchController extends \BaseController {
 		while($seconds < 10) {
 
 			// Job data
-			foreach($spot->jobs as $job) {
-				$data["#table_".$spot->id."_".$job->id] = $this->getZonejob($spot->id, $job->id); 
+			if($spot->jobs->exists()) {
+				foreach($spot->jobs as $job) {
+					$data["#table_".$spot->id."_".$job->id] = $this->getZonejob($spot->id, $job->id); 
+				}
 			}
 
 			/**

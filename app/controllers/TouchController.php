@@ -42,6 +42,7 @@ class TouchController extends \BaseController {
 		$seconds = 0; 
 		$response = array(); 
 		$spot = Spot::find($spot_id); 
+		$timestamp = 0;
 
 		while($seconds < 10) {
 

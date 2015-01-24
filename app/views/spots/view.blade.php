@@ -66,10 +66,10 @@
 				  });
 				})();
 			</script>
-
+			<?php $count = 1; ?>
 	  		@foreach($spot->jobs as $job)
 	  			@if($job->sensor->title != "Roaming Spot")
-			  		<div class='panel panel-default'>
+			  		<div class='panel panel-default job-{{ $job->id }}'>
 						<div class='panel-heading'>
 							<div class='btn-group pull-right'>
 				  				<a class='btn btn-xs btn-default clear-job' data-job-id='{{ $job->id }}'>
@@ -86,34 +86,8 @@
 				  			</div>
 							<strong>{{ $job->title }}</strong>, tracked using the <strong>{{ $job->sensor->title }}</strong>.
 						</div>
-				  		<table class='table table-striped' id='table_{{ $spot->id }}_{{$job->id }}'>
-					  		<thead>
-								<tr>
-									<th><small>Event</small></th>
-									<th><small>Reading</small></th>
-									<th><small>Time &amp; Date</small></th>
-								</tr>
-							</thead>
-	      					@foreach($job->getReadings($job->threshold, $job->sensor->table, $job->sensor->field)->take(4) as $reading)
-		      					<tr>
-		      						<td>
-		      							{{ $job->title }}
-		      						</td>
-		      						<td> {{ number_format($reading[$job->sensor->field], $job->sensor->decimal_points) }}{{ $job->sensor->unit}}</td>
-		      						<td>
-		      							<small>{{ Carbon::parse($reading->created_at)->format('G:ia') }} on {{ Carbon::parse($reading->created_at)->format('jS M') }}</small> 
-		      						</td>
-		      					</tr>
-	      					@endforeach
-		      			</table>
-		      			<div class='panel-footer'>
-		      				<a href='{{ url("spots/job/".$spot->id."/".$job->id)}}' class='btn btn-default btn-sm pull-right'>
-		  						View All <span class='glyphicon glyphicon-chevron-right'></span>
-		  					</a>
-  							<p class='form-control-static'>
-  								Viewing <strong>{{ (count($job->getReadings($job->threshold, $job->sensor->table, $job->sensor->field)) > 4) ? 4 : count($job->getReadings($job->threshold, $job->sensor->table, $job->sensor->field)) }}</strong> out of <strong>{{ count($job->getReadings($job->threshold, $job->sensor->table, $job->sensor->field)) }}</strong> readings
-  							</p>
-		      			</div>
+
+				  		@include('touch.tables.zonejob')
 				  	</div>
 
 			  	@endif
@@ -124,10 +98,10 @@
 					$.ajax({
 					  type: "DELETE",
 					  url: "/jobs/" + button.data('job-id'),
-					  success: function(data) {
+					  success: function(data, button) {
 					  	console.log(data);
-					  	location.reload();
-					  }
+					  	$('.job-'+data.job_id).fadeOut();
+					  } 
 					});
 				});
 			</script>
@@ -140,7 +114,7 @@
 					  url: "/jobs/clear/" + button.data('job-id'),
 					  success: function(data) {
 					  	console.log(data);
-					  	location.reload();
+					  	$('.job-'+data.job_id+' table tr.readings-reading').fadeOut(); 
 					  }
 					});
 				});
@@ -177,7 +151,7 @@
 					  			echo Form::label('sensor_id', 'Sensor', array('class' => 'col-md-2 control-label'));
 					  		?>
 				  			<div class='col-md-4'>
-					  			<select name="sensor_id" class='form-control'>
+					  			<select name="sensor_id" class='form-control sensor-select'>
 					  				<option value="" disabled="disabled" selected="selected">Please select a sensor</option>
 					  				@foreach(Sensor::all() as $sensor) 
 					  					<option value="{{ $sensor->id }}">{{ $sensor->title }}</option>
@@ -191,22 +165,78 @@
 					  		</div>
 					  	</div>
 
-					  	<div class='form-group'>
-					  		<?php
-					  			echo Form::label('threshold', 'Threshold', array('class' => 'col-md-2 control-label'));
-					  		?>
-				  			<div class='col-md-4'>
-					  			<?php 
-					  				echo Form::text('threshold', null, array('placeholder' => 'Job Threshold e.g. 30'));
-					  			?>
-					  		</div>
-					  		<div class='col-md-6'>
-					  			<p class='text-muted'>
-					  				The threshold that has to be reached by the sensor for this SPOT to collect data. 
-					  				<br /><br />
-					  				Leave blank to make the SPOT collect data using this sensor periodically. (every 5 minutes)</p>
-					  		</div>
-					  	</div>
+					  	<script type="text/javascript">
+					  		var sensors = ["Cell Tower", "Smart Cup", "Roaming Spot"];
+							$('.sensor-select').change(function(e) {
+								// If sensor has no config, don't fade in
+								if($.inArray($(".sensor-select option[value='" + $(this).val() + "']").text(), sensors) > -1) {
+									$('.form-sensor-config').fadeOut(); 
+								} else { // Fade in
+									$('.form-sensor-config').fadeIn(); 
+								}
+							});
+						</script>
+
+					  	<div class='form-sensor-config form-hide'>
+						  	<hr />
+
+						  	<div class='form-group'>
+						  		<?php
+						  			echo Form::label('type', 'Type', array('class' => 'col-md-2 control-label'));
+						  		?>
+					  			<div class='col-md-4'>
+						  			<select name="type" class='form-control sensor-type'>
+						  				<option value="" disabled="disabled" selected="selected">Please select a sensor type</option>
+						  				<option value="sensor-threshold-type">Threshold</option>
+						  				<option value="sensor-sample-rate-type">Sample Rate</option>
+						  			</select>
+						  		</div>
+						  		<div class='col-md-6'>
+						  			<p class='text-muted'>
+						  				The sensor type to use. <strong>Threshold</strong> only records data when a threshold is met, <strong>Sample Rate</strong> records data every so many seconds.
+						  			</p>
+						  		</div>
+						  	</div>
+
+						  	<script type="text/javascript">
+								$('.sensor-type').change(function(e) {
+									$('.sensor-type-group').hide(); 
+									console.log("."+$('.sensor-type').val());
+									$("."+$('.sensor-type').val()).fadeIn(); 
+								});
+							</script>
+
+						  	<div class='form-group form-hide sensor-type-group sensor-threshold-type'>
+						  		<?php
+						  			echo Form::label('threshold', 'Threshold', array('class' => 'col-md-2 control-label'));
+						  		?>
+					  			<div class='col-md-4'>
+						  			<?php 
+						  				echo Form::text('threshold', null, array('placeholder' => 'Job Threshold e.g. 30'));
+						  			?>
+						  		</div>
+						  		<div class='col-md-6'>
+						  			<p class='text-muted'>
+						  				The threshold that has to be reached by the sensor for this SPOT to collect data. 
+						  		</div>
+						  	</div>
+
+						  	<div class='form-group form-hide sensor-type-group sensor-sample-rate-type'>
+						  		<?php
+						  			echo Form::label('sample_rate', 'Sample Rate', array('class' => 'col-md-2 control-label'));
+						  		?>
+					  			<div class='col-md-4'>
+						  			<?php 
+						  				echo Form::text('sample_rate', null, array('placeholder' => 'Sample Rate (seconds) e.g. 5'));
+						  			?>
+						  		</div>
+						  		<div class='col-md-6'>
+						  			<p class='text-muted'>
+						  				The rate at which this sensor should collect data, in seconds. 
+						  		</div>
+						  	</div>
+
+						</div>
 
 					  	<hr />
 

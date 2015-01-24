@@ -9,7 +9,7 @@
 		</thead>
 		<tbody>
 			@foreach($job->getReadings($job->threshold, $job->sensor->table, $job->sensor->field)->take(4) as $reading)
-				<tr>
+				<tr class='readings-reading'>
 					<td>
 						<small>{{ $job->title }}</small>
 						@if(str_contains($job->title, "User Entered"))
@@ -29,7 +29,7 @@
 					</td>
 				</tr>
 			@endforeach
-			<tr>
+			<tr class='readings-viewall'>
 				<td colspan='3'> 
 					<small>
 						Viewing <strong>{{ ($job->getReadings($job->threshold, $job->sensor->table, $job->sensor->field)->count() > 4) ? 4 : $job->getReadings($job->threshold, $job->sensor->table, $job->sensor->field)->count() }}</strong> out of <strong>{{ $job->getReadings($job->threshold, $job->sensor->table, $job->sensor->field)->count() }}</strong> readings

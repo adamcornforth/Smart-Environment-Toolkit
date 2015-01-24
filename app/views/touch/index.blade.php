@@ -93,21 +93,6 @@
 									<small>Drank today</small>
 								</h2>
 							</div>
-							<script type="text/javascript">
-								// (function worker() {
-								//   $.ajax({
-								//     url: "/cup/cupsno", 
-								//     async: true,
-								//     success: function(data) {
-								//       $('#cup_no').html(data.cups);
-								//     },
-								//     complete: function() {
-								//       // Schedule the next request when the current one's complete
-								//       setTimeout(worker, 2500);
-								//     }
-								//   });
-								// })();
-							</script>
 						</div>
 					</div>
 					<div class='panel-footer'>

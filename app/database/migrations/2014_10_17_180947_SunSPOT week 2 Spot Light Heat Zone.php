@@ -91,6 +91,7 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 		    $table->string('title');
 		    $table->string('description');
 		    $table->float('threshold')->nullable();
+		    $table->integer('sample_rate')->nullable();
 		    $table->integer('object_id')->unsigned();
 		    $table->integer('sensor_id')->unsigned();
 

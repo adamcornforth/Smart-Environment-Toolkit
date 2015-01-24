@@ -83,9 +83,9 @@ class JobController extends \BaseController {
 			// Delete associated readings
 			$readings = DB::table($job->sensor->table)->where('job_id', '=', $job->id)->delete();
 			$job->delete(); 
-			return Response::json(array('success' => 'Job '.$job->id.' deleted!')); 
+			return Response::json(array('job_id' => $id, 'success' => 'Job '.$job->id.' deleted!')); 
 		} else {
-			return Response::json(array('error' => 'Job '.$id.' could not be found')); 
+			return Response::json(array('job_id' => $id, 'error' => 'Job '.$id.' could not be found')); 
 		}
 	}
 
@@ -99,9 +99,9 @@ class JobController extends \BaseController {
 		if($job = Job::find($id)) {
 			// Delete associated readings
 			$readings = DB::table($job->sensor->table)->where('job_id', '=', $job->id)->delete();
-			return Response::json(array('success' => 'Job '.$job->id.' readings deleted!')); 
+			return Response::json(array('job_id' => $id, 'success' => 'Job '.$job->id.' readings deleted!')); 
 		} else {
-			return Response::json(array('error' => 'Job '.$id.' could not be found')); 
+			return Response::json(array('job_id' => $id, 'error' => 'Job '.$id.' could not be found')); 
 		}
 	}
 

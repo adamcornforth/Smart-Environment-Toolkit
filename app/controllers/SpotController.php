@@ -126,6 +126,7 @@ class SpotController extends BaseController {
 			$job = new Job(); 
 			$job->title = Input::get('job_title');
 			$job->threshold = (Input::has('threshold')) ? Input::get('threshold') : NULL;
+			$job->sample_rate = (Input::has('sample_rate')) ? Input::get('sample_rate') : NULL;
 			$job->object_id = $spot->object->id;
 			$job->sensor_id = Input::get('sensor_id');
 			$job->save();

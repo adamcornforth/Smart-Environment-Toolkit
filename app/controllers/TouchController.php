@@ -142,7 +142,7 @@ class TouchController extends \BaseController {
 	}
 
 	private function cup_time() {
-		if(Water::orderBy('id', 'DESC')->first()->exists())
+		if(isset(Water::orderBy('id', 'DESC')->first()) && Water::orderBy('id', 'DESC')->first()->exists())
 			return Carbon::parse(Water::orderBy('id', 'DESC')->first()->created_at)->toDateTimeString();
 		else
 			return null;

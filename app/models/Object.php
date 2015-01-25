@@ -40,7 +40,11 @@ class Object extends Eloquent {
 	public function getLatestReadingTime($limit=null) {
 		$latestHeatTime = $this->getSensorLatestReading("Thermometer", $limit, TRUE); 
 		$latestLightTime = $this->getSensorLatestReading("Photosensor", $limit, TRUE);
-		return ($latestHeatTime > $latestLightTime) ? $latestHeatTime : $latestLightTime;  
+		
+		if($latestHeatTime || $latestLightTime)
+			return ($latestHeatTime > $latestLightTime) ? $latestHeatTime : $latestLightTime;  
+		else 
+			return null;
 	}
 
 	/**

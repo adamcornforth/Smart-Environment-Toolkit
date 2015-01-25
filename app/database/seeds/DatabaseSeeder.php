@@ -227,16 +227,16 @@ class DataSeeder extends Seeder {
         $jobs['cup_drank_from'] = Job::create(array('title' => 'Cup drank to', 'object_id' => $objects['smart_cup']->id, 'sensor_id' => $sensors['smart_cup']->id, 'threshold' => null));
         
         $jobs['center_table_range'] = Job::create(array('title' => 'User Entered Center Zone', 'object_id' => $objects['center_zone']->id, 'sensor_id' => $sensors['cell_tower']->id, 'threshold' => null));
-        $jobs['center_table_temperature'] = Job::create(array('title' => 'Zone Temperature', 'object_id' => $objects['center_zone']->id, 'sensor_id' => $sensors['thermometer']->id, 'threshold' => null));
-        $jobs['center_table_light'] = Job::create(array('title' => 'Zone Light', 'object_id' => $objects['center_zone']->id, 'sensor_id' => $sensors['photosensor']->id, 'threshold' => null));
+        $jobs['center_table_temperature'] = Job::create(array('title' => 'Zone Temperature', 'object_id' => $objects['center_zone']->id, 'sensor_id' => $sensors['thermometer']->id, 'threshold' => null, 'sample_rate' => 1));
+        $jobs['center_table_light'] = Job::create(array('title' => 'Zone Light', 'object_id' => $objects['center_zone']->id, 'sensor_id' => $sensors['photosensor']->id, 'threshold' => null, 'sample_rate' => 1));
 
         $jobs['north_zone_range'] = Job::create(array('title' => 'User Entered North Zone', 'object_id' => $objects['north_zone']->id, 'sensor_id' => $sensors['cell_tower']->id, 'threshold' => null));
-        $jobs['north_zone_temperature'] = Job::create(array('title' => 'Zone Temperature', 'object_id' => $objects['north_zone']->id, 'sensor_id' => $sensors['thermometer']->id, 'threshold' => null));
-        $jobs['north_zone_light'] = Job::create(array('title' => 'Zone Light', 'object_id' => $objects['north_zone']->id, 'sensor_id' => $sensors['photosensor']->id, 'threshold' => null));
+        $jobs['north_zone_temperature'] = Job::create(array('title' => 'Zone Temperature', 'object_id' => $objects['north_zone']->id, 'sensor_id' => $sensors['thermometer']->id, 'threshold' => null, 'sample_rate' => 1));
+        $jobs['north_zone_light'] = Job::create(array('title' => 'Zone Light', 'object_id' => $objects['north_zone']->id, 'sensor_id' => $sensors['photosensor']->id, 'threshold' => null, 'sample_rate' => 1));
 
         $jobs['south_zone_range'] = Job::create(array('title' => 'User Entered South Zone', 'object_id' => $objects['south_zone']->id, 'sensor_id' => $sensors['cell_tower']->id, 'threshold' => null));
-        $jobs['south_zone_temperature'] = Job::create(array('title' => 'Zone Temperature', 'object_id' => $objects['south_zone']->id, 'sensor_id' => $sensors['thermometer']->id, 'threshold' => null));
-        $jobs['south_zone_light'] = Job::create(array('title' => 'Zone Light', 'object_id' => $objects['south_zone']->id, 'sensor_id' => $sensors['photosensor']->id, 'threshold' => null));
+        $jobs['south_zone_temperature'] = Job::create(array('title' => 'Zone Temperature', 'object_id' => $objects['south_zone']->id, 'sensor_id' => $sensors['thermometer']->id, 'threshold' => null, 'sample_rate' => 1));
+        $jobs['south_zone_light'] = Job::create(array('title' => 'Zone Light', 'object_id' => $objects['south_zone']->id, 'sensor_id' => $sensors['photosensor']->id, 'threshold' => null, 'sample_rate' => 1));
 
         $jobs['roaming_user_1'] = Job::create(array('title' => 'Roaming User 1 (Dom)', 'object_id' => $objects['roaming_user_1']->id, 'sensor_id' => $sensors['roaming_spot']->id, 'threshold' => null));
         $jobs['roaming_user_2'] = Job::create(array('title' => 'Roaming User 2 (Vitali)', 'object_id' => $objects['roaming_user_2']->id, 'sensor_id' => $sensors['roaming_spot']->id, 'threshold' => null));

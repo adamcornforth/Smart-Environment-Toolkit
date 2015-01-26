@@ -97,7 +97,7 @@ class TouchController extends \BaseController {
 				$data["#panel_".$spot->id."_zonelatest_min"] = $this->getZonelatestmin($spot->id); 
 
 				// zonechange detected
-				if($data["#panel_".$spot->id."_zonelatest_min"]['data'] == true) $zonechange = true;
+				if($data["#table_".$spot->id."_zonechange"]['data'] != false) $zonechange = true;
 			}
 
 			/**

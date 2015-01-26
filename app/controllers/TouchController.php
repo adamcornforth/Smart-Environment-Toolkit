@@ -219,7 +219,7 @@ class TouchController extends \BaseController {
 	private function getZonelatest_time($spot) {
 		$spot = Spot::find($spot); 
 		$time = $spot->object->getLatestReadingTime(1); 
-		if($time)
+		if(isset($time))
 			return Carbon::parse($spot->object->getLatestReadingTime(1))->toDateTimeString();
 		else
 			return null;

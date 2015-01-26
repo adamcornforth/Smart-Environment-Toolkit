@@ -80,10 +80,10 @@ class TouchController extends \BaseController {
 
 	public function getAjax() {
 		$seconds = 0; 
-		$response = array(); 
 		$zone_spots = $this->zone_spots(); 
 		$timestamp = 0;
 		while($seconds < 10) {
+			$response = array(); 
 			$data = array(); 
 			$zonechange = null; 
 

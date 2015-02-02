@@ -31,8 +31,8 @@
 				  				<td>{{ $spot->id }}</td>
 				  				<td>
 				  					<a href='{{ url('spots/'.$spot->id) }}'>
-				  						{{ $spot->spot_address }}
-				  					</a> <br />
+				  						{{ $spot->spot_address }} 
+				  					</a><br />
 				  					<small class='text-muted'>
 				  						@if(count($spot->user))
 					  						<span class='glyphicon glyphicon-user'></span> {{ $spot->user->first_name }} {{ $spot->user->last_name }}
@@ -89,7 +89,7 @@
 											@include('touch.panels.battery', array('percent' => $spot->battery_percent))
 										</span>
 									@endif
-				  					<strong>{{ Carbon::parse($spot->updated_at)->format('D jS M') }}</strong> at <strong>{{ Carbon::parse($spot->updated_at)->format('G:ia') }}</strong><br />
+				  					<strong>{{ Carbon::parse($spot->updated_at)->diffForHumans() }}</strong> <small class='muted'>{{ Carbon::parse($spot->updated_at)->format('G:ia D jS M') }}</small><br />
 				  					<small class='text-muted'>
 				  						First detected {{ Carbon::parse($spot->created_at)->format('d/m/y') }} {{ Carbon::parse($spot->created_at)->format('G:ia') }}
 				  					</small>

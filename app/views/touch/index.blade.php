@@ -96,9 +96,7 @@
 						</div>
 					</div>
 					<div class='panel-footer'>
-						@if(Spot::whereSpotAddress('0014.4F01.0000.77C0')->first()->battery_percent)
-							@include('touch.panels.battery', array('percent' => Spot::whereSpotAddress('0014.4F01.0000.77C0')->first()->battery_percent))
-						@endif
+						@include('touch.panels.battery', array('percent' => Spot::whereSpotAddress('0014.4F01.0000.77C0')->first()->battery_percent))
 					</div>
 				</div>
 			</div>

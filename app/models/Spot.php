@@ -43,6 +43,14 @@ class Spot extends Eloquent {
 	}
 
 	/**
+	 * Return this spot's online status
+	 */
+	public function getOnlineAttribute() 
+	{
+		return ((Carbon::now()->subSeconds(15)->lt(Carbon::parse($this->updated_at))) ? "<span class='spot-status spot-status-online'>Online</span>" : "<span class='spot-status spot-status-offline'>Offline</span>");
+	}
+
+	/**
 	 * Returns spots that have roaming sensors in its jobs
 	 */
 	public static function getRoamingSpots() 

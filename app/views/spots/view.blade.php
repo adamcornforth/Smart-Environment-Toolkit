@@ -70,7 +70,7 @@
 	  		@foreach($spot->jobs as $job)
 	  			@if($job->sensor->title != "Roaming Spot")
 			  		<div class='panel panel-default job-{{ $job->id }}'>
-						<div class='panel-heading'>
+						<div class='panel-heading text-center'>
 							<div class='btn-group pull-right'>
 				  				<a class='btn btn-xs btn-default clear-job' data-job-id='{{ $job->id }}'>
 				  					<span class='glyphicon glyphicon-ban-circle'>
@@ -84,6 +84,20 @@
 				  					Delete
 				  				</span>
 				  			</div>
+							<div class='btn-group pull-left'>
+									@if($job->tracking)
+										<a class='btn btn-xs btn-default pause-job' data-tracking='true' data-job-id='{{ $job->id }}'>
+						  					<span class='glyphicon glyphicon-pause'>
+						  					</span> Pause Tracking
+						  				</a>
+				  					@else
+				  						<a class='btn btn-xs btn-default pause-job' data-tracking='false' data-job-id='{{ $job->id }}'>
+											<span class='glyphicon glyphicon-play'>
+					  						</span> Resume Tracking
+					  					</a>
+				  					@endif
+				  				</a>
+							</div>
 							<strong>{{ $job->title }}</strong>, tracked using the <strong>{{ $job->sensor->title }}</strong>.
 						</div>
 
@@ -115,6 +129,31 @@
 					  success: function(data) {
 					  	console.log(data);
 					  	$('.job-'+data.job_id+' table tr.readings-reading').fadeOut(); 
+					  }
+					});
+				});
+
+				$('.pause-job').click(function(e) {
+					var button = $(e.target);
+					$(button).attr('disabled','disabled'); 
+					if($(button).data("tracking")) {
+						$(button).html("<span class='glyphicon glyphicon-pause'></span> Pause Tracking");
+					} else {
+						$(button).html("<span class='glyphicon glyphicon-play'></span> Resume Tracking");
+					}
+					$.ajax({
+					  type: "POST",
+					  url: "/jobs/toggle_tracking/" + button.data('job-id'),
+					  success: function(data) {
+					  	console.log(data);
+					  	if(data.status == true) {
+					  		$(button).data("tracking", 'true');
+					  		$(button).html("<span class='glyphicon glyphicon-pause'></span> Pause Tracking");
+					  	} else {
+					  		$(button).data("tracking", 'false');
+					  		$(button).html("<span class='glyphicon glyphicon-play'></span> Resume Tracking");
+					  	}
+					  	$(button).removeAttr('disabled');
 					  }
 					});
 				});

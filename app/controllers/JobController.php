@@ -105,5 +105,29 @@ class JobController extends \BaseController {
 		}
 	}
 
+	/**
+	 * Toggles the specified job's tracking status
+	 * @param  int $id job id
+	 * @return Response
+	 */
+	public function toggle_tracking($id) 
+	{
+		if($job = Job::find($id)) {
+			$status = $job->tracking; 
+			
+			if($status) {
+				$job->tracking = false;
+			} else {
+				$job->tracking = true; 
+			}
+
+			$job->save(); 
+
+			return Response::json(array('job_id' => $id, 'success' => 'Job '.$job->id.' tracking status: '.$job->tracking, 'status' => $job->tracking)); 
+		} else {
+			return Response::json(array('job_id' => $id, 'error' => 'Job '.$id.' could not be found')); 
+		}
+	}
+
 
 }

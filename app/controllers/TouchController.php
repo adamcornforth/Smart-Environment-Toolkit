@@ -95,6 +95,7 @@ class TouchController extends \BaseController {
 				$data["#table_".$spot->id."_zonechange"] = $this->getZonechange($spot->id); 
 				$data["#panel_".$spot->id."_zonelatest"] = $this->getZonelatest($spot->id); 
 				$data["#panel_".$spot->id."_zonelatest_min"] = $this->getZonelatestmin($spot->id); 
+				$data["#panel_".$spot->id."_battery"] = $this->getBatteryLatest($spot->id); 
 
 				// zonechange detected
 				if($data["#table_".$spot->id."_zonechange"]['data'] != false) $zonechange = true;
@@ -107,6 +108,7 @@ class TouchController extends \BaseController {
 				foreach($spot->jobs as $job) {
 					$data["#table_".$spot->id."_".$job->id] = $this->getZonejob($spot->id, $job->id); 
 				}
+				$data["#panel_".$spot->id."_battery"] = $this->getBatteryLatest($spot->id); 
 			}
 
 			/**
@@ -169,6 +171,28 @@ class TouchController extends \BaseController {
 
 		if($last_reading_update_time !== null && (!Input::has('timestamp') || $last_reading_update_time > $last_ajax_call)) {
 			return array('data' => "<span id='cup_no'>".Water::whereWaterPercent('0')->whereBetween('created_at', array(Carbon::now()->startOfDay()->toDateTimeString(), Carbon::now()->endOfDay()->toDateTimeString()))->get()->count()."</span>", 'timestamp' => $last_reading_update_time);
+		} else {
+			return false; 
+		}
+	}
+
+	private function getBatteryLatest_time($spot) {
+		$spot = Spot::find($spot); 
+		if(!$spot->exists()) return null;
+		if(Carbon::now()->between(Carbon::parse($spot->updated_at)->addMinutes(1), Carbon::parse($spot->updated_at)->addMinutes(1)->addSeconds(20)))
+			return Carbon::parse($spot->updated_at)->addMinutes(1)->toDateTimeString();
+		else
+			return Carbon::parse($spot->updated_at)->toDateTimeString();
+	}
+
+	private function getBatteryLatest($spot) {
+		$seconds = 0;
+		$last_ajax_call = Input::get('timestamp'); 
+
+		$last_reading_update_time = $this->getBatteryLatest_time($spot);
+
+		if($last_reading_update_time !== null && (!Input::has('timestamp') || $last_reading_update_time > $last_ajax_call)) {
+			return array('data' => View::make('touch.panels.battery', array('percent' => Spot::find($spot)->battery_percent, 'spot' => Spot::find($spot)))->render(), 'timestamp' => $last_reading_update_time);
 		} else {
 			return false; 
 		}

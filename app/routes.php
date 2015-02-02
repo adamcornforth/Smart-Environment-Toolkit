@@ -32,6 +32,7 @@ Route::group(array('before' => 'spot'), function() {
 	Route::resource('objects', 'ObjectController');
 
 	Route::post('jobs/clear/{id}', 'JobController@clear');
+	Route::post('jobs/toggle_tracking/{id}', 'JobController@toggle_tracking');
 	Route::resource('jobs', 'JobController');
 
 	Route::post('actuators/delete_job/{id}', 'ActuatorController@deleteJob');

@@ -255,6 +255,22 @@ class DataSeeder extends Seeder {
         ZoneObject::create(array('object_id' => $objects['south_zone']->id, 'zone_id' => $zones['south']->id, 'job_id' => $jobs['south_zone_range']->id));
 
         /**
+         * Create Actuator
+         */
+        Actuator::create(array('actuator_address' => 'RELAYLO1-10FBC.relay1'));
+
+        ActuatorJob::create(array('title' => "Light On", 'actuator_id' => 1, 'job_id' => $jobs['north_zone_light']->id, 'direction' => 'ABOVE', 'threshold' => 30)); 
+        ActuatorJob::create(array('title' => "Room Hot", 'actuator_id' => 1, 'job_id' => $jobs['south_zone_temperature']->id, 'direction' => 'ABOVE', 'threshold' => 30)); 
+        ActuatorJob::create(array('title' => "Light On 2", 'actuator_id' => 1, 'job_id' => $jobs['north_zone_light']->id, 'direction' => 'ABOVE', 'threshold' => 30)); 
+        ActuatorJob::create(array('title' => "Room Hot 2", 'actuator_id' => 1, 'job_id' => $jobs['south_zone_temperature']->id, 'direction' => 'ABOVE', 'threshold' => 30)); 
+
+        /**
+         * Create some boolean conditions
+         */
+        Condition::create(array('actuator_id' => 1, 'actuator_job' => 1, 'boolean_operator' => 'or', 'second_actuator_job' => 2, 'next_condition' => 2, 'next_operator' => 'and'));
+        Condition::create(array('actuator_id' => 1, 'actuator_job' => 3, 'boolean_operator' => 'and', 'second_actuator_job' => 4, 'next_condition' => null, 'next_operator' => null));
+
+        /**
          * Add a week's worth of data
          */
         $carbon = Carbon::now()->subDays(7);

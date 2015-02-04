@@ -18,4 +18,12 @@ class Actuator extends Eloquent {
 		return $this->hasMany('ActuatorJob');
 	}
 
+	/**
+	 * Get this actuator's conditions
+	 */
+	public function conditions()
+	{
+		return $this->hasMany('Condition');
+	}
+
 }

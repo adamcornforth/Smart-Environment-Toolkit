@@ -78,11 +78,9 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 			$table->increments('id');
 		    $table->string('actuator_address')->unique();
 		    $table->string('title')->nullable();
-		    $table->integer('object_id')->unsigned()->nullable();
 		    $table->integer('is_on')->nullable();
 		    $table->timestamps();
 
-		    $table->foreign('object_id')->references('id')->on('Object');
 		});
 
 		Schema::create('Job', function($table)
@@ -239,6 +237,23 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 		    $table->integer('seen')->default(0); 
 		    $table->integer('replied')->default(0); 
 		});
+
+		Schema::create('Condition', function($table)
+		{
+		    $table->increments('id');
+
+		    $table->integer('actuator_id')->unsigned()->nullable(); 
+
+		    $table->integer('actuator_job')->unsigned()->nullable();
+		    $table->string('boolean_operator')->nullable();
+		    $table->integer('second_actuator_job')->unsigned()->nullable();
+
+		    $table->integer('next_condition')->unsigned()->nullable();
+		    $table->string('next_operator')->nullable();
+
+		    $table->foreign('actuator_job')->references('id')->on('actuator_job');
+		    $table->foreign('second_actuator_job')->references('id')->on('actuator_job');
+		});
 	}
 
 	/**
@@ -248,6 +263,7 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 	 */
 	public function down()
 	{
+		Schema::drop('Condition');  
 		Schema::drop('Tweet'); 
 		Schema::drop('Water'); 
 		Schema::drop('Motion'); 

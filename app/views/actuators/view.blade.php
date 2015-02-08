@@ -38,21 +38,7 @@
 			  							<p class='actuator-padding'>(</p>
 			  						</div>
 					  				<div class='col-md-4 well well-sm text-center'>
-					  					@if(isset($condition->first->id))
-											<button class='btn btn-danger actuator-delete-job delete-job pull-right' data-job-id="{{ $condition->first->id }}">
-							  					<span class='glyphicon glyphicon-remove'>
-							  					</span>
-							  				</button>
-						  					{{ $condition->first->title }} ({{ $condition->first->job->object->title }})
-						  					<br />
-						  					<small class='text-muted'>
-							  					<strong> {{ ucwords(strtolower($condition->first->job->sensor->measures)) }} </strong> goes <strong> {{ strtolower($condition->first->direction) }} {{ $condition->first->threshold }}{{ $condition->first->job->sensor->unit }}</strong>
-							  				</small>
-						  				@else 
-						  					<button class='actuator-add-event add-event btn btn-xs btn-success btn text-center' data-toggle="modal" data-target="#myModal">
-						  						<span class='glyphicon glyphicon-plus'></span> Add Event
-						  					</button>
-						  				@endif
+					  					@include('actuators.panels.event', array('actuator_job' => $condition->first))
 					  				</div>
 					  				<div class='col-md-2 well-sm text-center'>
 					  					<p class='actuator-padding'>
@@ -64,21 +50,7 @@
 							  			</p>
 					  				</div>
 					  				<div class='col-md-4 well well-sm text-center'>
-					  					@if(isset($condition->second->id))
-											<button class='btn btn-danger actuator-delete-job delete-job pull-right' data-job-id="{{ $condition->second->id }}">
-							  					<span class='glyphicon glyphicon-remove'>
-							  					</span>
-							  				</button>
-						  					{{ $condition->second->title }} ({{ $condition->second->job->object->title }})
-						  					<br />
-						  					<small class='text-muted'>
-							  					<strong> {{ ucwords(strtolower($condition->second->job->sensor->measures)) }} </strong> goes <strong> {{ strtolower($condition->second->direction) }} {{ $condition->second->threshold }}{{ $condition->second->job->sensor->unit }}</strong>
-							  				</small>
-						  				@else 
-						  					<button class='actuator-add-event add-event btn btn-xs btn-success btn text-center' data-toggle="modal" data-target="#myModal">
-						  						<span class='glyphicon glyphicon-plus'></span> Add Event
-						  					</button>
-						  				@endif
+					  					@include('actuators.panels.event', array('actuator_job' => $condition->second))
 					  				</div>
 					  				<div class='col-md-1 well-sm text-left'>
 			  							<p class='actuator-padding'>)</p>

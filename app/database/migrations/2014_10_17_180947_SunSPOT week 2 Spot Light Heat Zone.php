@@ -107,7 +107,7 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 			$table->string('title');
 		    $table->integer('actuator_id')->unsigned();
 		    $table->integer('job_id')->unsigned();
-		    $table->enum('direction', array('ABOVE', 'BELOW'));
+		    $table->enum('direction', array('ABOVE', 'BELOW', 'EQUALS'));
 		    $table->float('threshold'); 
 
 		    $table->foreign('actuator_id')->references('id')->on('Actuator');

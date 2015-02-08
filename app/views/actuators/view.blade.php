@@ -28,94 +28,79 @@
 			  		Turn Actuator On if:
 			  	</div>
 
-			  	<div class='panel-body'>
-			  		<br /><br />
-			  		@foreach($actuator->conditions as $condition) 
-			  			<div class='row'>
-				  			<div class='col-md-12'>
-			  					<div class='col-md-9'>
-			  						<div class='col-md-1 well-sm text-right'>
-			  							<p class='actuator-padding'>(</p>
-			  						</div>
-					  				<div class='col-md-4 well well-sm text-center'>
-					  					@include('actuators.panels.event', array('actuator_job' => $condition->first))
-					  				</div>
-					  				<div class='col-md-2 well-sm text-center'>
-					  					<p class='actuator-padding'>
-					  						<select>
-							  					<option disabled='disabled' {{ (!$condition->boolean_operator) ? "selected='selected'": "" }}>--</option>
-							  					<option value="or" {{ ($condition->boolean_operator == "or") ? "selected='selected'": "" }}>Or</option>
-							  					<option value="and" {{ ($condition->boolean_operator == "and") ? "selected='selected'": "" }}>And</option>
-							  				</select>
-							  			</p>
-					  				</div>
-					  				<div class='col-md-4 well well-sm text-center'>
-					  					@include('actuators.panels.event', array('actuator_job' => $condition->second))
-					  				</div>
-					  				<div class='col-md-1 well-sm text-left'>
-			  							<p class='actuator-padding'>)</p>
-			  						</div>
-					  			</div>
-						  			<div class='col-md-3 well-sm text-left'>
-						  				<p class='actuator-padding'>
-								  			<button class='btn btn-danger btn-xs delete-condition pull-right' data-condition-id="{{ $condition->id }}">
-							  					<span class='glyphicon glyphicon-remove'></span> Delete Condition
-							  				</button>
-						  					<select class='pull-left'>
-							  					<option disabled='disabled' {{ (!$condition->next_operator) ? "selected='selected'": "" }}>--</option>
-							  					<option value="or" {{ ($condition->next_operator == "or") ? "selected='selected'": "" }}>Or</option>
-							  					<option value="and" {{ ($condition->next_operator == "and") ? "selected='selected'": "" }}>And</option>
-							  				</select>
-							  			</p>
-						  			</div>
-				  			</div>
-				  		</div>
-			  		@endforeach
-			  			<div class='col-md-10'>
-			  			</div>
-				  		<div class='col-md-2 well-sm text-right'>
-		  						<button class='btn btn-xs btn-success text-center add-condition actuator-add-event' data-actuator-id="{{ $actuator->id }}"><span class='glyphicon glyphicon-plus'></span> Add Condition</button>
-		  				</div>
-			  		<br />
+			  	<div class='panel-body' id='actuator-conditions-panel'>
+			  		@include('actuators.conditions', array('actuator' => $actuator))
 				</div>
 			</div>
 
 			<script type="text/javascript">
-				$('.delete-job').click(function(e) {
-					var button = $(this);
-					$.ajax({
-					  type: "POST",
-					  url: "/actuators/delete_job/" + button.data('job-id'),
-					  success: function(data) {
-					  	console.log(data);
-					  	location.reload();
-					  }
+				initConditions();
+				function initConditions() {
+					$('.delete-job').click(function(e) {
+						var button = $(this);
+						$.ajax({
+						  type: "POST",
+						  url: "/actuators/delete_job/" + button.data('job-id'),
+						  success: function(data) {
+						  	console.log(data);
+						  	$('#actuator-conditions-panel').load("/actuators/conditions/{{ $actuator->id }}", function() {
+						  		initConditions();
+						  	});
+						  }
+						});
 					});
-				});
 
-				$('.delete-condition').click(function(e) {
-					var button = $(this);
-					$.ajax({
-					  type: "POST",
-					  url: "/actuators/delete_condition/" + button.data('condition-id'),
-					  success: function(data) {
-					  	console.log(data);
-					  	location.reload();
-					  }
+					$('.delete-condition').click(function(e) {
+						var button = $(this);
+						$.ajax({
+						  type: "POST",
+						  url: "/actuators/delete_condition/" + button.data('condition-id'),
+						  success: function(data) {
+						  	console.log(data);
+						  	$('#actuator-conditions-panel').load("/actuators/conditions/{{ $actuator->id }}", function() {
+						  		initConditions();
+						  	});
+						  }
+						});
 					});
-				});
 
-				$('.add-condition').click(function(e) {
-					var button = $(this);
-					$.ajax({
-					  type: "POST",
-					  url: "/actuators/add_condition/" + button.data('actuator-id'),
-					  success: function(data) {
-					  	console.log(data);
-					  	location.reload();
-					  }
+					$('.add-condition').click(function(e) {
+						var button = $(this);
+						$.ajax({
+						  type: "POST",
+						  url: "/actuators/add_condition/" + button.data('actuator-id'),
+						  success: function(data) {
+						  	console.log(data);
+						  	$('#actuator-conditions-panel').load("/actuators/conditions/{{ $actuator->id }}", function() {
+						  		initConditions();
+						  	});
+						  }
+						});
 					});
-				});
+
+					$('.add-event').click(function(e) {
+						var button = $(this);
+						$('.condition-id').val($(this).data('condition-id'));
+						$('.job-field').val($(this).data('job-field'));
+					});
+
+					$('.boolean-select').change(function(e) {
+						var button = $(this);
+						console.log($(button).val()); 
+						$.ajax({
+						  type: "POST",
+						  data: {"field" : $(button).data('boolean-field'), "operator": $(button).val()},
+						  url: "/actuators/boolean_condition/" + $(button).data('condition-id'),
+						  success: function(data) {
+						  	console.log(data);
+						  	$('#actuator-conditions-panel').load("/actuators/conditions/{{ $actuator->id }}", function() {
+						  		initConditions();
+						  	});
+						  }
+						});
+					});
+				}
+				
 			</script>
 
 		</div>
@@ -138,7 +123,8 @@
 				<div class="modal-body">
 					<br />
 				  	<?php echo Form::horizontal(array('url' => url('actuators/'.$actuator->id), 'method' => 'PUT')); ?>
-				  	
+				  	<input type="hidden" class='condition-id' name="condition-id" value="">
+				  	<input type="hidden" class='job-field' name="job-field" value="">
 				  	<div class='form-group'>
 				  		<?php
 				  			echo Form::label('job_title', 'Name', array('class' => 'col-md-2 control-label'));
@@ -182,6 +168,7 @@
 				  			<select name="direction" class='form-control'>
 				  				<option value="ABOVE">Above</option>
 				  				<option value="BELOW">Below</option>
+				  				<option value="EQUALS">Equals</option>
 				  			</select>
 				  		</div>
 			  			<div class='col-md-2'>

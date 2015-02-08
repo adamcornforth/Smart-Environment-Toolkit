@@ -89,10 +89,21 @@ class ActuatorController extends \BaseController {
 			$job->actuator_id = $actuator->id;
 			$job->job_id = Input::get('job_id');
 			$job->save();
+
+			if(Input::has('condition-id') && Input::has('job-field')) {
+				$condition = Condition::find(Input::get('condition-id'));
+				$condition[Input::get('job-field')] = $job->id;
+				$condition->save();
+			}
 		} 
 
 		Session::forget('notice');
 		return Redirect::to('actuators/'.$actuator->id);
+	}
+
+	public function getConditions($id) 
+	{
+		return View::make('actuators.conditions', array('actuator' => Actuator::find($id)));
 	}
 
 	/**
@@ -140,6 +151,24 @@ class ActuatorController extends \BaseController {
 			$new_condition->save(); 
 		}
 
+	}
+
+	/**
+	 * Sets a specified boolean value 
+	 * @param  [type] $id [description]
+	 * @return [type]     [description]
+	 */
+	public function setBoolean($id)
+	{
+		if($condition = Condition::find($id)) {
+			if(Input::has('field') && Input::has('operator')) {
+				$condition[Input::get('field')] = Input::get('operator'); 
+				$condition->save();
+			} elseif(Input::has('field')) {
+				$condition[Input::get('field')] = null; 
+				$condition->save();
+			}
+		}
 	}
 
 	/**

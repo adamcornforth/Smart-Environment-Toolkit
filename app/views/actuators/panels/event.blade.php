@@ -11,13 +11,22 @@
 	<br />
 	<small class='text-muted'>
 		@if($actuator_job->job->sensor->measures == "Zone")
-			<strong> Enters Zone {{ $actuator_job->threshold }}</strong>
+			Enters 
+			<strong>
+				@if($actuator_job->threshold == 1)
+					North Zone
+				@elseif($actuator_job->threshold == 2)
+					Center Zone
+				@elseif($actuator_job->threshold == 3)
+					South Zone
+				@endif	
+			</strong>
 		@else
 			<strong> {{ ucwords(strtolower($actuator_job->job->sensor->measures)) }} </strong> goes <strong> {{ strtolower($actuator_job->direction) }} {{ $actuator_job->threshold }}{{ $actuator_job->job->sensor->unit }}</strong>
 		@endif
 	</small>
 @else 
-	<button class='actuator-add-event add-event btn btn-xs btn-success btn text-center' data-toggle="modal" data-target="#myModal">
+	<button class='actuator-add-event add-event btn btn-xs btn-success btn text-center' data-toggle="modal" data-target="#myModal" data-condition-id="{{ $condition->id }}" data-job-field="{{ $field }}">
 		<span class='glyphicon glyphicon-plus'></span> Add Event
 	</button>
 @endif

@@ -97,4 +97,6 @@
             @yield('content')
         </div>
     </body>
+        @section('modal')
+        @show
 </html>

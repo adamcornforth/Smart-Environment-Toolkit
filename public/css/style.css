@@ -137,3 +137,24 @@ body {
 .spot-status-offline {
 	color: #DB2C2C;
 }
+.actuator-padding {
+	padding: 0px 0;
+	font-size: 24px;
+	font-weight: normal;
+}
+.actuator-delete-job {
+	padding: 10px 5px 11px 5px;
+	cursor: pointer;
+}
+.actuator-add-event {
+	margin: 9px 0;
+}
+.actuator-padding select {
+	margin: 9px 0 0 0;
+}
+.actuator-padding button {
+	margin: 7px 0 0 0;
+}
+.modal-backdrop {
+	z-index: -1;
+}

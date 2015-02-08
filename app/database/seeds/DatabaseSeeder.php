@@ -259,16 +259,18 @@ class DataSeeder extends Seeder {
          */
         Actuator::create(array('actuator_address' => 'RELAYLO1-10FBC.relay1'));
 
-        ActuatorJob::create(array('title' => "Light On", 'actuator_id' => 1, 'job_id' => $jobs['north_zone_light']->id, 'direction' => 'ABOVE', 'threshold' => 30)); 
-        ActuatorJob::create(array('title' => "Room Hot", 'actuator_id' => 1, 'job_id' => $jobs['south_zone_temperature']->id, 'direction' => 'ABOVE', 'threshold' => 30)); 
-        ActuatorJob::create(array('title' => "Light On 2", 'actuator_id' => 1, 'job_id' => $jobs['north_zone_light']->id, 'direction' => 'ABOVE', 'threshold' => 30)); 
-        ActuatorJob::create(array('title' => "Room Hot 2", 'actuator_id' => 1, 'job_id' => $jobs['south_zone_temperature']->id, 'direction' => 'ABOVE', 'threshold' => 30)); 
+        ActuatorJob::create(array('title' => "Light Off", 'actuator_id' => 1, 'job_id' => $jobs['north_zone_light']->id, 'direction' => 'BELOW', 'threshold' => 30)); 
+        ActuatorJob::create(array('title' => "Room Warm", 'actuator_id' => 1, 'job_id' => $jobs['north_zone_temperature']->id, 'direction' => 'ABOVE', 'threshold' => 20)); 
+        ActuatorJob::create(array('title' => "Light Off", 'actuator_id' => 1, 'job_id' => $jobs['south_zone_light']->id, 'direction' => 'BELOW', 'threshold' => 30)); 
+        ActuatorJob::create(array('title' => "Room Warm", 'actuator_id' => 1, 'job_id' => $jobs['south_zone_temperature']->id, 'direction' => 'ABOVE', 'threshold' => 20)); 
+        ActuatorJob::create(array('title' => "Light On", 'actuator_id' => 1, 'job_id' => $jobs['south_zone_light']->id, 'direction' => 'ABOVE', 'threshold' => 30)); 
 
         /**
          * Create some boolean conditions
          */
-        Condition::create(array('actuator_id' => 1, 'actuator_job' => 1, 'boolean_operator' => 'or', 'second_actuator_job' => 2, 'next_condition' => 2, 'next_operator' => 'and'));
-        Condition::create(array('actuator_id' => 1, 'actuator_job' => 3, 'boolean_operator' => 'and', 'second_actuator_job' => 4, 'next_condition' => null, 'next_operator' => null));
+        Condition::create(array('actuator_id' => 1, 'actuator_job' => 1, 'boolean_operator' => 'or', 'second_actuator_job' => 2, 'next_condition' => 2, 'next_operator' => 'or'));
+        Condition::create(array('actuator_id' => 1, 'actuator_job' => 3, 'boolean_operator' => 'and', 'second_actuator_job' => 4, 'next_condition' => 3, 'next_operator' => 'or'));
+        Condition::create(array('actuator_id' => 1, 'actuator_job' => 5, 'boolean_operator' => null, 'second_actuator_job' => null, 'next_condition' => null, 'next_operator' => null));
 
         /**
          * Add a week's worth of data

@@ -48,6 +48,7 @@ class Initialise extends Seeder {
         $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.76FF', 'user_id' => 1));
         $spots['dom'][] = Spot::create(array('spot_address' => '0014.4F01.0000.77A7', 'user_id' => 2)); // Dom
         $spots['dom'][] = Spot::create(array('spot_address' => '0014.4F01.0000.77C0', 'user_id' => 2));
+        $spots['dom'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7E4D', 'user_id' => 2));
         $spots['vitali'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7A12', 'user_id' => 3)); // Vitali
         $spots['vitali'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7AD7', 'user_id' => 3));
 
@@ -142,6 +143,7 @@ class DataSeeder extends Seeder {
 
         $spots['dom'][] = Spot::create(array('spot_address' => '0014.4F01.0000.77A7', 'user_id' => 2)); // Dom
         $spots['dom'][] = Spot::create(array('spot_address' => '0014.4F01.0000.77C0', 'user_id' => 2));
+        $spots['dom'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7E4D', 'user_id' => 2));
         $spots['vitali'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7A12', 'user_id' => 3)); // Vitali
         $spots['vitali'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7AD7', 'user_id' => 1));
 
@@ -161,12 +163,15 @@ class DataSeeder extends Seeder {
         $spot_zone['south'] = ZoneSpot::create(array('spot_id'  => $spots['adam'][0]->id, 'zone_id' => $zones['south']->id));
 
         ZoneSpot::create(array('spot_id' => $spots['dom'][0]->id, 'zone_id' => $zones['north']->id));
+        ZoneSpot::create(array('spot_id' => $spots['dom'][1]->id, 'zone_id' => $zones['north']->id));
+        ZoneSpot::create(array('spot_id' => $spots['dom'][2]->id, 'zone_id' => $zones['north']->id));
         ZoneSpot::create(array('spot_id' => $spots['vitali'][0]->id, 'zone_id' => $zones['north']->id));
         ZoneSpot::create(array('spot_id' => $spots['vitali'][1]->id, 'zone_id' => $zones['north']->id));
 
         ZoneSpot::create(array('spot_id' => $spots['adam'][2]->id, 'zone_id' => $zones['north']->id));
         ZoneSpot::create(array('spot_id' => $spots['adam'][3]->id, 'zone_id' => $zones['north']->id));
         ZoneSpot::create(array('spot_id' => $spots['adam'][4]->id, 'zone_id' => $zones['north']->id));
+
 
         /**
          * Create some sensors
@@ -210,6 +215,7 @@ class DataSeeder extends Seeder {
         $objects['center_zone'] = Object::create(array('title' => 'Center Zone', 'spot_id' => $spots['dom'][0]->id));
         $objects['roaming_user_1'] = Object::create(array('title' => 'Roaming User (Dom)', 'spot_id' => $spots['dom'][1]->id));
         $objects['roaming_user_2'] = Object::create(array('title' => 'Roaming User (Vitali)', 'spot_id' => $spots['vitali'][1]->id));
+        $objects['roaming_user_3'] = Object::create(array('title' => 'Roaming User (Dom)', 'spot_id' => $spots['dom'][2]->id));
 
         /**
          * Attach some actuators
@@ -241,6 +247,7 @@ class DataSeeder extends Seeder {
 
         $jobs['roaming_user_1'] = Job::create(array('title' => 'Roaming User 1 (Dom)', 'object_id' => $objects['roaming_user_1']->id, 'sensor_id' => $sensors['roaming_spot']->id, 'threshold' => null));
         $jobs['roaming_user_2'] = Job::create(array('title' => 'Roaming User 2 (Vitali)', 'object_id' => $objects['roaming_user_2']->id, 'sensor_id' => $sensors['roaming_spot']->id, 'threshold' => null));
+        $jobs['roaming_user_3'] = Job::create(array('title' => 'Roaming User 3 (Dom)', 'object_id' => $objects['roaming_user_3']->id, 'sensor_id' => $sensors['roaming_spot']->id, 'threshold' => null));
 
         /**
          * Assign actuator jobs
@@ -265,7 +272,7 @@ class DataSeeder extends Seeder {
         // ActuatorJob::create(array('title' => "Light Off", 'actuator_id' => 1, 'job_id' => $jobs['center_table_light']->id, 'direction' => 'BELOW', 'threshold' => 30)); 
         // ActuatorJob::create(array('title' => "Room Warm", 'actuator_id' => 1, 'job_id' => $jobs['center_table_temperature']->id, 'direction' => 'ABOVE', 'threshold' => 20)); 
         // ActuatorJob::create(array('title' => "Light On", 'actuator_id' => 1, 'job_id' => $jobs['south_zone_light']->id, 'direction' => 'ABOVE', 'threshold' => 30)); 
-        ActuatorJob::create(array('title' => "Entered Zone", 'actuator_id' => 1, 'job_id' => $jobs['roaming_user_1']->id, 'direction' => 'EQUALS', 'threshold' => 1)); 
+        ActuatorJob::create(array('title' => "Entered Zone", 'actuator_id' => 1, 'job_id' => $jobs['roaming_user_3']->id, 'direction' => 'EQUALS', 'threshold' => 1)); 
 
         /**
          * Create some boolean conditions
@@ -285,6 +292,8 @@ class DataSeeder extends Seeder {
         $user_zone[0]['spot'] = $objects['roaming_user_1']->spot->id;
         $user_zone[1]['zone'] = 1; 
         $user_zone[1]['spot'] = $objects['roaming_user_2']->spot->id;
+        $user_zone[2]['zone'] = 1; 
+        $user_zone[2]['spot'] = $objects['roaming_user_3']->spot->id;
 
         $cup_percent = 100;
 

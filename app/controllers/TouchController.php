@@ -143,6 +143,25 @@ class TouchController extends \BaseController {
 		return Response::json(array('nodata' => true, 'timestamp' => Input::get('timestamp')));
 	}
 
+	private function getZonechange_time($spot) {
+		foreach(ZoneSpot::orderBy('created_at', 'ASC')->get()->reverse() as $zone_spot) {
+			return Carbon::parse($zone_spot->created_at)->toDateTimeString();
+		}
+	}
+
+	private function getZonechange($spot, $force=null) {
+		$seconds = 0;
+		$last_ajax_call = Input::get('timestamp'); 
+
+		$last_reading_update_time = $this->getZonechange_time($spot);
+
+		if($force == true || $last_reading_update_time !== null && (!Input::has('timestamp') || $last_reading_update_time > $last_ajax_call)) {
+			return array('data' => View::make('touch.tables.zonechange', array('spot' => Spot::find($spot)))->render(), 'timestamp' => $last_reading_update_time);
+		} else {
+			return false; 
+		}
+	}
+
 	private function cup_time() {
 		if(Water::orderBy('id', 'DESC')->get()->count() && Water::orderBy('id', 'DESC')->first()->exists())
 			return Carbon::parse(Water::orderBy('id', 'DESC')->first()->created_at)->toDateTimeString();
@@ -213,28 +232,6 @@ class TouchController extends \BaseController {
 
 		if($last_reading_update_time !== null && (!Input::has('timestamp') || $last_reading_update_time > $last_ajax_call)) {
 			return array('data' => View::make('touch.tables.zonejob', array('count' => 0, 'spot' => Spot::find($spot), 'job' => Job::find($job)))->render(), 'timestamp' => $last_reading_update_time);
-		} else {
-			return false; 
-		}
-	}
-
-	private function getZonechange_time($spot) {
-		$spot = Spot::find($spot); 
-		foreach (Spot::getRoamingSpots() as $roaming_spot) {
-			if(count($roaming_spot->zonechanges) && count($roaming_spot->zonechanges()->orderBy('id', 'DESC')->first()->job) && $roaming_spot->zonechanges()->orderBy('id', 'DESC')->first()->job->object->title == $spot->object->title) {
-				return Carbon::parse($roaming_spot->zonechanges()->orderBy('id', 'DESC')->first()->created_at)->toDateTimeString();
-			}
-		}
-	}
-
-	private function getZonechange($spot, $force=null) {
-		$seconds = 0;
-		$last_ajax_call = Input::get('timestamp'); 
-
-		$last_reading_update_time = $this->getZonechange_time($spot);
-
-		if($force == true || $last_reading_update_time !== null && (!Input::has('timestamp') || $last_reading_update_time > $last_ajax_call)) {
-			return array('data' => View::make('touch.tables.zonechange', array('spot' => Spot::find($spot)))->render(), 'timestamp' => $last_reading_update_time);
 		} else {
 			return false; 
 		}

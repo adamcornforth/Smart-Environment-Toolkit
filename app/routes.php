@@ -20,7 +20,7 @@ Route::filter('spot', function() {
 
 Route::group(array('before' => 'spot'), function() {
 	Route::get('twitter', function() {
-		echo Heat::lab(); 
+		echo Heat::lab();
 		echo "<br />";
 		echo Light::lab();
 	});
@@ -42,12 +42,15 @@ Route::group(array('before' => 'spot'), function() {
 	Route::post('actuators/delete_job/{id}', 'ActuatorController@deleteJob');
 	Route::post('actuators/set_status', 'ActuatorController@postSetStatus');
 	Route::resource('actuators', 'ActuatorController');
-	
+
 	Route::controller('zones', 'ZoneController');
 	Route::resource('zones', 'ZoneController');
 
 	Route::controller('reports', 'ReportController');
 	Route::resource('reports', 'ReportController');
-	
+
+	Route::get('api/spots', 'APIController@spots');
+	Route::get('api/nonzone_spots', 'APIController@nonzone_spots');
+
 	Route::controller('/', 'TouchController');
 });

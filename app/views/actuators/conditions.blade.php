@@ -6,7 +6,7 @@
 				<div class='col-md-1 well-sm text-right'>
 					<p class='actuator-padding'>(</p>
 				</div>
-				<div class='col-md-4 well well-sm text-center'>
+				<div class='col-md-4 well well-sm text-center {{ (isset($condition->first->status) && $condition->first->status)  ? "event-on" : ""}}'>
 					@include('actuators.panels.event', array('actuator_job' => $condition->first, 'field' => 'actuator_job'))
 				</div>
 				<div class='col-md-2 well-sm text-center'>
@@ -18,7 +18,7 @@
 	  				</select>
 	  			</p>
 				</div>
-				<div class='col-md-4 well well-sm text-center'>
+				<div class='col-md-4 well well-sm text-center {{ (isset($condition->second->status) && $condition->second->status)  ? "event-on" : ""}}'>
 					@include('actuators.panels.event', array('actuator_job' => $condition->second, 'field' => 'second_actuator_job'))
 				</div>
 				<div class='col-md-1 well-sm text-left'>

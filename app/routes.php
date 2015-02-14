@@ -35,6 +35,7 @@ Route::group(array('before' => 'spot'), function() {
 	Route::post('jobs/toggle_tracking/{id}', 'JobController@toggle_tracking');
 	Route::resource('jobs', 'JobController');
 
+	Route::get('actuators/{id}/ajax', 'ActuatorController@getAjax');
 	Route::get('actuators/conditions/{id}', 'ActuatorController@getConditions');
 	Route::post('actuators/boolean_condition/{id}', 'ActuatorController@setBoolean');
 	Route::post('actuators/add_condition/{id}', 'ActuatorController@addCondition');

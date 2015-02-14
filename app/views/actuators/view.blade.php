@@ -36,7 +36,7 @@
 				  		@endif
 			  	</div>
 
-			  	<div class='panel-body' id='actuator-conditions-panel'>
+			  	<div class='panel-body' id='actuator-time-panel'>
 			  		<br />
 			  		<div class='col-md-4 well well-sm text-center'>
 						<select class='time-select' name='start_hour'>
@@ -100,6 +100,24 @@
 			  		@include('actuators.conditions', array('actuator' => $actuator))
 				</div>
 			</div>
+
+			<script type="text/javascript">
+				(function worker(timestamp) {
+				  $.ajax({
+				    url: "/actuators/{{ $actuator->id }}/ajax", 
+				    data: {'timestamp' : timestamp},
+				    async: true,
+				    success: function(data) {
+				      console.log(data);
+				      if(!data.nodata) $('#actuator-conditions-panel').html(data.html); 
+				      worker(data.timestamp);
+				    },
+				    error: function() {
+				    	worker(); 
+				    }
+				  });
+				})();
+			</script>
 
 			<script type="text/javascript">
 				initConditions();

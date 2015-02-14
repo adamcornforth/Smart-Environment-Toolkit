@@ -167,3 +167,6 @@ body {
 .time-select {
 	font-size: 20px;
 }
+.event-on {
+	border-color: #4cae4c;
+}

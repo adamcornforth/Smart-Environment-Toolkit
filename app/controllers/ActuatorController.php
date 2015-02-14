@@ -103,6 +103,34 @@ class ActuatorController extends \BaseController {
 		return Redirect::to('actuators/'.$actuator->id);
 	}
 
+	public function getAjax($id) 
+	{
+		$seconds = 0; 
+		$timestamp = 0;
+		while($seconds < 10) {
+			
+			$last_ajax_call = Input::get('timestamp'); 
+			$last_reading_update_time = $this->getConditionsTime($id);
+
+			if($last_reading_update_time !== null && (!Input::has('timestamp') || $last_reading_update_time > $last_ajax_call)) {
+				return Response::json(
+					array(	'timestamp' => $last_reading_update_time, 
+							'html' => $this->getConditions($id)->render()));
+			}
+			
+			sleep(1); 
+			$seconds++; 
+		}
+
+		return Response::json(array('nodata' => true, 'timestamp' => Input::get('timestamp')));
+	}
+
+	private function getConditionsTime($id) {
+		foreach(ActuatorJob::whereActuatorId($id)->orderBy('updated_at', 'ASC')->get()->reverse() as $actuator_job) {
+			return Carbon::parse($actuator_job->updated_at)->toDateTimeString();
+		}
+	}
+
 	public function getConditions($id) 
 	{
 		return View::make('actuators.conditions', array('actuator' => Actuator::find($id)));

@@ -230,6 +230,19 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 		    $table->foreign('zone_id')->references('id')->on('Zone');
 		});
 
+		Schema::create('Bearing', function($table)
+		{
+		    $table->increments('id');
+		    $table->float('bearing');
+		    $table->string('spot_address');
+		    $table->integer('job_id')->unsigned()->nullable();
+		    $table->integer('zone_id')->unsigned()->default(0);
+		    $table->timestamp('created_at'); 
+
+		    $table->foreign('job_id')->references('id')->on('Job');
+		    $table->foreign('zone_id')->references('id')->on('Zone');
+		});
+
 		Schema::create('Tweet', function($table)
 		{
 		    $table->increments('id');
@@ -269,6 +282,7 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 	{
 		Schema::drop('Condition');  
 		Schema::drop('Tweet'); 
+		Schema::drop('Bearing'); 
 		Schema::drop('Water'); 
 		Schema::drop('Motion'); 
 		Schema::drop('Acceleration'); 

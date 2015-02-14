@@ -188,6 +188,9 @@ class DataSeeder extends Seeder {
         $sensors['motion_sensor'] = Sensor::create(array('title' => 'Motion Sensor', 'table' => 'Motion', 'field' => 'motion', 
                                                         'unit' => '', 'measures' => 'Motion', 'decimal_points' => 0, 'port_number' => 140));
 
+        $sensors['compass'] = Sensor::create(array('title' => 'Compass', 'table' => 'Bearing', 'field' => 'bearing', 
+                                                        'unit' => '°', 'measures' => 'Angle', 'decimal_points' => 0, 'port_number' => 200));
+        
         $sensors['cell_tower'] = Sensor::create(array('title' => 'Cell Tower', 'table' => 'ZoneSpot', 'field' => 'zone_id', 
                                                         'unit' => '', 'measures' => 'Zone Entries', 'port_number' => 150));
 
@@ -196,6 +199,7 @@ class DataSeeder extends Seeder {
 
         $sensors['smart_cup'] = Sensor::create(array('title' => 'Smart Cup', 'table' => 'Water', 'field' => 'water_percent',
                                                         'unit' => '%', 'measures' => 'Water Level', 'port_number' => 180));
+
 
     	DB::table('Acceleration')->delete();
         DB::table('Light')->delete();

@@ -158,3 +158,12 @@ body {
 .modal-backdrop {
 	z-index: -1;
 }
+.well-match {
+    height: 40px;
+}
+.well-match .btn-block {
+	padding: 8px 0 9px 0;
+}
+.time-select {
+	font-size: 20px;
+}

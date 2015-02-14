@@ -14,36 +14,35 @@
 				  	<?php echo Form::horizontal(array('url' => url('actuators/'.$actuator->id), 'method' => 'PUT')); ?>
 				  	<div class='form-group'>
 				  		<?php
-					  			echo Form::label('object_title', 'What object is this actuator controlled by?', array('class' => 'col-md-4 control-label'));
+					  			echo Form::label('actuator_trigger', 'Actuator Name', array('class' => 'col-md-4 control-label'));
 					  		?>
-				  		@if(!count($actuator->object) && Object::all()->count())
-				  			<div class='col-md-3'>
-					  			<select name="object_id" class='form-control'>
-					  				<option value="" disabled="disabled" selected="selected">Please select an object</option>
-					  				@foreach(Object::all() as $object) 
-					  					<option {{ ((count($actuator->object) && $object->id == $actuator->object->id)) ? "selected='selected'" : ""}}value="{{ $object->id }}">{{ $object->title }}</option>
-					  				@endforeach
-					  			</select>
-					  		</div>
-					  		<p class='col-md-1 text-center text-muted control-label'>Or</p>
-				  		@endif
-				  		@if(count($actuator->object))
-				  			<div class='col-md-3'>
-					  			<p class='form-control-static'>
-					  				<strong>{{ $actuator->object->title }}</strong> 
-					  				<a class='btn btn-xs btn-danger pull-right' href=''>
-					  					<span class='glyphicon glyphicon-remove'>
-					  					</span>
-					  					Stop Controlling
-					  				</a>
-					  			</p>
-					  		</div>
-					  		<p class='col-md-1 text-center text-muted control-label'>Or</p>
-				  		@endif
+				  		
 				  		<div class='col-md-3'>
 				  			<?php 
-				  				echo Form::text('object_title', null, array('placeholder' => 'New Object Name e.g. Kettle'));
+				  				echo Form::text('triggers', $actuator->triggers, array('placeholder' => 'Actuator Name e.g. Light, Alarm'));
 				  			?>
+				  		</div>
+				  		<div class='col-md-3'>
+				  			<p>
+				  				What is this actuator going to trigger? e.g. a LED Light, Alarm, Fan
+				  			</p>
+				  		</div>
+				  	</div>
+
+				  	<div class='form-group'>
+				  		<?php
+					  			echo Form::label('triggered_by', 'Triggered By', array('class' => 'col-md-4 control-label'));
+					  		?>
+				  		
+				  		<div class='col-md-3'>
+				  			<?php 
+				  				echo Form::text('triggered_by', $actuator->triggered_by, array('placeholder' => 'Actuator Trigger e.g. Security Alarm'));
+				  			?>
+				  		</div>
+				  		<div class='col-md-3'>
+				  			<p>
+				  				What is this actuator going to be triggered by? e.g. Security Alarm, High Energy Use, etc.
+				  			</p>
 				  		</div>
 				  	</div>
 

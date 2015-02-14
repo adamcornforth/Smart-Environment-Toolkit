@@ -5,8 +5,12 @@
 		<span class='glyphicon glyphicon-pencil'></span>
 		Edit Actuator
 	</a>
-	<h1>{{ $title or "Viewing Actuator <small>".$actuator->actuator_address." ".((count($actuator->object)) ? "&middot; Actuator for <strong>".$actuator->object->title."</strong>" : "")."</small>"}}</h1>
-
+	<h1>{{ $title or "Viewing ".(isset($actuator->triggers) ? "<strong>".$actuator->triggers."</strong> " : "Actuator "). "<small>".$actuator->actuator_address}}</small></h1>
+	@if(isset($actuator->triggered_by))
+		<p class='lead'>
+			Triggered by <strong>{{ $actuator->triggered_by }}</strong>
+		</p>
+	@endif
 	<br /> 
 	<div class='row marketing'>
 		<div class='col-md-12'>
@@ -23,9 +27,73 @@
 		  	@endforeach
 		  <!-- </div> -->
 
+		  	<div class='panel panel-default'>
+		  		<div class='panel-heading'>
+						@if(isset($actuator->triggered_by))
+				  			Only trigger <strong>{{ $actuator->triggered_by }}</strong> if the time is between:
+				  		@else 
+				  			Only turn actuator on if the time is between:
+				  		@endif
+			  	</div>
+
+			  	<div class='panel-body' id='actuator-conditions-panel'>
+			  		<br />
+			  		<div class='col-md-4 well well-sm text-center'>
+						<select class='time-select' name='start_hour'>
+		  					<option>--</option>
+		  					@for ($i = 1; $i <= 12; $i++)
+		  						<option value="{{ $i }}">{{ $i }}</option>
+		  					@endfor
+		  				</select>
+		  				:
+		  				<select class='time-select' name='start_hour'>
+		  					<option>--</option>
+		  					@for ($i = 0; $i < 60; $i+=5)
+		  						<option value="{{ $i }}">{{  sprintf("%02d", $i) }}</option>
+		  					@endfor
+		  				</select>
+		  				<select class='time-select' name='start_hour'>
+		  					<option value="AM">AM</option>
+		  					<option value="PM">PM</option>
+		  				</select>
+					</div>
+					<div class='col-md-1 well-sm text-center'>
+						And 
+					</div>
+					<div class='col-md-4 well well-sm text-center'>
+						<select class='time-select' name='start_hour'>
+		  					<option>--</option>
+		  					@for ($i = 1; $i <= 12; $i++)
+		  						<option value="{{ $i }}">{{ $i }}</option>
+		  					@endfor
+		  				</select>
+		  				:
+		  				<select class='time-select' name='start_hour'>
+		  					<option>--</option>
+		  					@for ($i = 0; $i < 60; $i+=5)
+		  						<option value="{{ $i }}">{{  sprintf("%02d", $i) }}</option>
+		  					@endfor
+		  				</select>
+		  				<select class='time-select' name='start_hour'>
+		  					<option value="AM">AM</option>
+		  					<option value="PM">PM</option>
+		  				</select>
+					</div>
+					<div class='col-md-2 col-md-offset-1 text-center well-match'>
+						<span class='btn btn-block btn-primary'>
+							<span class='glyphicon glyphicon-floppy-disk'></span> Update 
+						</span>
+					</div>
+				</div>
+		  	</div>
+
 			<div class='panel panel-primary'>
 				<div class='panel-heading'>
-			  		Turn Actuator On if:
+						@if(isset($actuator->triggered_by))
+				  			<strong>{{ $actuator->triggered_by }}</strong> triggered if:
+				  		@else 
+				  			Turn Actuator On if:
+				  		@endif
 			  	</div>
 
 			  	<div class='panel-body' id='actuator-conditions-panel'>

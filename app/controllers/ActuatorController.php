@@ -69,11 +69,13 @@ class ActuatorController extends \BaseController {
 	{
 		$actuator = Actuator::find($id); 
 
-		/**
-		 * Assign object to this actuator if object is selected
-		 */
-		if(Input::has('object_id')) {
-			$actuator->object_id = Input::get('object_id');
+		if(Input::has('triggers')) {
+			$actuator->triggers = Input::get('triggers'); 
+			$actuator->save(); 
+		}
+
+		if(Input::has('triggered_by')) {
+			$actuator->triggered_by = Input::get('triggered_by'); 
 			$actuator->save(); 
 		}
 

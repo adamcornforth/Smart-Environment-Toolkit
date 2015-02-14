@@ -21,7 +21,7 @@
 			  			<tr>
 			  				<th>#</th>
 			  				<th>Actuator Details</th>
-			  				<th>Events</th>
+			  				<th>Actuator Trigger Conditions</th>
 			  				<th>Last Seen</th>
 			  			</tr>
 			  		</thead>
@@ -55,37 +55,46 @@
 											});
 										});
 									</script>
-				  					<a href='{{ url('actuators/'.$actuator->id) }}'>
-				  						{{ $actuator->actuator_address }}
-				  					</a> 
-				  					<hr class='hr-small' />
-				  					<small class='text-muted'>
-				  						@if(count($actuator->object))
-					  						Actuator for <strong>{{ $actuator->object->title }} </strong>
-					  						<a href='{{ url('actuators/'.$actuator->id.'/edit') }}' class='btn btn-default btn-xs pull-right'>
-				  								Edit Object
-				  								<span class='glyphicon glyphicon-cog'></span>
-				  							</a>
-					  					@else
-					  						No object
-					  						<a href='{{ url('actuators/'.$actuator->id.'/edit') }}' class='btn btn-primary btn-xs pull-right'>
-				  								Add Object
-				  								<span class='glyphicon glyphicon-plus-sign'></span>
-				  							</a>
+									@if(isset($actuator->triggers))
+										<a href='{{ url('actuators/'.$actuator->id) }}'>
+					  						{{ $actuator->triggers }}
+					  					</a> 
+										<a href='{{ url('actuators/'.$actuator->id.'/edit') }}' class='btn btn-xs btn-default'>
+											<span class='glyphicon glyphicon-pencil'></span> Edit
+										</a>
+					  					<br />
+					  					@if(isset($actuator->triggered_by))
+					  						<small>Triggered by <strong>{{ $actuator->triggered_by }}</strong></small><br />
 					  					@endif
-				  					</small>
+					  					<small class='text-muted'>
+					  						{{ $actuator->actuator_address}}
+					  					</small>
+									@else
+					  					<a href='{{ url('actuators/'.$actuator->id) }}'>
+					  						{{ $actuator->actuator_address }}
+					  					</a> 
+										<a href='{{ url('actuators/'.$actuator->id.'/edit') }}' class='btn btn-xs btn-default'>
+											<span class='glyphicon glyphicon-pencil'></span> Edit
+										</a>
+				  					@endif
 				  				</td>
 				  				<td>
-				  						<a href='{{ url('actuators/'.$actuator->id) }}' class='btn btn-success btn-xs pull-right'>
-			  								Add Job
-			  								<span class='glyphicon glyphicon-plus-sign'></span>
+				  						<a href='{{ url('actuators/'.$actuator->id) }}' class='btn btn-primary btn-xs pull-right'>
+			  								<span class='glyphicon glyphicon-pencil'></span>
+			  								Edit
 			  							</a>
-				  					@if($actuator->jobs->count())
-				  						@foreach ($actuator->jobs as $job)
-					  						<strong>{{ $job->title }}</strong> event<br />
-					  						<small class='text-muted'>Triggered when  <strong>{{ strtolower($job->job->sensor->measures) }}</strong> goes <strong>{{ strtolower($job->direction) }} {{ $job->threshold }}{{ $job->job->sensor->unit }}</strong></small><br />
-				  						@endforeach
-				  					@endif	
+			  						@if(isset($actuator->triggered_by))
+			  							Actuator triggered by '<strong>{{ $actuator->triggered_by }}</strong>':<br >
+			  						@endif
+			  						<small>
+					  					@foreach($actuator->conditions as $condition) 
+											(<strong>{{ isset($condition->first->title) ? $condition->first->title : '' }}</strong>@if(isset($condition->second->title))
+												 	{{ isset($condition->boolean_operator) ? $condition->boolean_operator : '' }} 
+												 	<strong>{{ isset($condition->second->title) ? $condition->second->title : ''}}</strong>@endif) 
+											{{ isset($condition->next_operator) ? $condition->next_operator : '' }}
+														
+										@endforeach
+									</small>
 				  				</td>
 				  				<td>
 				  					<strong>{{ Carbon::parse($actuator->updated_at)->format('D jS M') }}</strong> at <strong>{{ Carbon::parse($actuator->updated_at)->format('G:ia') }}</strong><br />

@@ -66,7 +66,7 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 		{
 		    $table->increments('id');
 		    $table->string('title');
-		    $table->string('description');
+		    $table->string('description'); 
 		    $table->integer('spot_id')->unsigned()->nullable();
 
 			$table->foreign('spot_id')->references('id')->on('Spot');
@@ -77,7 +77,10 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 		{
 			$table->increments('id');
 		    $table->string('actuator_address')->unique();
-		    $table->string('title')->nullable();
+		    $table->string('triggers')->nullable();
+		    $table->string('triggered_by')->nullable();
+		    $table->time('auto_start_time')->nullable();
+		    $table->time('auto_end_time')->nullable();
 		    $table->integer('is_on')->nullable();
 		    $table->timestamps();
 

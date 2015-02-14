@@ -263,9 +263,9 @@ class DataSeeder extends Seeder {
         ZoneObject::create(array('object_id' => $objects['south_zone']->id, 'zone_id' => $zones['south']->id, 'job_id' => $jobs['south_zone_range']->id));
 
         /**
-         * Create Actuator
+         * Create Actuator 
          */
-        Actuator::create(array('actuator_address' => 'RELAYLO1-10FBC.relay1'));
+        Actuator::create(array('actuator_address' => 'RELAYLO1-10FBC.relay1', 'auto_start_time' => Carbon::now()->startOfDay()->addHours(9)->toTimeString(), 'auto_end_time' => Carbon::now()->startOfDay()->addHours(17)->toTimeString()));
 
         ActuatorJob::create(array('title' => "Light Off", 'actuator_id' => 1, 'job_id' => $jobs['north_zone_light']->id, 'direction' => 'BELOW', 'threshold' => 30)); 
         ActuatorJob::create(array('title' => "Light Off", 'actuator_id' => 1, 'job_id' => $jobs['south_zone_light']->id, 'direction' => 'BELOW', 'threshold' => 30)); 

@@ -103,6 +103,49 @@ class ActuatorController extends \BaseController {
 		return Redirect::to('actuators/'.$actuator->id);
 	}
 
+	public function postActuatorTime($id)
+	{
+		$error = false; 
+		$actuator = Actuator::find($id); 
+		if(!isset($actuator->id)) $error = "Actuator could not be found";
+
+		if(Input::has('start_hour') && Input::has('start_minute') && Input::has('start_meridiem') && Input::has('end_hour') && Input::has('end_minute') && Input::has('end_meridiem')) {
+			if(is_numeric(Input::get('start_hour')) && is_numeric(Input::get('start_minute')) && is_numeric(Input::get('start_hour')) && is_numeric(Input::get('start_minute'))) {
+				// Add offsets if PM
+				$start_offset = (Input::get('start_meridiem') == "PM") ? 12 : 0; 
+				$end_offset = (Input::get('end_meridiem') == "PM") ? 12 : 0; 
+
+				// Get start + end values 
+				$start = Carbon::now()->startOfDay()->addHours($start_offset + Input::get('start_hour'))->addMinutes(Input::get('start_minute')); 
+				$end = Carbon::now()->startOfDay()->addHours($end_offset + Input::get('end_hour'))->addMinutes(Input::get('end_minute')); 
+
+				if($start->lt($end)) {
+					// Save values
+					$actuator->auto_start_time = $start->toTimeString(); 
+					$actuator->auto_end_time = $end->toTimeString(); 
+					$actuator->save(); 
+				} else {
+					$error = "The start time (".$start->format('g:ia').") must be before the end time (".$end->format('g:ia').").";
+				}
+
+			} else {
+				$error = "Sorry the inputted time values must be numbers.";
+			}
+		} else {
+			$error = "Sorry, you must fill in all the time fields.";
+		}
+
+		if($error) 
+			return Response::json(array('status' => 'error', 'error' => $error));
+		else
+			return Response::json(array('status' => 'success', 'message' => "The actuator will now only activate between ".$start->format('g:ia')." and ".$end->format('g:ia')."!"));
+	}
+
+	public function getActuatorTimes($id) 
+	{
+		return View::make('actuators.time', array('actuator' => Actuator::find($id))); 
+	}
+
 	public function getAjax($id) 
 	{
 		$seconds = 0; 

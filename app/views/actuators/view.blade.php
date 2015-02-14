@@ -37,55 +37,39 @@
 			  	</div>
 
 			  	<div class='panel-body' id='actuator-time-panel'>
-			  		<br />
-			  		<div class='col-md-4 well well-sm text-center'>
-						<select class='time-select' name='start_hour'>
-		  					<option>--</option>
-		  					@for ($i = 1; $i <= 12; $i++)
-		  						<option value="{{ $i }}">{{ $i }}</option>
-		  					@endfor
-		  				</select>
-		  				:
-		  				<select class='time-select' name='start_hour'>
-		  					<option>--</option>
-		  					@for ($i = 0; $i < 60; $i+=5)
-		  						<option value="{{ $i }}">{{  sprintf("%02d", $i) }}</option>
-		  					@endfor
-		  				</select>
-		  				<select class='time-select' name='start_hour'>
-		  					<option value="AM">AM</option>
-		  					<option value="PM">PM</option>
-		  				</select>
-					</div>
-					<div class='col-md-1 well-sm text-center'>
-						And 
-					</div>
-					<div class='col-md-4 well well-sm text-center'>
-						<select class='time-select' name='start_hour'>
-		  					<option>--</option>
-		  					@for ($i = 1; $i <= 12; $i++)
-		  						<option value="{{ $i }}">{{ $i }}</option>
-		  					@endfor
-		  				</select>
-		  				:
-		  				<select class='time-select' name='start_hour'>
-		  					<option>--</option>
-		  					@for ($i = 0; $i < 60; $i+=5)
-		  						<option value="{{ $i }}">{{  sprintf("%02d", $i) }}</option>
-		  					@endfor
-		  				</select>
-		  				<select class='time-select' name='start_hour'>
-		  					<option value="AM">AM</option>
-		  					<option value="PM">PM</option>
-		  				</select>
-					</div>
-					<div class='col-md-2 col-md-offset-1 text-center well-match'>
-						<span class='btn btn-block btn-primary'>
-							<span class='glyphicon glyphicon-floppy-disk'></span> Update 
-						</span>
-					</div>
+			  		@include('actuators.time', array('actuator' => $actuator))
 				</div>
 		  	</div>
+
+		  	<script type="text/javascript">
+		  		initActuatorTime();
+		  		function initActuatorTime() {
+			  		$(".time-submit").click(function() {
+			  			$(this).addClass('disabled'); 
+			  			$.ajax({
+			  				url:"/actuators/{{ $actuator->id }}/settime",
+			  				data : $("#time-form").serialize(), 
+			  				type: "POST", 
+			  				success: function(data) {
+			  					console.log(data); 
+			  					$('#actuator-time-panel').load("/actuators/{{ $actuator->id }}/time", function() {
+			  						initActuatorTime();
+				  					$('#actuator-time-panel').find('.alert').remove(); 
+				  					if(data.status == "error") {
+				  						$('#actuator-time-panel').prepend("<p class='alert alert-danger'><strong>Error!</strong> " + data.error + "</p>"); 
+				  					} else {
+				  						$('#actuator-time-panel').prepend("<p class='alert alert-success'><strong>Success!</strong> " + data.message + "</p>"); 
+				  					}
+				  					$(this).removeClass('disabled'); 
+			  					});
+			  				},
+			  				complete: function() {
+			  					$(".time-submit").removeClass('disabled');
+			  				}
+			  			});
+			  		});
+			  	}
+		  	</script>
 
 			<div class='panel panel-primary'>
 				<div class='panel-heading'>

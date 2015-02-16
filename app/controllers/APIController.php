@@ -7,18 +7,29 @@ class APIController extends \BaseController {
 		foreach ($jobs as $job) {
 			if($job->sensor->title == $sensor_name) {
 				foreach($job->getReadings($job->threshold, $job->sensor->table, $job->sensor->field, $limit)->take(1) as $reading) {
-					return number_format($reading[$job->sensor->field]);
+					return number_format($reading[$job->sensor->field], 2);
 				}
 			}
 		}
 	}
 
+	private function convertObjectIdToZoneId($object_id) {
+		switch ($object_id)
+		{
+			case 5:
+				return 1; // North Zone
+				break;
+			case 6:
+				return 3; // Centre Zone
+				break;
+			case 7:
+				return 2; // South Zone
+				break;
+		}
+	}
+
 	public function spots() {
 		$zone_spots = new \Illuminate\Database\Eloquent\Collection;
-		$zone_objects = array(	'North Zone' => 1,
-								'Center Zone' => 2,
-								'South Zone' => 3);
-		$spots = new \Illuminate\Database\Eloquent\Collection;
 		$roaming_spots = new \Illuminate\Database\Eloquent\Collection;
 		foreach (Spot::all() as $spot) {
 
@@ -32,9 +43,10 @@ class APIController extends \BaseController {
 							$spot_modified->address = $spot->spot_address;
 							$spot_modified->title = $spot->object->title;
 							// $spot_modified->is_online = ;
-							$spot_modified->heat_level = $this->getSensorLatestReading($spot->object->id, "Thermometer", 1);
-							$spot_modified->light_level = $this->getSensorLatestReading($spot->object->id, "Photosensor", 1);
+							$spot_modified->heat_level = round($this->getSensorLatestReading($spot->object->id, "Thermometer", 1), 2);
+							$spot_modified->light_level = round($this->getSensorLatestReading($spot->object->id, "Photosensor", 1), 0);
 							$spot_modified->battery_level = $spot->battery_percent;
+							$spot_modified->zone_id = $this->convertObjectIdToZoneId($spot->object->id);
 
 							$zone_spots->add($spot_modified);
 						}
@@ -49,7 +61,7 @@ class APIController extends \BaseController {
 							$spot_modified->heat_level = $this->getSensorLatestReading($spot->object->id, "Thermometer", 1);
 							$spot_modified->light_level = $this->getSensorLatestReading($spot->object->id, "Photosensor", 1);
 							$spot_modified->battery_level = $spot->battery_percent;
-							$zone_spot = ZoneSpot::orderBy('created_at', 'DESC')->where('spot_id', '=', $spot->id)->first();
+							$zone_spot = ZoneSpot::orderBy('created_at', 'DESC')->where('job_id', '!=', 'NULL')->where('spot_id', '=', $spot->id)->first();
 							$spot_modified->zone_id = $zone_spot->zone_id;
 							$spot_modified->date_of_entering_zone = Carbon::parse($spot->zonechanges()->orderBy('id', 'DESC')->first()->created_at)->format('G:ia jS M');
 

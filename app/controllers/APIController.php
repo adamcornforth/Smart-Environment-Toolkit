@@ -7,7 +7,7 @@ class APIController extends \BaseController {
 		foreach ($jobs as $job) {
 			if($job->sensor->title == $sensor_name) {
 				foreach($job->getReadings($job->threshold, $job->sensor->table, $job->sensor->field, $limit)->take(1) as $reading) {
-					return number_format($reading[$job->sensor->field]);
+					return number_format($reading[$job->sensor->field], 2);
 				}
 			}
 		}
@@ -43,8 +43,8 @@ class APIController extends \BaseController {
 							$spot_modified->address = $spot->spot_address;
 							$spot_modified->title = $spot->object->title;
 							// $spot_modified->is_online = ;
-							$spot_modified->heat_level = $this->getSensorLatestReading($spot->object->id, "Thermometer", 1);
-							$spot_modified->light_level = $this->getSensorLatestReading($spot->object->id, "Photosensor", 1);
+							$spot_modified->heat_level = round($this->getSensorLatestReading($spot->object->id, "Thermometer", 1), 2);
+							$spot_modified->light_level = round($this->getSensorLatestReading($spot->object->id, "Photosensor", 1), 0);
 							$spot_modified->battery_level = $spot->battery_percent;
 							$spot_modified->zone_id = $this->convertObjectIdToZoneId($spot->object->id);
 

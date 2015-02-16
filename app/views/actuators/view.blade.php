@@ -95,6 +95,7 @@
 				      console.log(data);
 				      if(!data.nodata) $('#actuator-conditions-panel').html(data.html); 
 				      worker(data.timestamp);
+				      initConditions();
 				    },
 				    error: function() {
 				    	worker(); 

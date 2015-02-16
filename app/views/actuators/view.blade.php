@@ -11,6 +11,16 @@
 			Triggered by <strong>{{ $actuator->triggered_by }}</strong>
 		</p>
 	@endif
+	@if(Session::has('message'))
+		<p class='alert alert-success'>
+			<strong>Success!</strong> {{ Session::get('message') }}
+		<p>
+	@endif
+	@if(Session::has('error'))
+		<p class='alert alert-danger'>
+			<strong>Error!</strong> {{ Session::get('error') }}
+		<p>
+	@endif
 	<br /> 
 	<div class='row marketing'>
 		<div class='col-md-12'>

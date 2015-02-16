@@ -10,6 +10,12 @@
 					Configuring Actuator {{ $actuator->actuator_address }}
 				</div>
 			  	<div class='panel-body'>
+			  		@if(Session::has('error'))
+			  			<p class='alert alert-danger'>
+			  				<strong>Error!</strong> {{ Session::get('error') }}
+			  			<p>
+			  				<hr />
+			  		@endif
 			  		<br />
 				  	<?php echo Form::horizontal(array('url' => url('actuators/'.$actuator->id), 'method' => 'PUT')); ?>
 				  	<div class='form-group'>

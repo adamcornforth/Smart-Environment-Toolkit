@@ -68,36 +68,51 @@ class ActuatorController extends \BaseController {
 	public function update($id)
 	{
 		$actuator = Actuator::find($id); 
-
-		if(Input::has('triggers')) {
-			$actuator->triggers = Input::get('triggers'); 
-			$actuator->save(); 
-		}
-
-		if(Input::has('triggered_by')) {
-			$actuator->triggered_by = Input::get('triggered_by'); 
-			$actuator->save(); 
-		}
-
 		/**
 		 * For creating jobs for the actuator
 		 */
-		if(Input::has('job_title') && Input::has('job_id') && Input::has('threshold') && Input::has('direction')) {
+		if(Input::has('condition-id') && Input::has('job-field')) {
+			if(Input::has('job_title') && Input::has('job_id') && Input::has('threshold') && Input::has('direction')) {
+				$job = new ActuatorJob(); 
+				$job->title = Input::get('job_title');
+				$job->threshold = Input::get('threshold');
+				$job->direction = Input::get('direction');
+				$job->actuator_id = $actuator->id;
+				$job->job_id = Input::get('job_id');
+				$job->save();
 
-			$job = new ActuatorJob(); 
-			$job->title = Input::get('job_title');
-			$job->threshold = Input::get('threshold');
-			$job->direction = Input::get('direction');
-			$job->actuator_id = $actuator->id;
-			$job->job_id = Input::get('job_id');
-			$job->save();
-
-			if(Input::has('condition-id') && Input::has('job-field')) {
-				$condition = Condition::find(Input::get('condition-id'));
-				$condition[Input::get('job-field')] = $job->id;
-				$condition->save();
+				if(Input::has('condition-id') && Input::has('job-field')) {
+					$condition = Condition::find(Input::get('condition-id'));
+					$condition[Input::get('job-field')] = $job->id;
+					$condition->save();
+				}
+				return Redirect::to('actuators/'.$actuator->id)->with('message', 'Your event, <strong>'.$job->title.'</strong>, has been successfully created!');
+			} else {
+				return Redirect::to('actuators/'.$actuator->id)->with('error', 'Sorry, you must fill in all the <strong>Add Event</strong> fields to create an event.');
 			}
-		} 
+		/**
+		 * For modifying the actuator itself
+		 */
+		} else {
+			if(!Input::has('triggers') && !Input::has('triggered_by')) {
+				return Redirect::to('actuators/'.$actuator->id.'/edit')->withInput()->with('error', 'Sorry, the <strong>Actuator Name</strong> and <strong>Triggered By</strong> fields are required.');
+			} 
+
+			if(!Input::has('triggers')) {
+				return Redirect::to('actuators/'.$actuator->id.'/edit')->withInput()->with('error', 'Sorry, the <strong>Actuator Name</strong> field is required.');
+			}
+
+			if(!Input::has('triggered_by')) {
+				return Redirect::to('actuators/'.$actuator->id.'/edit')->withInput()->with('error', 'Sorry, the <strong>Triggered By</strong> field is required.');
+			}
+
+			$actuator->triggers = Input::get('triggers'); 
+			$actuator->triggered_by = Input::get('triggered_by'); 
+			$actuator->save(); 
+
+			return Redirect::to('actuators/'.$actuator->id)->with('message', 'Your actuator, <strong>'.$actuator->triggers.'</strong>, has been successfully configured!');
+		}
+
 
 		Session::forget('notice');
 		return Redirect::to('actuators/'.$actuator->id);

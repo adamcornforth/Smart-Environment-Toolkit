@@ -288,7 +288,7 @@ class DataSeeder extends Seeder {
         /**
          * Add a week's worth of data
          */
-        $carbon = Carbon::now()->subDays(7);
+        $carbon = Carbon::now()->subDays(1);
         $now = Carbon::now();
 
         $light_on = false;

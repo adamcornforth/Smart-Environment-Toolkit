@@ -1,28 +1,32 @@
 <?php
-Cron::setDisablePreventOverlapping();
 
-// Every hour 
-Cron::add('cronhour', '0 * * * *', function() {
-	$heat = Heat::average(Carbon::now()->subHour()->toDateTimeString(), Carbon::now()->toDateTimeString());
-	$light = Light::average(Carbon::now()->subHour()->toDateTimeString(), Carbon::now()->toDateTimeString());
-    return Twitter::postTweet(array('status' => Carbon::now()->format('D jS M g:ia').': Average Lab Temp: '.$heat.', Lab Light: '.$light, 'format' => 'json'));
-    return true;
-}); 
+// Every min
+if(!function_exists("contains")) { 
+	Cron::setDisablePreventOverlapping();
 
-// Every min 
-function contains($str, array $arr)
-{
-    foreach($arr as $a) {
-        if (stripos($str,$a) !== false) return true;
-    }
-    return false;
-}
-Cron::add('cronmin', '* * * * *', function() {
-    $mentions = Twitter::getMentionsTimeline();
+	// Every hour 
+	Cron::add('cronhour', '0 * * * *', function() {
+		$heat = Heat::average(Carbon::now()->subHour()->toDateTimeString(), Carbon::now()->toDateTimeString());
+		$light = Light::average(Carbon::now()->subHour()->toDateTimeString(), Carbon::now()->toDateTimeString());
+	    return Twitter::postTweet(array('status' => Carbon::now()->format('D jS M g:ia').': Average Lab Temp: '.$heat.', Lab Light: '.$light, 'format' => 'json'));
+	    return true;
+	}); 
 
-    $tweet = null; 
+	
+	function contains($str, array $arr) {
+	    foreach($arr as $a) {
+	        if (stripos($str,$a) !== false) return true;
+	    }
+	    return false; 
+	}
 
-	foreach ($mentions as $mention) {
+
+	Cron::add('cronmin', '* * * * *', function() {
+	    $mentions = Twitter::getMentionsTimeline();
+
+	    $tweet = null; 
+
+		foreach ($mentions as $mention) {
 			if(Tweet::whereTweetId($mention->id)->get()->count() == 0 && $mention->user->screen_name != "SccSmartLab") {
 				echo $mention->text."<br />";
 				$tweet = Tweet::create(array(
@@ -50,7 +54,9 @@ Cron::add('cronmin', '* * * * *', function() {
 			}
 		}
 
-    return $tweet."\n";
-}); 
+	    return $tweet."\n";
+	});
+
+} 
 
 ?>

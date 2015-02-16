@@ -10,6 +10,16 @@
 			When a new actuator is discovered, it will appear on the list below as an "<span class='text-danger'><span class='glyphicon glyphicon-exclamation-sign'></span> Unconfigured Actuator </span>"
 		</small>
 	</p>
+	@if(Session::has('message'))
+		<p class='alert alert-success'>
+			<strong>Success!</strong> {{ Session::get('message') }}
+		<p>
+	@endif
+	@if(Session::has('error'))
+		<p class='alert alert-danger'>
+			<strong>Error!</strong> {{ Session::get('error') }}
+		<p>
+	@endif
 	<div class='row marketing'>
 		<div class='col-md-12'>
 			<div class='panel panel-default'>

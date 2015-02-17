@@ -28,7 +28,16 @@
 					@endif
 				</a>
 		</div>
-		<strong>{{ $job->title }}</strong>, tracked using the <strong>{{ $job->sensor->title }}</strong>.
+		<strong>{{ $job->title }}</strong>, tracked using the <strong>{{ $job->sensor->title }}</strong>. 
+		<br />
+		<small class='text-muted'>
+			@if(isset($job->threshold))
+				Threshold: <strong>{{ $job->sensor->measures }}</strong> {{ ucwords(strtolower($job->direction)) }} <strong>{{ $job->threshold }}{{ $job->sensor->unit }}</strong>
+			@endif
+			@if(isset($job->sample_rate))
+				Sample Rate: <strong>{{ $job->sample_rate }}s</strong>
+			@endif
+		</small>
 	</div>
 
 		@include('touch.tables.zonejob')

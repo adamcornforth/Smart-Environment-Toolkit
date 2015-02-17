@@ -169,3 +169,8 @@ body {
 .event-on {
 	border-color: #4cae4c;
 }
+.spot-title-battery {
+	width: 107px;
+	margin: 0 0 0 15px;
+	display: inline-block;
+}

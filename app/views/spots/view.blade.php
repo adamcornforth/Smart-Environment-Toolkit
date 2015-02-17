@@ -5,8 +5,23 @@
 		<span class='glyphicon glyphicon-pencil'></span>
 		Edit SPOT
 	</a>
-	<h1>{{ $title or "Viewing SPOT <small>".$spot->spot_address." ".((count($spot->object)) ? "&middot; Tracking <strong>".$spot->object->title."</strong>" : "")."</small>"}}</h1>
+	<h1>Viewing SPOT 
+		<small> 
+			{{ $spot->spot_address }}
+			@if(isset($spot->battery_percent))
+				<div class='spot-title-battery'>
+					@include('touch.panels.battery', array('percent' => $spot->battery_percent))
+				</div>
+			@else 
+				&middot;
+			@endif
 
+			@if(count($spot->object))
+				Tracking <strong>{{ $spot->object->title }}</strong>
+			@endif
+
+		</small>
+	</h1>
 	<br /> 
 	<div class='row marketing'>
 		<div class='col-md-8'>
@@ -179,9 +194,16 @@
 						  		<?php
 						  			echo Form::label('threshold', 'Threshold', array('class' => 'col-md-2 control-label'));
 						  		?>
-					  			<div class='col-md-4'>
+					  			<div class='col-md-2'>
+						  			<select name="direction" class='form-control'>
+						  				<option value="ABOVE">Above</option>
+						  				<option value="BELOW">Below</option>
+						  				<option value="EQUALS">Equals</option>
+						  			</select>
+						  		</div>
+					  			<div class='col-md-2'>
 						  			<?php 
-						  				echo Form::text('threshold', null, array('placeholder' => 'Job Threshold e.g. 30'));
+						  				echo Form::text('threshold', null, array('placeholder' => 'e.g. 30'));
 						  			?>
 						  		</div>
 						  		<div class='col-md-6'>

@@ -42,18 +42,18 @@ class DataSeeder extends Seeder {
          * 2x Dom's SPOTs
          * 2x Vitali's SPOTs
          */
-        $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7827', 'user_id' => 1)); // Adam
-        $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.76FF', 'user_id' => 1));
+        $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7827', 'user_id' => 1, 'battery_percent' => 0)); // Adam
+        $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.76FF', 'user_id' => 1, 'battery_percent' => 0));
 
-        $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7201', 'user_id' => 1)); // Fake SPOT for kettle
-        $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7202', 'user_id' => 1)); // Fake SPOT for chair
-        $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7203', 'user_id' => 1)); // Fake SPOT for door
+        $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7201', 'user_id' => 1, 'battery_percent' => 0)); // Fake SPOT for kettle
+        $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7202', 'user_id' => 1, 'battery_percent' => 0)); // Fake SPOT for chair
+        $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7203', 'user_id' => 1, 'battery_percent' => 0)); // Fake SPOT for door
 
-        $spots['dom'][] = Spot::create(array('spot_address' => '0014.4F01.0000.77A7', 'user_id' => 2)); // Dom
-        $spots['dom'][] = Spot::create(array('spot_address' => '0014.4F01.0000.77C0', 'user_id' => 2));
-        $spots['dom'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7E4D', 'user_id' => 2));
-        $spots['vitali'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7A12', 'user_id' => 3)); // Vitali
-        $spots['vitali'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7AD7', 'user_id' => 1));
+        $spots['dom'][] = Spot::create(array('spot_address' => '0014.4F01.0000.77A7', 'user_id' => 2, 'battery_percent' => 0)); // Dom
+        $spots['dom'][] = Spot::create(array('spot_address' => '0014.4F01.0000.77C0', 'user_id' => 2, 'battery_percent' => 0));
+        $spots['dom'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7E4D', 'user_id' => 2, 'battery_percent' => 0));
+        $spots['vitali'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7A12', 'user_id' => 3, 'battery_percent' => 0)); // Vitali
+        $spots['vitali'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7AD7', 'user_id' => 1, 'battery_percent' => 0));
 
         /**
          * Initialise Zones
@@ -138,10 +138,10 @@ class DataSeeder extends Seeder {
          * Create some Jobs
          */
         $jobs['door_open'] = Job::create(array('title' => 'Door open', 'object_id' => $objects['fridge']->id, 'sensor_id' => $sensors['accelerometer']->id, 'threshold' => null));
-        $jobs['fridge_light_on'] = Job::create(array('title' => 'Light on', 'object_id' => $objects['fridge']->id, 'sensor_id' => $sensors['photosensor']->id, 'threshold' => 10));
+        $jobs['fridge_light_on'] = Job::create(array('title' => 'Light on', 'object_id' => $objects['fridge']->id, 'sensor_id' => $sensors['photosensor']->id, 'threshold' => 10, 'direction' => 'ABOVE'));
         $jobs['chair_moved'] = Job::create(array('title' => 'Chair moved', 'object_id' => $objects['chair']->id, 'sensor_id' => $sensors['accelerometer']->id, 'threshold' => null));
         $jobs['kettle_moved'] = Job::create(array('title' => 'Kettle moved', 'object_id' => $objects['kettle']->id, 'sensor_id' => $sensors['accelerometer']->id, 'threshold' => null));
-        $jobs['kettle_boiled'] = Job::create(array('title' => 'Kettle boiled', 'object_id' => $objects['kettle']->id, 'sensor_id' => $sensors['thermometer']->id, 'threshold' => 40));
+        $jobs['kettle_boiled'] = Job::create(array('title' => 'Kettle boiled', 'object_id' => $objects['kettle']->id, 'sensor_id' => $sensors['thermometer']->id, 'threshold' => 40, 'direction' => 'ABOVE'));
 
         $jobs['cup_drank_from'] = Job::create(array('title' => 'Cup drank to', 'object_id' => $objects['smart_cup']->id, 'sensor_id' => $sensors['smart_cup']->id, 'threshold' => null));
         

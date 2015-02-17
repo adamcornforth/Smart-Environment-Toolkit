@@ -84,7 +84,7 @@
 				  					@endif
 				  				</td>
 				  				<td>
-				  					@if($spot->battery_percent)
+				  					@if(isset($spot->battery_percent))
 										<span class='pull-right'>
 											@include('touch.panels.battery', array('percent' => $spot->battery_percent))
 										</span>

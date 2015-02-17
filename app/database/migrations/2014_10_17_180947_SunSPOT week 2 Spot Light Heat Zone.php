@@ -126,7 +126,7 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 		    $table->timestamps();
 		});
 
-		Schema::create('zone_spot', function($table)
+		Schema::create('ZoneSpot', function($table)
 		{
 		    $table->increments('id');
 		    $table->integer('zone_id')->unsigned();
@@ -139,7 +139,7 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 		    $table->timestamps();
 		});
 
-		Schema::create('zone_object', function($table)
+		Schema::create('ZoneObject', function($table)
 		{
 		    $table->increments('id');
 		    $table->integer('zone_id')->unsigned();
@@ -289,8 +289,8 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 		Schema::drop('Heat'); 
 		Schema::drop('Light'); 
 		Schema::drop('Switch'); 
-		Schema::drop('zone_object');
-		Schema::drop('zone_spot'); 
+		Schema::drop('ZoneObject');
+		Schema::drop('ZoneSpot'); 
 		Schema::drop('Zone');
 		Schema::drop('actuator_job');
 		Schema::drop('Job'); 

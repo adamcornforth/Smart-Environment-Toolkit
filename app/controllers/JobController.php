@@ -98,7 +98,11 @@ class JobController extends \BaseController {
 	{
 		if($job = Job::find($id)) {
 			// Delete associated readings
-			$readings = DB::table($job->sensor->table)->where('job_id', '=', $job->id)->delete();
+			if($job->sensor->title=="Roaming Spot") { // Have to delete Roaming Job job data differently 
+				$readings = DB::table($job->sensor->table)->where('spot_id', '=', $job->object->spot->id)->delete();
+			} else {
+				$readings = DB::table($job->sensor->table)->where('job_id', '=', $job->id)->delete();
+			}
 			return Response::json(array('job_id' => $id, 'success' => 'Job '.$job->id.' readings deleted!')); 
 		} else {
 			return Response::json(array('job_id' => $id, 'error' => 'Job '.$id.' could not be found')); 

@@ -1,6 +1,6 @@
 <?php 
 class ZoneSpot extends Eloquent {
-    protected $table = 'zone_spot';
+    protected $table = 'ZoneSpot';
 
     public function spot() {
     	return $this->belongsTo('Spot');

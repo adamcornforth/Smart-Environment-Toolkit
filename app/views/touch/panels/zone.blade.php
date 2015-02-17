@@ -44,5 +44,12 @@
 	@include('touch.tables.zonechange')
 	<div class='panel-footer'>
 		@include('touch.panels.battery', array('percent' => $spot->battery_percent))
+		<hr class='hr-small' />
+		<small>
+			<a class='btn btn-default btn-xs pull-right' href='{{ url('objects/'.$spot->object->id.'/edit') }}'>
+				<span class='glyphicon glyphicon-pencil'></span> Edit Zone
+			</a>
+			<a href='{{ url('spots/'.$spot->id) }}'>{{ $spot->spot_address }}</a>
+		</small>
 	</div>
 </div>

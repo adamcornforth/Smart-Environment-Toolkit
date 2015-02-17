@@ -4,9 +4,6 @@ class TouchController extends \BaseController {
 
 	private function zone_spots() {
 		$zone_spots = new \Illuminate\Database\Eloquent\Collection;
-		$zone_objects = array(	'North Zone' => 1,
-								'Center Zone' => 2,
-								'South Zone' => 3);	
 		$spots = new \Illuminate\Database\Eloquent\Collection;
 		foreach (Spot::all() as $spot) {
 			if(count($spot->object)) {
@@ -21,10 +18,6 @@ class TouchController extends \BaseController {
 				}
 			}
 		}
-		$zone_spots = $zone_spots->sortBy(function($spot) use (&$zone_objects)
-		{
-		    return $zone_objects[$spot->object->title];
-		});
 		return array('zone_spots' => $zone_spots, 'spots' => $spots);
 	}
 

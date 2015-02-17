@@ -81,7 +81,17 @@ class JobController extends \BaseController {
 	{
 		if($job = Job::find($id)) {
 			// Delete associated readings
-			$readings = DB::table($job->sensor->table)->where('job_id', '=', $job->id)->delete();
+			$this->clear($id);
+
+			// If we have actuator_jobs (actuator condition events) using this job, we need to delete
+			$actuator_jobs = ActuatorJob::whereJobId($id)->get();
+			if($actuator_jobs->count()) {
+				foreach($actuator_jobs as $actuator_job) {
+					$actuatorController = new ActuatorController;
+					$actuatorController->deleteJob($actuator_job->id);
+				}
+			}
+			
 			$job->delete(); 
 			return Response::json(array('job_id' => $id, 'success' => 'Job '.$job->id.' deleted!')); 
 		} else {

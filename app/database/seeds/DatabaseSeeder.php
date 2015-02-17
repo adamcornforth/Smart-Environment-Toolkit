@@ -167,14 +167,6 @@ class DataSeeder extends Seeder {
         // ActuatorJob::create(array('title' => 'Turn LED Light On', 'actuator_id' => $actuator['light']->id, 'job_id' => $jobs['north_zone_light']->id, 'direction' => 'BELOW', 'threshold' => 40));
 
         /**
-         * Assign zones to pillars
-         */
-        ZoneObject::create(array('object_id' => $objects['north_zone']->id, 'zone_id' => $zones['north']->id, 'job_id' => $jobs['north_zone_range']->id));
-        ZoneObject::create(array('object_id' => $objects['north_zone']->id, 'zone_id' => $zones['center']->id, 'job_id' => $jobs['north_zone_range']->id));
-        ZoneObject::create(array('object_id' => $objects['south_zone']->id, 'zone_id' => $zones['center']->id, 'job_id' => $jobs['south_zone_range']->id));
-        ZoneObject::create(array('object_id' => $objects['south_zone']->id, 'zone_id' => $zones['south']->id, 'job_id' => $jobs['south_zone_range']->id));
-
-        /**
          * Create Actuator 
          */
         Actuator::create(array('actuator_address' => 'RELAYLO1-10FBC.relay1', 'auto_start_time' => Carbon::now()->startOfDay()->addHours(9)->toTimeString(), 'auto_end_time' => Carbon::now()->startOfDay()->addHours(17)->toTimeString()));
@@ -222,8 +214,8 @@ class DataSeeder extends Seeder {
             $door_open = (mt_rand(0,300) == 1) ? 1.2+$random_float : $random_float-0.7;
 
             foreach($user_zone as $key => $user) {
-                $north_pillar = (mt_rand(0,300) == 1) ? -7+mt_rand(1,5)+$random_float : -30-mt_rand(1,5)+$random_float;
-                $south_pillar = (mt_rand(0,300) == 1) ? -7+mt_rand(1,5)+$random_float : -30-mt_rand(1,5)+$random_float;
+                $north_pillar = (mt_rand(0,50) == 1) ? -7+mt_rand(1,5)+$random_float : -30-mt_rand(1,5)+$random_float;
+                $south_pillar = (mt_rand(0,50) == 1) ? -7+mt_rand(1,5)+$random_float : -30-mt_rand(1,5)+$random_float;
 
                 /**
                  * Moving past north pillar

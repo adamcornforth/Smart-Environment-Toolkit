@@ -103,9 +103,11 @@
 				    async: true,
 				    success: function(data) {
 				      console.log(data);
-				      if(!data.nodata) $('#actuator-conditions-panel').html(data.html); 
+				      if(!data.nodata) {
+				      	$('#actuator-conditions-panel').html(data.html);
+				      	initConditions();
+				      }
 				      worker(data.timestamp);
-				      initConditions();
 				    },
 				    error: function() {
 				    	worker(); 

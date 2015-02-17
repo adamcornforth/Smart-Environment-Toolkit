@@ -300,7 +300,7 @@ class DataSeeder extends Seeder {
         $user_zone[2]['spot'] = $objects['roaming_user_3']->spot->id;
 
         $cup_percent = 100;
-
+        echo "Seeding data";
         while($carbon->lt($now)) {
     		$random_float = rand(0, 10) / 10;
 
@@ -323,11 +323,9 @@ class DataSeeder extends Seeder {
                 if($north_pillar > -7 && $user_zone[$key]['zone'] != 1 && $user_zone[$key]['zone'] == 2) {
                     $user_zone[$key]['zone'] = 1; 
                     $zonechange = ZoneSpot::create(array('spot_id' => $user_zone[$key]['spot'], 'zone_id' => $user_zone[$key]['zone'], 'job_id' => $jobs['north_zone_range']->id, 'created_at' => $carbon->toDateTimeString()));
-                    echo "Zonechange\n";
                 } elseif($north_pillar > -7 && $user_zone[$key]['zone'] != 2 && ($user_zone[$key]['zone'] == 1 || $user_zone[$key]['zone'] == 3)) {
                     $user_zone[$key]['zone'] = 2; 
                     $zonechange = ZoneSpot::create(array('spot_id' => $user_zone[$key]['spot'], 'zone_id' => $user_zone[$key]['zone'], 'job_id' => $jobs['center_table_range']->id, 'created_at' => $carbon->toDateTimeString()));
-                    echo "Zonechange\n";
                 }
 
                 /**
@@ -336,11 +334,9 @@ class DataSeeder extends Seeder {
                 if($south_pillar > -7 && $user_zone[$key]['zone'] != 2 && ($user_zone[$key]['zone'] == 1 || $user_zone[$key]['zone'] == 3)) {
                     $user_zone[$key]['zone'] = 2; 
                     $zonechange = ZoneSpot::create(array('spot_id' => $user_zone[$key]['spot'], 'zone_id' => $user_zone[$key]['zone'], 'job_id' => $jobs['center_table_range']->id, 'created_at' => $carbon->toDateTimeString()));
-                    echo "Zonechange\n";
                 } elseif($south_pillar > -7 && $user_zone[$key]['zone'] != 3 && $user_zone[$key]['zone'] == 2) {
                     $user_zone[$key]['zone'] = 3;
                     $zonechange = ZoneSpot::create(array('spot_id' => $user_zone[$key]['spot'], 'zone_id' => $user_zone[$key]['zone'], 'job_id' => $jobs['south_zone_range']->id, 'created_at' => $carbon->toDateTimeString()));
-                    echo "Zonechange\n";
                 }
             }
 
@@ -348,7 +344,6 @@ class DataSeeder extends Seeder {
              * Insert water level data
              */
             if($water_drank > 0) {
-                echo "Water drank to $cup_percent%\n";
                 Water::create(array('water_percent' => $cup_percent, 'zone_id' => 1, 'job_id' => $jobs['cup_drank_from']->id, 'spot_address'  => $spots['dom'][1]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
                 $cup_percent -= 10;
                 if($cup_percent < 0) $cup_percent = 100;
@@ -370,7 +365,9 @@ class DataSeeder extends Seeder {
             Light::create(array('light_intensity' => $zone_light, 'zone_id' => 1, 'job_id' => $jobs['south_zone_light']->id, 'spot_address'  => $spots['adam'][0]->spot_address, 'created_at'    => $carbon->toDateTimeString()));
 
             $carbon->addMinutes(5);
+            echo ((mt_rand(0,10) == 1)) ? "." : "";
         }
+        echo " Done!\n";
     }
 
 }

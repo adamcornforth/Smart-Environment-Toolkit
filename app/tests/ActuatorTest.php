@@ -15,11 +15,6 @@ class ActuatorTest extends TestCase {
 		parent::setUp();
 	}
 
-	public function tearDown() 
-	{
-		Mockery::close();
-	}
-
 	public function testEditActuatorWithEmptyFields()
 	{
 		// With
@@ -68,6 +63,18 @@ class ActuatorTest extends TestCase {
 		$this->assertSessionHas('message', 'Your actuator, <strong>Sounder</strong>, has been successfully configured!'); 
 	}
 
+	public function testEditNonExistentActuatorWithValidFields()
+	{
+		// With
+		$input = ['triggers' => 'Sounder', 'triggered_by' => 'Security Alarm'];
+
+		// When
+		$this->call("PUT", "/actuators/2", $input);
+
+		$this->assertRedirectedToRoute('actuators.index');
+		$this->assertSessionHas('error', 'Sorry, the requested actuator could not be found.'); 
+	}
+
 	public function testAddEventWithEmptyFields()
 	{
 		// With
@@ -101,4 +108,138 @@ class ActuatorTest extends TestCase {
 		$this->assertEquals(null, Condition::find(2)->second_actuator_job);
 	}
 
+	public function testDeleteActuatorJobNotExists()
+	{
+		// When
+		$response = $this->call("POST", "/actuators/delete_job/5", array());
+
+		$this->assertEquals(false, ActuatorJob::find(5)); 
+
+		// Get the response and decode it
+		$jsonResponse = $response->getContent();
+		$responseData = json_decode($jsonResponse);
+
+		$this->assertEquals("error", $responseData->status);
+		$this->assertEquals("Sorry, the requested actuator job could not be found.", $responseData->error);
+	}
+
+	public function testDeleteCondition()
+	{
+		// When
+		$this->call("POST", "/actuators/delete_condition/2", array());
+
+		$this->assertEquals(false, Condition::find(2)); 
+		$this->assertEquals(null, Condition::find(1)->next_condition);
+		$this->assertEquals(null, Condition::find(1)->next_operand);
+	}
+
+	public function testDeleteConditionNotExists()
+	{
+		// When
+		$response = $this->call("POST", "/actuators/delete_condition/3", array());
+
+		$this->assertEquals(false, Condition::find(3));
+
+		// Get the response and decode it
+		$jsonResponse = $response->getContent();
+		$responseData = json_decode($jsonResponse);
+
+		$this->assertEquals("error", $responseData->status);
+		$this->assertEquals("Sorry, the requested condition could not be found.", $responseData->error);
+	}
+
+	public function testAddCondition()
+	{
+		// When
+		$response = $this->call("POST", "/actuators/add_condition/1", array());
+
+		// Get the response and decode it
+		$jsonResponse = $response->getContent();
+		$responseData = json_decode($jsonResponse);
+
+		$this->assertEquals(3, Condition::find(3)->id); 
+		$this->assertEquals(3, Condition::find(1)->next_condition);
+		$this->assertEquals("success", $responseData->status);
+		$this->assertEquals("Condition successfully added!", $responseData->message);
+
+		// When
+		$response = $this->call("POST", "/actuators/add_condition/1", array());
+
+		// Get the response and decode it
+		$jsonResponse = $response->getContent();
+		$responseData = json_decode($jsonResponse);
+
+		$this->assertEquals(4, Condition::find(4)->id); 
+		$this->assertEquals(4, Condition::find(3)->next_condition);
+		$this->assertEquals("Condition successfully added!", $responseData->message);
+	}
+
+	public function testAddConditionActuatorNotExists()
+	{
+		// When
+		$response = $this->call("POST", "/actuators/add_condition/2", array());
+
+		// Get the response and decode it
+		$jsonResponse = $response->getContent();
+		$responseData = json_decode($jsonResponse);
+
+		$this->assertEquals("error", $responseData->status);
+		$this->assertEquals("Sorry, the condition could not be added.", $responseData->error);
+	}
+
+	public function testDeleteMiddleConditionCheckLinkedList()
+	{
+		// When
+		$this->call("POST", "/actuators/delete_condition/3", array());
+
+		$this->assertEquals(false, Condition::find(3)); 
+		$this->assertEquals(4, Condition::find(1)->next_condition);
+	}
+
+	public function testSetTimeNoFields()
+	{
+		// When
+		$response = $this->call("POST", "/actuators/1/settime", array());
+
+		$this->assertTrue($response->isOk());
+
+		// Get the response and decode it
+		$jsonResponse = $response->getContent();
+		$responseData = json_decode($jsonResponse);
+
+		$this->assertEquals("error", $responseData->status);
+		$this->assertEquals("Sorry, you must fill in all the time fields.", $responseData->error);
+	}
+
+	public function testSetTimeWithAllFields()
+	{
+		// When
+		$response = $this->call("POST", "/actuators/1/settime", array('start_hour' => 9, 'start_minute' => 00, 'start_meridiem' => 'AM', 'end_hour' => 7, 'end_minute' => 00, 'end_meridiem' => 'PM'));
+
+		$this->assertTrue($response->isOk());
+
+		// Get the response and decode it
+		$jsonResponse = $response->getContent();
+		$responseData = json_decode($jsonResponse);
+
+		$this->assertEquals("success", $responseData->status);
+		$this->assertEquals("The actuator will now only activate between 9:00am and 7:00pm!", $responseData->message);
+	}
+
+	public function testSetTimeWithStartTimeAfterEnd()
+	{
+		// When
+		$response = $this->call("POST", "/actuators/1/settime", array('start_hour' => 9, 'start_minute' => 00, 'start_meridiem' => 'PM', 'end_hour' => 7, 'end_minute' => 00, 'end_meridiem' => 'PM'));
+
+		$this->assertTrue($response->isOk());
+
+		// Get the response and decode it
+		$jsonResponse = $response->getContent();
+		$responseData = json_decode($jsonResponse);
+
+		$this->assertEquals("error", $responseData->status);
+		$this->assertEquals("The start time (9:00pm) must be before the end time (7:00pm).", $responseData->error);
+	}
+
+	
 }

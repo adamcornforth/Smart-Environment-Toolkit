@@ -67,7 +67,9 @@ class ActuatorController extends \BaseController {
 	 */
 	public function update($id)
 	{
-		$actuator = Actuator::find($id); 
+		if(!$actuator = Actuator::find($id)) {
+			return Redirect::to('actuators')->withInput()->with('error', 'Sorry, the requested actuator could not be found.');
+		} 
 		/**
 		 * For creating jobs for the actuator
 		 */
@@ -83,6 +85,9 @@ class ActuatorController extends \BaseController {
 
 				if(Input::has('condition-id') && Input::has('job-field')) {
 					$condition = Condition::find(Input::get('condition-id'));
+					if(!isset($condition->id)) {
+						return Redirect::to('actuators/'.$actuator->id)->withInput()->with('error', 'Sorry, the condition '.Input::get('condition-id'). 'could not be found.');
+					}
 					$condition[Input::get('job-field')] = $job->id;
 					$condition->save();
 				}
@@ -226,17 +231,22 @@ class ActuatorController extends \BaseController {
 	 */
 	public function addCondition($actuator_id) 
 	{
-		$new_condition = new Condition();
-		$new_condition->actuator_id = $actuator_id;
+		if($actuator = Actuator::find($actuator_id)) {
+			$new_condition = new Condition();
+			$new_condition->actuator_id = $actuator_id;
 
-		// Check if condition for this actuator exists. If so we need to link new condition
-		$condition = Condition::whereActuatorId($actuator_id)->orderBy('id', 'DESC')->first(); 
-		if(isset($condition->id)) {
-			$new_condition->save(); 
-			$condition->next_condition = $new_condition->id; 
-			$condition->save(); 
+			// Check if condition for this actuator exists. If so we need to link new condition
+			$condition = Condition::whereActuatorId($actuator_id)->orderBy('id', 'DESC')->first(); 
+			if(isset($condition->id)) {
+				$new_condition->save(); 
+				$condition->next_condition = $new_condition->id; 
+				$condition->save(); 
+			} else {
+				$new_condition->save(); 
+			}
+			return Response::json(array('status' => 'success', 'message' => 'Condition successfully added!'));
 		} else {
-			$new_condition->save(); 
+			return Response::json(array('status' => 'error', 'error' => 'Sorry, the condition could not be added.'));
 		}
 
 	}
@@ -291,6 +301,9 @@ class ActuatorController extends \BaseController {
 			}
 
 			$condition->delete(); 
+			return Response::json(array('status' => 'success', 'message' => "Condition successfully created!"));
+		} else {
+			return Response::json(array('status' => 'error', 'error' => "Sorry, the requested condition could not be found."));
 		}
 	}
 
@@ -327,7 +340,7 @@ class ActuatorController extends \BaseController {
 			$actuatorJob->delete(); 
 			return Response::json(array('success' => 'Actuator Job '.$actuatorJob->id.' deleted!')); 
 		} else {
-			return Response::json(array('error' => 'Actuator Job '.$id.' could not be found')); 
+			return Response::json(array('status' => 'error', 'error' => 'Sorry, the requested actuator job could not be found.'));  
 		}
 	}
 

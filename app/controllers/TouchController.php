@@ -219,6 +219,7 @@ class TouchController extends \BaseController {
 
 	private function getZonejob_time($spot, $job) {
 		$job = Job::find($job);
+		if(!isset($job->id)) return null; 
 		$reading = $job->getReadings($job->threshold, $job->sensor->table, $job->sensor->field)->take(1); 
 		if(!isset($reading->first()->created_at)) return null;
 		return Carbon::parse($reading->first()->created_at)->toDateTimeString();

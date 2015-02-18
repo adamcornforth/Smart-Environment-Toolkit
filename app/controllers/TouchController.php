@@ -191,8 +191,8 @@ class TouchController extends \BaseController {
 	private function getBatteryLatest_time($spot) {
 		$spot = Spot::find($spot); 
 		if(!$spot->exists()) return null;
-		if(Carbon::now()->between(Carbon::parse($spot->updated_at)->addMinutes(1), Carbon::parse($spot->updated_at)->addMinutes(1)->addSeconds(20)))
-			return Carbon::parse($spot->updated_at)->addMinutes(1)->toDateTimeString();
+		if(Carbon::now()->between(Carbon::parse($spot->updated_at)->addMinutes(1), Carbon::parse($spot->updated_at)->addMinutes(1)->addSeconds(30)))
+			return Carbon::parse($spot->updated_at)->toDateTimeString();
 		else
 			return Carbon::parse($spot->updated_at)->toDateTimeString();
 	}

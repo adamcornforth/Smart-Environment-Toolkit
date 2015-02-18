@@ -15,11 +15,9 @@
 <div class='container-fluid'>
 	<div class='col-xs-12'>
 		<div class='row'>
-			@foreach($zone_spots as $spot)
-				<div class='col-md-4 snappable' id='zone-{{ $spot->id }}'>
-					@include('touch.panels.zone')
-				</div>
-			@endforeach		
+			<div class='col-md-12 snappable snappable-zones'>
+				@include('touch.panels.zones')
+			</div>
 		</div>
 		<script type="text/javascript">
 			(function worker(timestamp) {
@@ -34,6 +32,17 @@
 			      	$.each(data.html, function(html, data) {
 					    $(html).html(data);
 					    console.log(html + " replaced");
+
+					    if(html.indexOf("zonelatest") > -1) {
+					    	light_off = 30; 
+					    	spot_id = html.match(/\d+/)[0];
+					    	brightness = $('.'+ spot_id +'_light').text().match(/\d+/)[0]; 
+					    	brightness = (brightness > light_off) ? light_off : brightness; 
+					    	brightness = (1 - (0.8*(brightness/light_off)));
+					    	rgb = 'rgb(175, 187, 194, '+brightness+')';
+					    	console.log(rgb);
+					    	$('.draggable-zone-' + spot_id).animate({backgroundColor: rgb}, 250);
+					    }
 
 					    if(html === "#cup_percent") {
 							if(data != current_cup_percent) {

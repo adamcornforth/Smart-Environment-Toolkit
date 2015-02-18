@@ -198,7 +198,6 @@
 						  			<select name="direction" class='form-control'>
 						  				<option value="ABOVE">Above</option>
 						  				<option value="BELOW">Below</option>
-						  				<option value="EQUALS">Equals</option>
 						  			</select>
 						  		</div>
 					  			<div class='col-md-2'>

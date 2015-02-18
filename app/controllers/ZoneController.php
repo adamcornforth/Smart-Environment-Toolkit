@@ -82,6 +82,33 @@ class ZoneController extends \BaseController {
 	}
 
 	/**
+	 * Update zone with given width, height, top and left values
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function postUpdateZone($id)
+	{
+		if($zone = Zone::find($id)) {
+			if(Input::has('width'))
+				$zone->width = Input::get('width'); 
+
+			if(Input::has('height'))
+				$zone->height = Input::get('height'); 
+
+			if(Input::has('left'))
+				$zone->left = Input::get('left'); 
+
+			if(Input::has('top'))
+				$zone->top = Input::get('top'); 
+
+			$zone->save();
+			return Response::json(array('status' => 'success', 'message' => 'Zone '.$id.' updated!', 'attr' => array('width' => $zone->width, 'height' => $zone->height, 'top' => $zone->top, 'left' => $zone->left)));
+		} else {
+			return Response::json(array('status' => 'error', 'error' => 'Zone '.$id.' not found'));
+		}
+	}
+
+	/**
 	 * Displays zone changes for the given spot id
 	 *
 	 * @param  int  $id

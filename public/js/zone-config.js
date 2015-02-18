@@ -6,30 +6,54 @@ $( ".draggable-zone" ).draggable({
 	containment: "parent",
 	snap: true,
 	stop: function(event, ui) {
-		saveDetails(event, ui); 
+		saveDetails(event, ui, this);
 	}
 }).resizable({
 	containment: "parent",
-	handles: "all",
+	handles: {
+        'ne': '#negrip',
+        'se': '#segrip',
+        'sw': '#swgrip',
+        'nw': '#nwgrip',
+        'n': '#ngrip',
+        'e': '#egrip',
+        's': '#sgrip',
+        'w': '#wgrip'
+    },
 	minHeight: 100, 
 	minWidth: 150, 
-	maxHeight: 500,
-	maxWidth: 500,
 	snap: true,
-	stop: function(event, ui) {
-		saveDetails(event, ui); 
-	}
+	resize: function(event, ui) {
+		$(this).css('line-height', ui.size.height + "px");
+	},
+	stop:  function(event, ui) {
+		saveDetails(event, ui, this);
+	},
 });
 
-function saveDetails(event, ui) {
-	// if(ui.position) {
-	// 	console.log("Left: " + ui.position.left);
-	// 	console.log("Top: " + ui.position.top);
-	// }
+function saveDetails(event, ui, css) {
+	var container_width = $('.zones-container').innerWidth();
+	var attr = {};
+	if(ui.position) {
+		attr['left'] = (ui.position.left/container_width)*100; 
+		attr['top'] = ui.position.top;
+	}
 
-	// if(ui.size) {
-	// 	console.log("Height: " + ui.size.height);
-	// 	console.log("Width: " + ui.size.width);
-	// }
+	if(ui.size) {
+		attr['height'] = ui.size.height;
+		attr['width'] = (ui.size.width/container_width)*100;
+	}
+
+	var zone_id = $(css).attr('data-zone-id');
+
+	$.ajax({
+		url: "/zones/" + zone_id + "/updateZone", 
+		data: attr,
+		type: 'POST',
+		async: true,
+		success: function(data) {
+		  console.log(data);
+		}
+	});
 		
 }

@@ -47,7 +47,7 @@ class Spot extends Eloquent {
 	 */
 	public function getOnlineAttribute() 
 	{
-		return ((Carbon::now()->subSeconds(15)->lt(Carbon::parse($this->updated_at))) ? "<span class='spot-status spot-status-online'>Online</span>" : "<span class='spot-status spot-status-offline'>Offline</span>");
+		return ((Carbon::now()->subSeconds(30)->lt(Carbon::parse($this->updated_at))) ? "<span class='spot-status spot-status-online'>Online</span>" : "<span class='spot-status spot-status-offline'>Offline</span>");
 	}
 
 	/**

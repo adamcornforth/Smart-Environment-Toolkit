@@ -6,8 +6,10 @@
 	</tr>
 </thead>
 <tbody>
+		<?php $count = 0 ?>
 		@foreach (Spot::getRoamingSpots() as $roaming_spot)
 			@if(count($roaming_spot->zonechanges) && count($roaming_spot->zonechanges()->orderBy('id', 'DESC')->first()->job) && $roaming_spot->zonechanges()->orderBy('id', 'DESC')->first()->job->object->title == $spot->object->title)
+			<?php $count++ ?>
 				<tr>
 					<td>
 						<small>
@@ -26,5 +28,14 @@
 				</tr>
 			@endif
 		@endforeach
+		@if($count == 0)
+			<tr>
+				<td colspan='2' class='text-center'>
+				<small>
+					<span class='glyphicon glyphicon-user'></span>  No users in zone
+				</small>
+				</td>
+			</tr>
+		@endif
 	</tbody>
 </table>

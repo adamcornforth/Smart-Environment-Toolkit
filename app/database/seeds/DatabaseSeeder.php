@@ -143,9 +143,9 @@ class DataSeeder extends Seeder {
         /**
          * Initialise Zones
          */
-        $zones['north'] = Zone::create(array('object_id' => $objects['north_zone']->id));
-        $zones['center'] = Zone::create(array('object_id' => $objects['center_zone']->id));
-        $zones['south'] = Zone::create(array('object_id' => $objects['south_zone']->id));
+        $zones['north'] = Zone::create(array('object_id' => $objects['north_zone']->id, 'width' => 28.91, 'height' => 430, 'top' => 20, 'left' => 2.19));
+        $zones['center'] = Zone::create(array('object_id' => $objects['center_zone']->id, 'width' => 40.42, 'height' => 320, 'top' => 20, 'left' => 31.10));
+        $zones['south'] = Zone::create(array('object_id' => $objects['south_zone']->id, 'width' => 26.52, 'height' => 430, 'top' => 20, 'left' => 71.44));
 
         /**
          * Assign spots to Zones

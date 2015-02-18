@@ -93,12 +93,9 @@
 			<div class='panel panel-default draggable'>
 				<div class="panel-body">
 					<div class='row'>
-						@foreach(Zone::where('title', '!=', 'Lab')->get() as $zone)
+						@foreach(Zone::all() as $zone)
 							<div class='col-md-4'>
-								<h3>{{ $zone->title }}</h3>
-								@foreach($zone->users() as $user)
-									{{-- $user->first_name --}} {{-- $user->last_name --}}
-								@endforeach
+								<h3>{{ $zone->object->title }}</h3>
 							</div>
 						@endforeach
 					</div>
@@ -166,7 +163,7 @@
 								<td class="col-md-5" id="spot_{{ $spot->id }}_last_zone">
 									@if($day_picked == 0)
 										<?php $zone = $spot->zonechanges()->orderBy('id', 'DESC')->first() ?>
-										{{ Zone::find($zone['zone_id'])['title'] }}
+										{{ Zone::find($zone['zone_id'])->object->title }}
 									@endif
 								</td>
 								<td class="col-md-2" id="spot_{{ $spot->id }}_time_of_change">

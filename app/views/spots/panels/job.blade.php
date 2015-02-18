@@ -85,7 +85,7 @@
 			@foreach($spot->zonechanges()->orderBy('created_at', 'DESC')->take(4)->get() as $zone_change)
 				<tr class='readings-reading'>
 					<td>
-						<small>{{ $zone_change->zone->title }}</small>
+						<small>{{ $zone_change->zone->object->title }}</small>
 					</td>
 					<td>
 						<small>{{ Carbon::parse($zone_change->created_at)->format('G:ia') }} on {{ Carbon::parse($zone_change->created_at)->format('jS M') }}</small> 

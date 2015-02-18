@@ -11,7 +11,10 @@ body {
 	cursor: move;
 }
 .snappable {
-	height: 45vh; 
+	height: 55vh; 
+}
+.snappable-zones {
+	height: 750px;
 }
 .snappable, .snappable-min {
 	border-width: 1px;
@@ -174,6 +177,24 @@ body {
 	margin: 0 0 0 15px;
 	display: inline-block;
 }
+.panel-top {
+	position: absolute;
+	top: 10;
+	right: 10;
+	min-width: 180px;
+	margin: 0;
+	padding: 0;
+}
+.panel-top .panel-body {
+	padding: 10px 0;
+}
+.panel-bottom {
+	bottom: 10;
+	left: 10;
+	max-width: 314px;
+	position: absolute;
+	margin-bottom: 0px;
+}
 
 /**
  * Zone Config
@@ -185,13 +206,81 @@ body {
     position: absolute; 
     height:100px;
     width: 150px;
-    border: 1px solid #bbb;
+    
+	border: 1px dotted #B4BFC7;
+	background: rgba(175, 187, 194, 0.28);
+}
+
+#nwgrip, #negrip, #swgrip, #segrip, #ngrip, #egrip, #sgrip, #wgrip {
+    width: 12px;
+    height: 12px;
+    background-color: #ffffff;
+    border: 1px solid #000000;
+    opacity: 0;
+}
+
+.draggable-zone:hover #nwgrip, .draggable-zone:hover #negrip, .draggable-zone:hover #swgrip, .draggable-zone:hover #segrip, .draggable-zone:hover #ngrip, .draggable-zone:hover #egrip, .draggable-zone:hover #sgrip, .draggable-zone:hover #wgrip {
+	opacity: 1;
+}
+
+#negrip {
+    top:-6px; right:-6px;
+}
+#segrip {
+    bottom:-6px; right:-6px;
+}
+#nwgrip {
+    top:-6px; left:-6px;
+}
+#swgrip {
+    bottom:-6px; left:-6px;
+}
+#ngrip {
+    top:-6px; 
+    left:50%; margin-left:-6px;
+}
+#egrip {
+    right:-6px; 
+    top:50%; margin-top:-6px;
+}
+#sgrip {
+    bottom:-6px; 
+    left:50%; margin-left:-6px;
+}
+#wgrip {
+    left:-6px; 
+    top:50%; margin-top:-6px;
+}
+
+.draggable-zone-config {
+	color: #57666F;
+	font-size: 26px;
+}
+
+.draggable-zone-title {
+	color: #57666F;
+	font-size: 27px;
+	width: 100%;
+	top: 30%;
+	position: absolute;
+	display: inline-block;
+	text-align: center;
+}
+
+.draggable-zone-title a {
+	font-size: 12px;
+}
+
+.draggable-zone-title .glyphicon {
+	font-size: 12px;
+	top: -2px;
 }
 
 .zones-container {
-	display: relative;
+	position: relative;
+	padding: 0px;
 	width: 100%; 
-	height: 600px;
+	height: 675px;
 }
 
 .guide{

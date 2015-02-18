@@ -31,4 +31,9 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		return $this->hasMany('Spot');
 	}
 
+	public function getNameAttribute()
+	{
+		return $this->first_name." ".$this->last_name;
+	}
+
 }

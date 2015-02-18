@@ -1,8 +1,8 @@
 <?php 
 class Zone extends Eloquent {
-    protected $table = 'Zone';
+    protected $table = 'Zone'; 
 
-    public function users() {
-    	return User::all();
+    public function object() {
+    	return $this->belongsTo('Object'); 
     }
 }

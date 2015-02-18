@@ -74,14 +74,13 @@
                   //         ],
                   //     ]
                   // ]
-                  ]));
-          // ->withContent(
-          // '<form class="navbar-form navbar-right" role="search">
-          //     <div class="form-group">
-          //         <input type="text" class="form-control" placeholder="Search">
-          //     </div>
-          //     <button type="submit" class="btn btn-default">Submit</button>
-          // </form>');
+                  ]))
+          ->withContent(
+          '<ul class="nav navbar-nav navbar-right">
+            <p class="navbar-text">
+              '.((Auth::check()) ? 'Logged in as <a href='.url("users/".Auth::getUser()->id).'><span class="glyphicon glyphicon-user"></span> '.Auth::getUser()->name.'</a>' : '').'
+            </p>
+          </ul>');
     			?>
 
         @show

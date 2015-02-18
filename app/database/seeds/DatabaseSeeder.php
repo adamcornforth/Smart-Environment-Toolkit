@@ -37,49 +37,28 @@ class DataSeeder extends Seeder {
         User::create(array('first_name' => 'Vitali', 'last_name' => 'Bokov', 'password' => Hash::make('password'), 'email' => 'vitali@sunspot.app'));
 
         /**
+         * Initialise Basestation
+         */
+        $basestation = Basestation::create(array('basestation_address' => '0014.4F01.0000.7E54', 'user_id' => 1));
+
+        /**
          * Initialise SPOTs. In order: 
          * 2x Adam's SPOTs
          * 2x Dom's SPOTs
          * 2x Vitali's SPOTs
          */
-        $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7827', 'user_id' => 1, 'battery_percent' => 0)); // Adam
-        $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.76FF', 'user_id' => 1, 'battery_percent' => 0));
+        $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7827', 'user_id' => 1, 'basestation_id' => 1, 'battery_percent' => 0)); // Adam
+        $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.76FF', 'user_id' => 1, 'basestation_id' => 1, 'battery_percent' => 0));
 
-        $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7201', 'user_id' => 1, 'battery_percent' => 0)); // Fake SPOT for kettle
-        $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7202', 'user_id' => 1, 'battery_percent' => 0)); // Fake SPOT for chair
-        $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7203', 'user_id' => 1, 'battery_percent' => 0)); // Fake SPOT for door
+        $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7201', 'user_id' => 1, 'basestation_id' => 1, 'battery_percent' => 0)); // Fake SPOT for kettle
+        $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7202', 'user_id' => 1, 'basestation_id' => 1, 'battery_percent' => 0)); // Fake SPOT for chair
+        $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7203', 'user_id' => 1, 'basestation_id' => 1, 'battery_percent' => 0)); // Fake SPOT for door
 
-        $spots['dom'][] = Spot::create(array('spot_address' => '0014.4F01.0000.77A7', 'user_id' => 2, 'battery_percent' => 0)); // Dom
-        $spots['dom'][] = Spot::create(array('spot_address' => '0014.4F01.0000.77C0', 'user_id' => 2, 'battery_percent' => 0));
-        $spots['dom'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7E4D', 'user_id' => 2, 'battery_percent' => 0));
-        $spots['vitali'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7A12', 'user_id' => 3, 'battery_percent' => 0)); // Vitali
-        $spots['vitali'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7AD7', 'user_id' => 1, 'battery_percent' => 0));
-
-        /**
-         * Initialise Zones
-         */
-        $zones['north'] = Zone::create(array('title' => 'North End of Lab'));
-        $zones['center'] = Zone::create(array('title' => 'Presentation and Touch Table Area'));
-        $zones['south'] = Zone::create(array('title' => 'South End of Lab'));
-        $zones['lab'] = Zone::create(array('title' => 'Lab'));
-
-        /**
-         * Assign spots to Zones
-         */
-        $spot_zone['north'] = ZoneSpot::create(array('spot_id'  => $spots['adam'][1]->id, 'zone_id' => $zones['north']->id));
-        $spot_zone['center'] = ZoneSpot::create(array('spot_id'=> $spots['dom'][1]->id, 'zone_id'   => $zones['center']->id));
-        $spot_zone['south'] = ZoneSpot::create(array('spot_id'  => $spots['adam'][0]->id, 'zone_id' => $zones['south']->id));
-
-        ZoneSpot::create(array('spot_id' => $spots['dom'][0]->id, 'zone_id' => $zones['north']->id));
-        ZoneSpot::create(array('spot_id' => $spots['dom'][1]->id, 'zone_id' => $zones['north']->id));
-        ZoneSpot::create(array('spot_id' => $spots['dom'][2]->id, 'zone_id' => $zones['north']->id));
-        ZoneSpot::create(array('spot_id' => $spots['vitali'][0]->id, 'zone_id' => $zones['north']->id));
-        ZoneSpot::create(array('spot_id' => $spots['vitali'][1]->id, 'zone_id' => $zones['north']->id));
-
-        ZoneSpot::create(array('spot_id' => $spots['adam'][2]->id, 'zone_id' => $zones['north']->id));
-        ZoneSpot::create(array('spot_id' => $spots['adam'][3]->id, 'zone_id' => $zones['north']->id));
-        ZoneSpot::create(array('spot_id' => $spots['adam'][4]->id, 'zone_id' => $zones['north']->id));
-
+        $spots['dom'][] = Spot::create(array('spot_address' => '0014.4F01.0000.77A7', 'user_id' => 2, 'basestation_id' => 1, 'battery_percent' => 0)); // Dom
+        $spots['dom'][] = Spot::create(array('spot_address' => '0014.4F01.0000.77C0', 'user_id' => 2, 'basestation_id' => 1, 'battery_percent' => 0));
+        $spots['dom'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7E4D', 'user_id' => 2, 'basestation_id' => 1, 'battery_percent' => 0));
+        $spots['vitali'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7A12', 'user_id' => 3, 'basestation_id' => 1, 'battery_percent' => 0)); // Vitali
+        $spots['vitali'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7AD7', 'user_id' => 1, 'basestation_id' => 1, 'battery_percent' => 0));
 
         /**
          * Create some sensors
@@ -160,6 +139,30 @@ class DataSeeder extends Seeder {
         $jobs['roaming_user_1'] = Job::create(array('title' => 'Roaming User 1 (Dom)', 'object_id' => $objects['roaming_user_1']->id, 'sensor_id' => $sensors['roaming_spot']->id, 'threshold' => null));
         $jobs['roaming_user_2'] = Job::create(array('title' => 'Roaming User 2 (Vitali)', 'object_id' => $objects['roaming_user_2']->id, 'sensor_id' => $sensors['roaming_spot']->id, 'threshold' => null));
         $jobs['roaming_user_3'] = Job::create(array('title' => 'Roaming User 3 (Dom)', 'object_id' => $objects['roaming_user_3']->id, 'sensor_id' => $sensors['roaming_spot']->id, 'threshold' => null));
+
+        /**
+         * Initialise Zones
+         */
+        $zones['north'] = Zone::create(array('object_id' => $objects['north_zone']->id));
+        $zones['center'] = Zone::create(array('object_id' => $objects['center_zone']->id));
+        $zones['south'] = Zone::create(array('object_id' => $objects['south_zone']->id));
+
+        /**
+         * Assign spots to Zones
+         */
+        $spot_zone['north'] = ZoneSpot::create(array('spot_id'  => $spots['adam'][1]->id, 'zone_id' => $zones['north']->id));
+        $spot_zone['center'] = ZoneSpot::create(array('spot_id'=> $spots['dom'][1]->id, 'zone_id'   => $zones['center']->id));
+        $spot_zone['south'] = ZoneSpot::create(array('spot_id'  => $spots['adam'][0]->id, 'zone_id' => $zones['south']->id));
+
+        ZoneSpot::create(array('spot_id' => $spots['dom'][0]->id, 'zone_id' => $zones['north']->id));
+        ZoneSpot::create(array('spot_id' => $spots['dom'][1]->id, 'zone_id' => $zones['north']->id));
+        ZoneSpot::create(array('spot_id' => $spots['dom'][2]->id, 'zone_id' => $zones['north']->id));
+        ZoneSpot::create(array('spot_id' => $spots['vitali'][0]->id, 'zone_id' => $zones['north']->id));
+        ZoneSpot::create(array('spot_id' => $spots['vitali'][1]->id, 'zone_id' => $zones['north']->id));
+
+        ZoneSpot::create(array('spot_id' => $spots['adam'][2]->id, 'zone_id' => $zones['north']->id));
+        ZoneSpot::create(array('spot_id' => $spots['adam'][3]->id, 'zone_id' => $zones['north']->id));
+        ZoneSpot::create(array('spot_id' => $spots['adam'][4]->id, 'zone_id' => $zones['north']->id));
 
         /**
          * Assign actuator jobs

@@ -25,6 +25,10 @@ Route::group(array('before' => 'spot'), function() {
 		echo Light::lab();
 	});
 
+	Route::get('zones/configure', function() {
+		return View::make('zones.configure');
+	});
+
 	Route::controller('cup', 'CupController');
 
 	Route::resource('spots', 'SpotController');

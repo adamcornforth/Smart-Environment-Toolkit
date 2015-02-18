@@ -37,15 +37,27 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 		    $table->timestamps();
 		});
 
+		Schema::create('Basestation', function($table)
+		{
+			$table->increments('id');
+		    $table->string('basestation_address')->unique();
+		    $table->integer('user_id')->unsigned()->nullable();
+		    $table->timestamps();
+
+		    $table->foreign('user_id')->references('id')->on('Users');
+		});
+
 		Schema::create('Spot', function($table)
 		{
 			$table->increments('id');
 		    $table->string('spot_address')->unique();
 		    $table->integer('user_id')->unsigned()->nullable();
+		    $table->integer('basestation_id')->unsigned()->nullable();
 		    $table->integer('battery_percent')->nullable();
 		    $table->timestamps();
 
 		    $table->foreign('user_id')->references('id')->on('Users');
+		    $table->foreign('basestation_id')->references('id')->on('Basestation');
 		});
 
 		Schema::create('Sensor', function($table)
@@ -123,7 +135,8 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 		Schema::create('Zone', function($table)
 		{
 		    $table->increments('id');
-		    $table->string('title');
+		    $table->integer('object_id')->unsigned();
+		    $table->foreign('object_id')->references('id')->on('Object');
 		    $table->timestamps();
 		});
 
@@ -299,6 +312,7 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 		Schema::drop('Sensor');
 		Schema::drop('Object');
 		Schema::drop('Spot');    
+		Schema::drop('Basestation');  
 		Schema::drop('Users');  
 
 		Schema::drop('cron_manager');  

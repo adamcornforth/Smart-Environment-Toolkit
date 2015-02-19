@@ -1,6 +1,7 @@
 <div id='panel_{{ $spot->id }}_battery'>
-	<small class='text-right'>
-		<span class='pull-right'>{{ $spot->online }}</span>
-		<span class='battery-percent'>{{ $percent }}%</span> <span class='battery' style='width:{{ $percent/2.1739130435 }}px'></span>
-	</small>
+	<div class='battery-container'>
+		<span class='battery-percent'>{{ $spot->battery_percent }}%</span> 
+		<span class='battery' style='width:{{ (($percent) ? $percent/2.1739130435 : 0) }}px'></span>
+		{{ $spot->online }}
+	</div>
 </div>

@@ -30,6 +30,9 @@
 				  			<tr>
 				  				<td>{{ $spot->id }}</td>
 				  				<td>
+				  					@if(count($spot->object))
+				  						{{ $spot->object->title }} <br />
+				  					@endif
 				  					<a href='{{ url('spots/'.$spot->id) }}'>
 				  						{{ $spot->spot_address }} 
 				  					</a><br />

@@ -43,6 +43,24 @@ class Spot extends Eloquent {
 	}
 
 	/**
+	 * Returns this spot's battery level. Maps 75-85 to 0-100
+	 */
+	public function getBatteryPercentAttribute($value)
+	{
+		$start = 71;
+		$end = 85; 
+
+		if(!$value) return 0;
+		if($value > $end) return 100;
+		
+		$percent = ($value-$start)*($end-$start); 
+
+		if($percent > 100) return 100; 
+		if($percent < 0) return 0; 
+		return $percent;
+	}
+
+	/**
 	 * Return this spot's online status
 	 */
 	public function getOnlineAttribute() 

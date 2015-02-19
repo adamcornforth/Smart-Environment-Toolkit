@@ -50,6 +50,7 @@ Route::group(array('before' => 'spot'), function() {
 	Route::post('actuators/set_status', 'ActuatorController@postSetStatus');
 	Route::resource('actuators', 'ActuatorController');
 
+	Route::post('zones/{id}/updateObject', 'ZoneController@postUpdateObject');
 	Route::post('zones/{id}/updateZone', 'ZoneController@postUpdateZone');
 	Route::controller('zones', 'ZoneController');
 	Route::resource('zones', 'ZoneController');

@@ -1,7 +1,7 @@
 <div class='panel panel-default draggable'>
 	<div class='panel-heading handle'>
 		<a href='{{ url("zones/configure") }}' class='btn btn-default btn-xs pull-right'>
-			<span class='glyphicon glyphicon-resize-full'></span> Resize Zones
+			<span class='glyphicon glyphicon-cog'></span> Configure Zones
 		</a>
 		Zones
 	</div>

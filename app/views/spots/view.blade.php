@@ -5,19 +5,19 @@
 		<span class='glyphicon glyphicon-pencil'></span>
 		Edit SPOT
 	</a>
-	<h1>Viewing SPOT 
+	<h1>
+		@if(count($spot->object))
+			{{ $spot->object->title }}
+		@else 
+			Viewing SPOT
+		@endif	
 		<small> 
+			&middot;
 			{{ $spot->spot_address }}
 			@if(isset($spot->battery_percent))
 				<div class='spot-title-battery'>
 					@include('touch.panels.battery', array('percent' => $spot->battery_percent))
 				</div>
-			@else 
-				&middot;
-			@endif
-
-			@if(count($spot->object))
-				Tracking <strong>{{ $spot->object->title }}</strong>
 			@endif
 
 		</small>

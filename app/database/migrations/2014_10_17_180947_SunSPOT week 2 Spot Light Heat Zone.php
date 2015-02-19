@@ -136,11 +136,12 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 		{
 		    $table->increments('id');
 		    $table->integer('object_id')->unsigned();
-		    $table->foreign('object_id')->references('id')->on('Object');
 		    $table->integer('width')->default(150); 
 		    $table->integer('height')->default(100); 
 		    $table->integer('top')->default(0); 
 		    $table->integer('left')->default(0); 
+		    
+		    $table->foreign('object_id')->references('id')->on('Object');
 		    $table->timestamps();
 		});
 
@@ -162,11 +163,13 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 		    $table->increments('id');
 		    $table->integer('zone_id')->unsigned();
 		    $table->integer('object_id')->unsigned();
-		    $table->integer('job_id')->unsigned()->nullable();
+		    $table->integer('width')->default(150); 
+		    $table->integer('height')->default(100); 
+		    $table->integer('top')->default(0); 
+		    $table->integer('left')->default(0); 
 
 		    $table->foreign('object_id')->references('id')->on('Object');
 		    $table->foreign('zone_id')->references('id')->on('Zone');
-		    $table->foreign('job_id')->references('id')->on('Job');
 		    $table->timestamps();
 		});
 

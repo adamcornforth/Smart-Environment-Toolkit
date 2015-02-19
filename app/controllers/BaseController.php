@@ -9,6 +9,7 @@ class BaseController extends Controller {
 	 */
 	protected function setupLayout()
 	{
+		Debugbar::disable();
 		if(!Auth::check()) {
 			Auth::loginUsingId(1);
 		}

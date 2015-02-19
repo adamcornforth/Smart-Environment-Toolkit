@@ -44,6 +44,12 @@
 					    	$('.draggable-zone-' + spot_id).animate({backgroundColor: rgb}, 250);
 					    }
 
+					    // If a spot's table is updated and timestamp is returned
+					    if(html.indexOf("#table") > -1 && timestamp) {
+					    	spot_id = html.match(/\d+/)[0];
+					    	$('.object-spot-' + spot_id).css('background-color', '#fff').effect('highlight', {}, 2500);
+					    }
+
 					    if(html === "#cup_percent") {
 							if(data != current_cup_percent) {
 						        drink(data);
@@ -60,13 +66,12 @@
 			})();
 		</script>
 		<div class='row'>
+			<!-- Button trigger modal -->
 			<div class='col-md-4 snappable'>
 				@include('touch.panels.actuators')
 			</div>
 			@foreach($spots as $spot)
-				<div class='col-md-4 snappable' id='spot-{{ $spot->id }}'>
-					@include('touch.panels.spot')
-				</div>
+				@include('touch.panels.modal_spot')
 			@endforeach	
 			<div class='col-md-4 snappable'>
 				<div class='panel panel-default draggable'>
@@ -111,7 +116,7 @@
 			</div>
 		</div>
 
-		<nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+		<!-- <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
 			<div class='container'>
 				<div class='col-md-2'>
 					<br />
@@ -133,6 +138,6 @@
 				<div class='col-xs-2 snappable-min'>
 				</div>
 			</div>
-		</nav>
+		</nav> -->
 		</div>
 @stop

@@ -4,6 +4,18 @@ body {
 .table {
 	margin-bottom: 0px;
 }
+.tabpanel {
+	margin: -7px -14px -15px -14px;
+}
+.tabpanel .table tr td {
+	padding: 4px 15px;
+}
+.tabpanel .table tr th {
+	padding: 7px 15px;
+}
+.tabpanel ul li:first-child {
+	margin: 0 0 0 15px; 
+}
 .draggable {
 	position: relative;
 }
@@ -60,24 +72,35 @@ body {
 	border: 1px solid #e7e7e7;
 	border-radius: 4px 4px 0 0;
 }
+.battery-container {
+	width: 110px;
+	font-family: arial;
+	color: #444;
+	line-height: 18px;
+	height: 23px;
+	text-align: left;
+	margin: 7px 0 0 0;
+}
 .battery-percent {
 	position: relative;
 	z-index: 5;
 	font-size: 9px;
-	width: 44px;
+	width: 40px;
+	left: 9px;
 	display: inline-block;
-	top: -4px;
+	top: -6px;
 	text-align: center;
 }
 .battery {
 	position: relative;
 	display: inline-block;
-	margin: 0px 0px 0 -48px;
+	margin: 0px 0px 0 -40px;
 	background: #7DCF87;
-	width: 50px;
+	width: 46px;
 	height: 14px;
    z-index: 2; 
   
+	top: -2px;
 }
 .battery:before {
 	content: "";
@@ -108,9 +131,13 @@ body {
 }
 .spot-status {
   display: inline-block;
-  padding: 0px 8px;
+  padding: 0px 0 0 5px;
+  position: relative;
   font-size: 11px;
-  margin: 0px -3px 0 0px;
+  float: right;
+  line-height: 13px;
+  margin: 0px 0px 0 0px;
+  top: -1px;
 }
 
 .spot-status:before {
@@ -173,12 +200,19 @@ body {
 	border-color: #4cae4c;
 }
 .spot-title-battery {
-	width: 107px;
-	margin: 0 0 0 15px;
+	width: 119px;
+	margin: 0 0 0 0;
 	display: inline-block;
 }
+
+.spot-title-battery .spot-status {
+	line-height:18px;
+}
+
 .panel-top {
+	transition: 0.2s all;
 	position: absolute;
+	z-index: 5;
 	top: 10;
 	right: 10;
 	min-width: 180px;
@@ -189,9 +223,10 @@ body {
 	padding: 10px 0;
 }
 .panel-bottom {
+	transition: 0.2s all;
 	bottom: 10;
 	left: 10;
-	max-width: 314px;
+	max-width: 394px;
 	position: absolute;
 	margin-bottom: 0px;
 }
@@ -199,16 +234,42 @@ body {
 /**
  * Zone Config
  */
+.draggable-object {
+	position: absolute;
+	font-size: 11px;
+	color: #666;
+	line-height: 12px;
+	background: #fefefe;
+	border-radius: 4px;
+	padding: 5px;
+	text-align: center;
+	cursor: pointer;
+}
+
 .draggable-zone {
 	box-sizing:border-box;
-    display: inline-block; 
-    cursor: move;
+    
+	display: inline-block; 
+    
     position: absolute; 
     height:100px;
     width: 150px;
     
 	border: 1px dotted #B4BFC7;
 	background: rgba(175, 187, 194, 0.28);
+}
+
+.draggable-zone:hover .draggable-object {
+	z-index: 10;
+}
+
+.draggable-zone:hover .panel-default {
+	opacity: 0.5;
+}
+
+.draggable-object div.ui-resizable-handle {
+	width: 10px !important;
+	height: 10px !important;
 }
 
 #nwgrip, #negrip, #swgrip, #segrip, #ngrip, #egrip, #sgrip, #wgrip {
@@ -219,7 +280,11 @@ body {
     opacity: 0;
 }
 
-.draggable-zone:hover #nwgrip, .draggable-zone:hover #negrip, .draggable-zone:hover #swgrip, .draggable-zone:hover #segrip, .draggable-zone:hover #ngrip, .draggable-zone:hover #egrip, .draggable-zone:hover #sgrip, .draggable-zone:hover #wgrip {
+.draggable-zone:hover > #nwgrip, .draggable-zone:hover > #negrip, .draggable-zone:hover > #swgrip, .draggable-zone:hover > #segrip, .draggable-zone:hover > #ngrip, .draggable-zone:hover > #egrip, .draggable-zone:hover > #sgrip, .draggable-zone:hover > #wgrip {
+	opacity: 1;
+}
+
+.draggable-object:hover > #nwgrip, .draggable-object:hover > #negrip, .draggable-object:hover > #swgrip, .draggable-object:hover > #segrip, .draggable-object:hover > #ngrip, .draggable-object:hover > #egrip, .draggable-object:hover > #sgrip, .draggable-object:hover > #wgrip {
 	opacity: 1;
 }
 
@@ -263,12 +328,16 @@ body {
 	width: 100%;
 	top: 30%;
 	position: absolute;
-	display: inline-block;
 	text-align: center;
 }
 
 .draggable-zone-title a {
 	font-size: 12px;
+}
+
+.draggable-object a {
+	color: #838383;
+	font-size: 10px;
 }
 
 .draggable-zone-title .glyphicon {

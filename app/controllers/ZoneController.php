@@ -82,6 +82,33 @@ class ZoneController extends \BaseController {
 	}
 
 	/**
+	 * Update object with given width, height, top and left values
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function postUpdateObject($id)
+	{
+		if($zone_object = ZoneObject::find($id)) {
+			if(Input::has('width'))
+				$zone_object->width = Input::get('width'); 
+
+			if(Input::has('height'))
+				$zone_object->height = Input::get('height'); 
+
+			if(Input::has('left'))
+				$zone_object->left = Input::get('left'); 
+
+			if(Input::has('top'))
+				$zone_object->top = Input::get('top'); 
+
+			$zone_object->save();
+			return Response::json(array('status' => 'success', 'message' => 'ZoneObject '.$id.' updated!', 'attr' => array('width' => $zone_object->width, 'height' => $zone_object->height, 'top' => $zone_object->top, 'left' => $zone_object->left)));
+		} else {
+			return Response::json(array('status' => 'error', 'error' => 'ZoneObject '.$id.' not found'));
+		}
+	}
+
+	/**
 	 * Update zone with given width, height, top and left values
 	 * @param  int  $id
 	 * @return Response

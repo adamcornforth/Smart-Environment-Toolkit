@@ -12,7 +12,7 @@ class TouchController extends \BaseController {
 						if($spot->object->jobs->first()->sensor->title == "Cell Tower")
 							$zone_spots->add($spot); 
 						else
-							($spot->object->jobs->first()->sensor->title == "Roaming Spot" || $spot->object->jobs->first()->sensor->title == "Smart Cup") ? null : $spots->add($spot);
+							($spot->object->jobs->first()->sensor->title == "Roaming Spot") ? null : $spots->add($spot);
 
 					}
 				}

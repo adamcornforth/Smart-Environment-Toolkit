@@ -82,6 +82,64 @@ class ZoneController extends \BaseController {
 	}
 
 	/**
+	 * Show zone configure page
+	 */
+	public function getZoneConfigure() 
+	{
+		return View::make('zones.configure');
+	}
+
+	/**
+	 * Add zone
+	 */
+	public function postAddZone() 
+	{
+		/**
+		 * If new zone...
+		 * 	Create new object + link object to selected spot. Add cell tower to zone
+		 * else 
+		 * 	do nothing
+		 *
+		 * Then link object to new Zone 
+		 * set default Zone width/height/left/top 
+		 */
+		// New zone
+		if(Input::has('zone_title') && Input::has('spot_id')) {
+			$object = new Object;
+			$object->title = Input::get('zone_title'); 
+			$object->spot_id = Input::get('spot_id');
+			$object->save(); 
+
+			$job = new Job; 
+			$job->title = "User Entered ".Input::get('zone_title');
+			$job->object_id = $object->id; 
+			$job->sensor_id = Sensor::whereTitle('Cell Tower')->first()->id;
+			$job->save(); 
+
+		// Add existing zone
+		} elseif (Input::has('object_id')) {
+			$object = Object::find(Input::get('object_id'));
+		}
+		$zone = new Zone;
+		$zone->object_id = $object->id; 
+		$zone->width = 10; 
+		$zone->height = 300;
+		$zone->top = 20;
+		$zone->left = 20; 
+
+		$zone->save(); 
+		return Redirect::to('/zones/configure');
+	}
+	
+	/**
+	 * Add object
+	 */
+	public function postAddObject() 
+	{
+		return Redirect::to('/zones/configure');
+	}
+
+	/**
 	 * Update object with given width, height, top and left values
 	 * @param  int  $id
 	 * @return Response

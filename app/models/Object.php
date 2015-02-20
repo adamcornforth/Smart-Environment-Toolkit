@@ -19,6 +19,22 @@ class Object extends Eloquent {
 	}
 
 	/**
+	 * Get this object's zone
+	 */
+	public function zone() 
+	{
+		return $this->hasOne('Zone');
+	}
+
+	/**
+	 * Get this zone's ZoneObject
+	 */
+	public function zoneobject()
+	{
+		return $this->hasOne("ZoneObject");
+	}
+
+	/**
 	 * Get the latest reading for this object, given a sensor name
 	 */
 	private function getSensorLatestReading($sensor_name, $limit=null, $created_at=null) {

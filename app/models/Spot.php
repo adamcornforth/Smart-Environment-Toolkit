@@ -79,7 +79,7 @@ class Spot extends Eloquent {
             ->join('Sensor', 'Job.sensor_id', '=', 'Sensor.id')
             ->where('Sensor.title', '=', 'Roaming Spot')
             ->groupBy('Spot.id')
-            ->remember(10)->get();
+            ->get();
         $collection = new \Illuminate\Database\Eloquent\Collection;
         foreach ($spots as $spot) {
         	$collection->add(Spot::find($spot->spot_id));
@@ -99,10 +99,45 @@ class Spot extends Eloquent {
             ->join('Sensor', 'Job.sensor_id', '=', 'Sensor.id')
             ->where('Sensor.title', '=', 'Cell Tower')
             ->groupBy('Spot.id')
-            ->remember(10)->get();
+            ->get();
         $collection = new \Illuminate\Database\Eloquent\Collection;
         foreach ($spots as $spot) {
         	$collection->add(Spot::find($spot->spot_id));
+        }
+        
+        return $collection->reverse();
+	}
+
+	/**
+	 * Returns spots that have cell towers in its jobs
+	 */
+	public static function getNonObjectSpots() 
+	{
+		$collection = new \Illuminate\Database\Eloquent\Collection;
+        foreach (Spot::all() as $spot) {
+        	if(!isset($spot->object->id))
+        		$collection->add($spot);
+        }
+        
+        return $collection;
+	}
+
+	/**
+	 * Returns spots that have cell towers in its jobs, and that do not have a zone assigned
+	 */
+	public static function getTowerSpotsNoZoneNoObjectZone() 
+	{
+		$spots = DB::table('Spot')
+            ->join('Object', 'Spot.id', '=', 'Object.spot_id')
+            ->join('Job', 'Object.id', '=', 'Job.object_id')
+            ->join('Sensor', 'Job.sensor_id', '=', 'Sensor.id')
+            ->where('Sensor.title', '=', 'Cell Tower')
+            ->groupBy('Spot.id')
+            ->get();
+        $collection = new \Illuminate\Database\Eloquent\Collection;
+        foreach ($spots as $spot) {
+        	if(!isset(Spot::find($spot->spot_id)->object->zone->id) && !isset(Spot::find($spot->spot_id)->object->zoneobject->id))
+        		$collection->add(Spot::find($spot->spot_id));
         }
         
         return $collection->reverse();

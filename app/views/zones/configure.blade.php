@@ -13,11 +13,85 @@
         <h4 class="modal-title" id="addZoneLabel">Add Zone</h4>
       </div>
       <div class="modal-body">
-        ...
+        <?php echo Form::horizontal(array('url' => url('zones/configure/addZone'), 'method' => 'POST')); ?>
+					  	
+		  	<div class='form-group'>
+		  		<?php
+		  			echo Form::label('zone_title', 'Zone', array('class' => 'col-md-2 control-label'));
+		  		?>
+	  			<div class='col-md-4'>
+		  			<?php 
+		  				echo Form::text('zone_title', null, array('placeholder' => 'New Zone'));
+		  			?>
+		  		</div>
+		  		<p class='col-md-1 text-center text-muted control-label'>Or</p>
+		  		<div class='col-md-4'>
+		  				@if(($no_zone_spots = Spot::getTowerSpotsNoZoneNoObjectZone()) && $no_zone_spots->count())
+			  				<select name="object_id" id="object_id" class='form-control sensor-select'>
+			  					<option value="" disabled="disabled" selected="selected">Select Zone</option>
+				  				@foreach($no_zone_spots as $spot) 
+		  							<option value="{{ $spot->object->id }}">{{ $spot->object->title }}</option>
+				  				@endforeach
+			  				@else
+			  					<select name="spot_id" class='form-control sensor-select disabled' disabled>
+			  						<option value="" disabled="disabled" selected="selected">No Zones Available</option>
+			  				@endif
+			  			</select>
+		  		</div>
+		  	</div>
+
+		  	<script type="text/javascript">
+				$('#object_id').change(function(e) {
+					console.log($(this).val());
+					// If sensor has no config, don't fade in
+					if($(this).val()) {
+						$('.zone-spot-config').fadeOut(); 
+						$('#zone_title').val('');
+					} else { // Fade in
+						$('.zone-spot-config').fadeIn(); 
+					}
+				});
+
+				$('#zone_title').on('input', function(e) {
+					// If sensor has no config, don't fade in
+					if(!$(this).val()) {
+						$('.zone-spot-config').fadeOut(); 
+					} else { // Fade in
+						$('#object_id').val('');
+						$('.zone-spot-config').fadeIn(); 
+					}
+				});
+			</script>
+
+		  	<div class='form-group zone-spot-config form-hide'>
+		  		<?php
+		  			echo Form::label('spot_id', 'Spot', array('class' => 'col-md-2 control-label'));
+		  		?>
+	  			<div class='col-md-5'>
+		  			@if(($no_object_spots = Spot::getNonObjectSpots()) && $no_object_spots->count())
+			  			<select name="spot_id" class='form-control sensor-select'>
+			  				<option value="" disabled="disabled" selected="selected">Please select a spot</option>
+			  				@foreach($no_object_spots as $no_object_spot) 
+			  					<option value="{{ $no_object_spot->id }}">{{ $no_object_spot->spot_address }} ({{ (isset($no_object_spot->object->title) ? $no_object_spot->object->title : "No Object Assigned")}})</option>
+			  				@endforeach
+			  		@else
+			  			<select name="spot_id" class='form-control sensor-select disabled' disabled>
+			  				<option value="" disabled="disabled" selected="selected">No spots available</option>
+			  		@endif	
+		  			</select>
+		  		</div>
+		  		<div class='col-md-5'>
+		  			<p class='text-muted'>
+		  				Please select a SPOT to track this new zone with.
+		  			</p>
+		  		</div>
+		  	</div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <?php 
+        	echo Button::success("Add Zone")->prependIcon(Icon::plus_sign())->submit();
+        ?>
       </div>
     </div>
   </div>
@@ -35,7 +109,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-success">Add Object</button>
       </div>
     </div>
   </div>
@@ -45,20 +119,16 @@
 		<div class='row'>
 			<div class='panel panel-default'>
 				<div class='panel-heading'>
-					<div class="btn-group pull-right" role="group" aria-label="...">
-						<!-- Single button -->
-						<div class="btn-group">
-						  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-						    Add <span class="caret"></span>
+					<div class="btn-group pull-right">
+						  <button type="button" data-toggle="modal" data-target="#addZone" class="btn btn-default">
+						    <span class='glyphicon glyphicon-plus'></span> Add Zone
 						  </button>
-						  <ul class="dropdown-menu" role="menu">
-						    <li><a href="#" data-toggle="modal" data-target="#addZone">Zone</a></li>
-						    <li><a href="#" data-toggle="modal" data-target="#addObject">Object</a></li>
-						  </ul>
-						</div>
-						<a href='{{ url("/") }}' class='btn btn-success'>
-							<span class='glyphicon glyphicon-floppy-disk'></span> Save Changes
-						</a>
+						  <button type="button" data-toggle="modal" data-target="#addObject" class="btn btn-default">
+						    <span class='glyphicon glyphicon-plus'></span> Add Object
+						  </button>
+						  <a href='{{ url("/") }}' class="btn btn-success">
+						    <span class='glyphicon glyphicon-floppy-disk'></span> Save
+						  </a>
 					</div>
 					<h4>
 						<span class='glyphicon glyphicon-cog'></span> Zone Configuration</p>

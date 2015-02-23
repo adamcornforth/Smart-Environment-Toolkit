@@ -35,6 +35,20 @@ class Object extends Eloquent {
 	}
 
 	/**
+	 * Returns spots that have cell towers in its jobs
+	 */
+	public static function getNoZoneObjectObjects() 
+	{
+		$collection = new \Illuminate\Database\Eloquent\Collection;
+        foreach (Object::all() as $object) {
+        	if(!isset($object->zoneobject->id) && !isset($object->zone->id))
+        		$collection->add($object);
+        }
+        
+        return $collection;
+	}
+
+	/**
 	 * Get the latest reading for this object, given a sensor name
 	 */
 	private function getSensorLatestReading($sensor_name, $limit=null, $created_at=null) {

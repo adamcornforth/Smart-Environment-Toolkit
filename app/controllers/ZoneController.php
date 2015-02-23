@@ -116,19 +116,42 @@ class ZoneController extends \BaseController {
 			$job->sensor_id = Sensor::whereTitle('Cell Tower')->first()->id;
 			$job->save(); 
 
+			if(Input::has('track_heat')) {
+				$job = new Job; 
+				$job->title = "Zone Heat";
+				$job->object_id = $object->id; 
+				$job->sensor_id = Sensor::whereTitle('Thermometer')->first()->id;
+				$job->sample_rate = 1;
+				$job->save(); 
+			}
+
+			if(Input::has('track_light')) {
+				$job = new Job; 
+				$job->title = "Zone Light";
+				$job->object_id = $object->id; 
+				$job->sensor_id = Sensor::whereTitle('Photosensor')->first()->id;
+				$job->sample_rate = 1; 
+				$job->save(); 
+			}
+
 		// Add existing zone
 		} elseif (Input::has('object_id')) {
 			$object = Object::find(Input::get('object_id'));
 		}
-		$zone = new Zone;
-		$zone->object_id = $object->id; 
-		$zone->width = 10; 
-		$zone->height = 300;
-		$zone->top = 20;
-		$zone->left = 20; 
 
-		$zone->save(); 
-		return Redirect::to('/zones/configure');
+		if(isset($object->id)) {
+			$zone = new Zone;
+			$zone->object_id = $object->id; 
+			$zone->width = 10; 
+			$zone->height = 300;
+			$zone->top = 20;
+			$zone->left = 20; 
+
+			$zone->save(); 
+			return Redirect::to('/zones/configure')->with('message', 'Zone successfully added!');
+		} else {
+			return Redirect::to('/zones/configure')->with('error', 'Sorry, we could not create your zone. Did you fill in all the fields?');
+		}
 	}
 	
 	/**
@@ -136,7 +159,46 @@ class ZoneController extends \BaseController {
 	 */
 	public function postAddObject() 
 	{
-		return Redirect::to('/zones/configure');
+		/**
+		 * If new object...
+		 * 	Create new object + link object to selected spot. 
+		 * 	Assign object to zone
+		 * else 
+		 * 	do nothing
+		 *
+		 * Then link object to new ZoneObject
+		 * set default ZoneObject width/height/left/top 
+		 */
+		// New zone
+		if(Input::has('object_title') && Input::has('spot_id')) {
+			$object = new Object;
+			$object->title = Input::get('object_title'); 
+			$object->spot_id = Input::get('spot_id');
+			$object->save(); 
+
+		// Add existing zone
+		} elseif (Input::has('object_id')) {
+			$object = Object::find(Input::get('object_id'));
+		}
+
+		if(Input::has('zone_id')) {
+			$zone = Zone::find(Input::get('zone_id'));
+		}
+
+		if(isset($object->id) && isset($zone->id)) {
+			$zone_object = new ZoneObject;
+			$zone_object->object_id = $object->id; 
+			$zone_object->zone_id = $zone->id;
+			$zone_object->width = 30; 
+			$zone_object->height = 100;
+			$zone_object->top = 20;
+			$zone_object->left = 20; 
+
+			$zone_object->save(); 
+			return Redirect::to('/zones/configure')->with('message', 'Object successfully added!');
+		} else {
+			return Redirect::to('/zones/configure')->with('error', 'Sorry, we could not create your object. Did you fill in all the fields?');
+		}
 	}
 
 	/**

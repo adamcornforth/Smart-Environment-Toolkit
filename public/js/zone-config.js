@@ -24,7 +24,7 @@ $(".draggable-zone").draggable({
 	minWidth: 150, 
 	snap: true,
 	resize: function(event, ui) {
-		$(this).css('line-height', (ui.size.height*0.665) + "px");
+		// $(this).css('line-height', (ui.size.height*0.665) + "px");
 	},
 	stop:  function(event, ui) {
 		saveDetails(event, ui, this, "updateZone", $('.zones-container').innerWidth());
@@ -53,7 +53,7 @@ $(".draggable-object").draggable({
 	minWidth: 100, 
 	snap: true,
 	resize: function(event, ui) {
-		$(this).css('line-height', (ui.size.height - 7) + "px");
+		// $(this).css('line-height', (ui.size.height - 7) + "px");
 	},
 	stop:  function(event, ui) {
 		saveDetails(event, ui, this, "updateObject", $(this).parent('.draggable-zone').innerWidth());

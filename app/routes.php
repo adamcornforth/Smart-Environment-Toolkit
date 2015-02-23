@@ -27,8 +27,11 @@ Route::group(array('before' => 'spot'), function() {
 
 	Route::controller('cup', 'CupController');
 
+	Route::get('spots/{id}/stop_tracking', 'SpotController@getStopTracking');
 	Route::resource('spots', 'SpotController');
 	Route::controller('spots', 'SpotController');
+
+	Route::get('objects/{id}/unlink', 'ObjectController@getUnlink');
 	Route::resource('objects', 'ObjectController');
 
 	Route::post('jobs/clear/{id}', 'JobController@clear');

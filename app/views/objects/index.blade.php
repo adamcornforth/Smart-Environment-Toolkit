@@ -59,15 +59,21 @@
 				  				
 				  				</td>
 				  				<td>
+				  					@if(isset($object->spot->id))
 				  					<a href='{{ url('spots/'.$object->spot->id) }}'>
 				  						{{ $object->spot->spot_address }}
 				  					</a> <br />
+				  					@endif
 				  					<small class='text-muted'>
-				  						@if(count($object->spot->user))
-					  						<span class='glyphicon glyphicon-user'></span> {{ $object->spot->user->first_name }} {{ $object->spot->user->last_name }}
-					  					@else
-					  						No owner
-					  					@endif
+				  						@if(isset($object->spot->id))
+					  						@if(count($object->spot->user))
+						  						<span class='glyphicon glyphicon-user'></span> {{ $object->spot->user->first_name }} {{ $object->spot->user->last_name }}
+						  					@else
+						  						No owner
+						  					@endif
+				  						@else
+				  							No spot
+				  						@endif
 				  					</small>
 				  				</td>
 				  				<td>

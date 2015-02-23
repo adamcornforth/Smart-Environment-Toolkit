@@ -7,9 +7,11 @@
 	</div>
 	<div class='panel-body zones-container'>
 		@foreach(Zone::all() as $zone)
-			<div class="draggable-zone draggable-zone-{{ $zone->object->spot->id }}" style="{{ $zone->style }}">
-					@include('touch.panels.zone', array('spot' => $zone->object->spot))
-			</div>
+			@if(isset($zone->object->spot->id))
+				<div class="draggable-zone draggable-zone-{{ $zone->object->spot->id }}" style="{{ $zone->style }}">
+						@include('touch.panels.zone', array('spot' => $zone->object->spot))
+				</div>
+			@endif
 		@endforeach
 		<div id="guide-h" class="guide"></div>
 		<div id="guide-v" class="guide"></div>

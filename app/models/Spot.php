@@ -109,7 +109,7 @@ class Spot extends Eloquent {
 	}
 
 	/**
-	 * Returns spots that have cell towers in its jobs
+	 * Returns spots that don't have an object assigned
 	 */
 	public static function getNonObjectSpots() 
 	{

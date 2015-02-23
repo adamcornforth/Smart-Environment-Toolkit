@@ -80,6 +80,32 @@ class ObjectController extends BaseController {
 		return Redirect::to('objects/'.$object->id);
 	}
 
+	public function getUnlink($id) 
+	{
+		$object = Object::find($id); 
+
+		// Unlink zoneobject from zone
+		if(isset($object->zoneobject->id)) {
+			$object->zoneobject->delete(); 
+			return Redirect::to('/zones/configure')->with('message', 'Object successfully unlinked.');
+		}
+
+		// Unlink object from zone 
+		if(isset($object->zone->id)) {
+			if(Zone::all()->count() == 1)
+				return Redirect::to('/zones/configure')->with('error', 'Sorry, you cannot have no zones.');
+
+			// delete objects from zone 
+			foreach($object->zone->zoneobjects as $zone_objects)
+				ObjectController::getUnlink($zone_objects->object->id);
+
+			// delete things referencing zone
+			foreach(ZoneSpot::whereZoneId($object->zone->id)->get() as $zone_spot)
+				$zone_spot->delete();
+			$object->zone->delete(); 
+			return Redirect::to('/zones/configure')->with('message', 'Zone successfully unlinked.');
+		}
+	}
 
 	/**
 	 * Remove the specified resource from storage.

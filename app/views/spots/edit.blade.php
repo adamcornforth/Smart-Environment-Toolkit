@@ -45,7 +45,7 @@
 				  			<div class='col-md-3'>
 					  			<p class='form-control-static'>
 					  				<strong>{{ $spot->object->title }}</strong> 
-					  				<a class='btn btn-xs btn-danger pull-right' href=''>
+					  				<a class='btn btn-xs btn-danger pull-right' href='{{ url("spots/".$spot->id."/stop_tracking")}}'>
 					  					<span class='glyphicon glyphicon-remove'>
 					  					</span>
 					  					Stop Tracking
@@ -79,4 +79,4 @@
 		<hr />
 	<p>&copy; Adam Cornforth, Dominic Lindsay, Vitali Bokov 2014</p>
 	</div>
-@stop
+@Stop

@@ -129,6 +129,9 @@ body {
 .form-hide {
 	display: none;
 }
+.control-label-noweight {
+	font-weight: normal;
+}
 .spot-status {
   display: inline-block;
   padding: 0px 0 0 5px;
@@ -246,6 +249,23 @@ body {
 	cursor: pointer;
 }
 
+.draggable-object span {
+	float: left;
+	top: 21%;
+	width: 100%;
+	position: relative;
+}
+
+.draggable-object a {
+	margin: 1px 2px;
+	position: relative;
+	float: right;
+}
+
+.draggable-object a:hover {
+	color: #337ab7;
+}
+
 .draggable-zone {
 	box-sizing:border-box;
     
@@ -257,6 +277,20 @@ body {
     
 	border: 1px dotted #B4BFC7;
 	background: rgba(175, 187, 194, 0.28);
+}
+
+.draggable-zone-config span {
+	float: left;
+	top: 21%;
+	width: 100%;
+	position: relative;
+}
+
+.draggable-zone-config > a {
+	margin: 6px 5px;
+	font-size: 15px;
+	position: relative;
+	float: right;
 }
 
 .draggable-zone:hover .draggable-object {

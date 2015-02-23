@@ -74,6 +74,20 @@ class SpotController extends BaseController {
 		return View::make('spots.edit', array('spot' => Spot::find($id)));
 	}
 
+	/**
+	 * Makes this spot stop tracking
+	 */
+	public function getStopTracking($id) 
+	{
+		$object = Object::whereSpotId($id)->first(); 
+		$object->spot_id = null;
+		$object->save();
+
+		if(isset($object->zone->id)) 
+			$object->zone->delete(); 
+
+		return Redirect::to('spots/'.$id.'/edit');
+	}
 
 	/**
 	 * Update the specified resource in storage.

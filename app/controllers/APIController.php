@@ -28,9 +28,14 @@ class APIController extends \BaseController {
 		}
 	}
 
+	public function api() {
+		return array_merge($this->spots(), $this->actuators());
+	}
+
 	public function spots() {
 		$zone_spots = new \Illuminate\Database\Eloquent\Collection;
 		$roaming_spots = new \Illuminate\Database\Eloquent\Collection;
+		$object_spots = new \Illuminate\Database\Eloquent\Collection;
 		foreach (Spot::all() as $spot) {
 
 			if(count($spot->object)) {
@@ -67,11 +72,61 @@ class APIController extends \BaseController {
 
 							$roaming_spots->add($spot_modified);
 						}
+						else
+						{
+							$heat_level = new \Illuminate\Database\Eloquent\Collection;
+							$light_level = new \Illuminate\Database\Eloquent\Collection;
+							$accel_level = new \Illuminate\Database\Eloquent\Collection;
+
+							$spot_modified = new stdClass();
+							$spot_modified->id = $spot->id;
+							$spot_modified->address = $spot->spot_address;
+							$spot_modified->title = $spot->object->title;
+							$spot_modified->user = $spot->user->first_name . " " . $spot->user->last_name;
+							// $spot_modified->is_online = ;
+							// $spot_modified->heat_level = $this->getSensorLatestReading($spot->object->id, "Thermometer", 1);
+							// $spot_modified->light_level = $this->getSensorLatestReading($spot->object->id, "Photosensor", 1);
+							// $spot_modified->accel_level = $this->getSensorLatestReading($spot->object->id, "Accelerometer", 1);
+
+							foreach (Heat::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->get() as $heat) {
+								$heat_level->add($heat);
+							}
+							$spot_modified->heat_level = $heat_level;
+
+							foreach (Light::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->get() as $light) {
+								$light_level->add($light);
+							}
+							$spot_modified->light_level = $light_level;
+
+							foreach (Acceleration::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->get() as $accel) {
+								$accel_level->add($accel);
+							}
+							$spot_modified->accel_level = $accel_level;
+
+							$spot_modified->battery_level = $spot->battery_percent;
+							$zone_object = ZoneObject::orderBy('created_at', 'DESC')->where('object_id', '=', $spot->object->id)->first();
+							$spot_modified->zone_id = $zone_object->zone_id;
+							$spot_modified->date_of_entering_zone = Carbon::parse($spot->zonechanges()->orderBy('id', 'DESC')->first()->created_at)->format('G:ia jS M');
+
+							$object_spots->add($spot_modified);
+						}
 					}
 				}
 			}
 		}
-		return array('zone_spots' => $zone_spots, 'roaming_spots' => $roaming_spots);
+		return array('zone_spots' => $zone_spots, 'roaming_spots' => $roaming_spots, 'object_spots' => $object_spots);
+	}
+
+	public function actuators() {
+		$actuators = new \Illuminate\Database\Eloquent\Collection;
+		foreach (Actuator::all() as $actuator) {
+			$actuator_modified = new stdClass();
+			$actuator_modified->id = $actuator->id;
+			$actuator_modified->address = $actuator->actuator_address;
+			$actuator_modified->is_on = $actuator->is_on;
+			$actuators->add($actuator_modified);
+		}
+		return array('actuators' => $actuators);
 	}
 
 		public function nonzone_spots() {

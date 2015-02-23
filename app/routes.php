@@ -37,7 +37,7 @@ Route::group(array('before' => 'spot'), function() {
 	Route::post('jobs/clear/{id}', 'JobController@clear');
 	Route::post('jobs/toggle_tracking/{id}', 'JobController@toggle_tracking');
 	Route::resource('jobs', 'JobController');
-	
+
 	Route::get('actuators/{id}/time', 'ActuatorController@getActuatorTimes');
 	Route::post('actuators/{id}/settime', 'ActuatorController@postActuatorTime');
 	Route::get('actuators/{id}/ajax', 'ActuatorController@getAjax');
@@ -49,8 +49,8 @@ Route::group(array('before' => 'spot'), function() {
 	Route::post('actuators/set_status', 'ActuatorController@postSetStatus');
 	Route::resource('actuators', 'ActuatorController');
 
-	Route::post('zones/configure/addZone', 'ZoneController@postAddZone'); 
-	Route::post('zones/configure/addObject', 'ZoneController@postAddObject'); 
+	Route::post('zones/configure/addZone', 'ZoneController@postAddZone');
+	Route::post('zones/configure/addObject', 'ZoneController@postAddObject');
 	Route::get('zones/configure', 'ZoneController@getZoneConfigure');
 	Route::post('zones/{id}/updateObject', 'ZoneController@postUpdateObject');
 	Route::post('zones/{id}/updateZone', 'ZoneController@postUpdateZone');
@@ -60,7 +60,9 @@ Route::group(array('before' => 'spot'), function() {
 	Route::controller('reports', 'ReportController');
 	Route::resource('reports', 'ReportController');
 
+	Route::get('api', 'APIController@api');
 	Route::get('api/spots', 'APIController@spots');
+	Route::get('api/actuators', 'APIController@actuators');
 	Route::get('api/nonzone_spots', 'APIController@nonzone_spots');
 
 	Route::controller('/', 'TouchController');

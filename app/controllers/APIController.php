@@ -28,6 +28,10 @@ class APIController extends \BaseController {
 		}
 	}
 
+	public function api() {
+		return array_merge($this->spots(), $this->actuators());
+	}
+
 	public function spots() {
 		$zone_spots = new \Illuminate\Database\Eloquent\Collection;
 		$roaming_spots = new \Illuminate\Database\Eloquent\Collection;
@@ -111,6 +115,18 @@ class APIController extends \BaseController {
 			}
 		}
 		return array('zone_spots' => $zone_spots, 'roaming_spots' => $roaming_spots, 'object_spots' => $object_spots);
+	}
+
+	public function actuators() {
+		$actuators = new \Illuminate\Database\Eloquent\Collection;
+		foreach (Actuator::all() as $actuator) {
+			$actuator_modified = new stdClass();
+			$actuator_modified->id = $actuator->id;
+			$actuator_modified->address = $actuator->actuator_address;
+			$actuator_modified->is_on = $actuator->is_on;
+			$actuators->add($actuator_modified);
+		}
+		return array('actuators' => $actuators);
 	}
 
 		public function nonzone_spots() {

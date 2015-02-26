@@ -106,7 +106,7 @@ class APIController extends \BaseController {
 							$spot_modified->battery_level = $spot->battery_percent;
 							$zone_object = ZoneObject::orderBy('created_at', 'DESC')->where('object_id', '=', $spot->object->id)->first();
 							$spot_modified->zone_id = $zone_object->zone_id;
-							$spot_modified->date_of_entering_zone = Carbon::parse($spot->zonechanges()->orderBy('id', 'DESC')->first()->created_at)->format('G:ia jS M');
+							$spot_modified->date_of_entering_zone = Carbon::parse($spot->zonechanges()->orderBy('id', 'DESC')->first()['created_at'])->format('G:ia jS M');
 
 							$object_spots->add($spot_modified);
 						}

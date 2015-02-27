@@ -126,7 +126,8 @@ return array(
 		'Bootstrapper\BootstrapperServiceProvider',
 		'BrainSocket\BrainSocketServiceProvider',
 		'Thujohn\Twitter\TwitterServiceProvider',
-		'Barryvdh\Debugbar\ServiceProvider'
+		'Barryvdh\Debugbar\ServiceProvider',
+		'Sunspot\Storage\StorageServiceProvider'
 
 	),
 

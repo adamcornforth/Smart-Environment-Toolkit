@@ -104,6 +104,8 @@ class ObjectController extends BaseController {
 				$zone_spot->delete();
 			$object->zone->delete(); 
 			return Redirect::to('/zones/configure')->with('message', 'Zone successfully unlinked.');
+		} else {
+			return Redirect::to('/zones/configure')->with('error', 'Sorry, the zone you tried to delete does not exist.');
 		}
 	}
 

@@ -357,7 +357,7 @@ body {
 }
 
 .draggable-zone-title {
-	color: #57666F;
+	color: #B7C2C8;
 	font-size: 27px;
 	width: 100%;
 	top: 30%;
@@ -367,6 +367,7 @@ body {
 
 .draggable-zone-title a {
 	font-size: 12px;
+	color: #A1BED7;
 }
 
 .draggable-object a {

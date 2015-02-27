@@ -49,11 +49,11 @@ Route::group(array('before' => 'spot'), function() {
 	Route::post('actuators/set_status', 'ActuatorController@postSetStatus');
 	Route::resource('actuators', 'ActuatorController');
 
-	Route::post('zones/configure/addZone', 'ZoneController@postAddZone');
-	Route::post('zones/configure/addObject', 'ZoneController@postAddObject');
-	Route::get('zones/configure', 'ZoneController@getZoneConfigure');
-	Route::post('zones/{id}/updateObject', 'ZoneController@postUpdateObject');
-	Route::post('zones/{id}/updateZone', 'ZoneController@postUpdateZone');
+	Route::post('zones/configure/addZone', array('as' =>'zones.configure.add_zone' , 'uses' => 'ZoneController@postAddZone'));
+	Route::post('zones/configure/addObject', array('as' =>'zones.configure.add_object' , 'uses' => 'ZoneController@postAddObject'));
+	Route::get('zones/configure', array('as' =>'zones.configure' , 'uses' => 'ZoneController@getZoneConfigure'));
+	Route::post('zones/{id}/updateObject', array('as' =>'zones.update_object' , 'uses' => 'ZoneController@postUpdateObject'));
+	Route::post('zones/{id}/updateZone', array('as' =>'zones.update_zone' , 'uses' => 'ZoneController@postUpdateZone'));
 	Route::controller('zones', 'ZoneController');
 	Route::resource('zones', 'ZoneController');
 

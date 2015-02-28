@@ -9,12 +9,12 @@
 		    <meta charset="UTF-8">
 			<title>SunSPOT</title>
 			<style>
-				@import url(//fonts.googleapis.com/css?family=Lato:800,700,100,200,300);
+/*				@import url(//fonts.googleapis.com/css?family=Lato:800,700,100,200,300);
 
 				h1, h2, h3, h4, h5, h6 {
 					font-family:'Lato', sans-serif !important;
 					font-weight: 700;
-				}
+				}*/
 
 			</style>
       <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">

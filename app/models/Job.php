@@ -2,6 +2,8 @@
 class Job extends Eloquent {
     protected $table = 'Job';
 
+    protected $fillable = array('title', 'object_id', 'sensor_id', 'sample_rate');
+
     /**
 	 * Get this object's sensor
 	 */

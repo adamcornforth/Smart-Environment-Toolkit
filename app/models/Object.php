@@ -2,6 +2,8 @@
 class Object extends Eloquent {
     protected $table = 'Object';
 
+    protected $fillable = array('title', 'spot_id');
+
     /**
 	 * Get this object's spots 
 	 */

@@ -1,7 +1,9 @@
 <?php 
-class Zone extends Eloquent {
+class Zone extends Elegant {
     protected $table = 'Zone';
     private $zones_width = 1138;  
+
+    protected $fillable = array('left', 'top', 'width', 'height', 'object_id'); 
 
     public function object() {
     	return $this->belongsTo('Object'); 

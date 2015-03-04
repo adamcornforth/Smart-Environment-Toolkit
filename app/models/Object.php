@@ -5,6 +5,34 @@ class Object extends Eloquent {
     protected $fillable = array('title', 'spot_id');
 
     /**
+     * Override all() method to return objects with basestation user id of logged in user.
+     * If logged in user is admin, return all objects 
+     */
+    public static function all($columns = array()) {
+    	if(Auth::user()->isAdmin())
+    		return parent::all(); 
+    	else
+    		return Basestation::whereUserId(Auth::user()->id)->first()->objects; 
+    }
+
+    /**
+     * Override find() method to return spots with basestation user id of logged in user.
+     * If logged in user is admin, return spot by id
+     * @return [type] [description]
+     */
+    public static function find($id, $columns = array()) {
+    	if(Auth::user()->isAdmin())
+    		return parent::find($id); 
+
+    	$object = Object::whereId($id)->first(); 
+
+    	if(isset($object->id) && $object->spot->basestation->user_id == Auth::user()->id)
+    		return $object; 
+    	else
+    		return false; 
+    }
+
+    /**
 	 * Get this object's spots 
 	 */
 	public function spot()

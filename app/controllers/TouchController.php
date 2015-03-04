@@ -1,6 +1,6 @@
 <?php
 
-class TouchController extends \BaseController {
+class TouchController extends BaseController {
 
 	private function zone_spots() {
 		$zone_spots = new \Illuminate\Database\Eloquent\Collection;
@@ -26,7 +26,7 @@ class TouchController extends \BaseController {
 		return View::make('touch.index', array('zone_spots' => $spots['zone_spots'], 'spots' => $spots['spots']));
 	}
 
-		/**
+	/**
 	 * Long polling: get ajax data for this spot
 	 * @return  JSON response
 	 */

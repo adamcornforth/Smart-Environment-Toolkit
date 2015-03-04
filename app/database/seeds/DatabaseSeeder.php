@@ -33,13 +33,15 @@ class DataSeeder extends Seeder {
          * Adam, Dom, Vitali
          */
         User::create(array('first_name' => 'Adam', 'last_name' => 'Cornforth', 'password' => Hash::make('password'), 'email' => 'adam@sunspot.app'));
-        User::create(array('first_name' => 'Dominic', 'last_name' => 'Lindsay', 'password' => Hash::make('password'), 'email' => 'dominic@sunspot.app'));
+        User::create(array('first_name' => 'Dom', 'last_name' => 'Lindsay', 'password' => Hash::make('password'), 'email' => 'dominic@sunspot.app'));
         User::create(array('first_name' => 'Vitali', 'last_name' => 'Bokov', 'password' => Hash::make('password'), 'email' => 'vitali@sunspot.app'));
+        User::create(array('first_name' => 'Admin', 'last_name' => '', 'password' => Hash::make('password'), 'email' => 'administrator@sunspot.app', 'admin' => true));
 
         /**
          * Initialise Basestation
          */
         $basestation = Basestation::create(array('basestation_address' => '0014.4F01.0000.7E54', 'user_id' => 1));
+        $basestation = Basestation::create(array('basestation_address' => '0014.4F01.0000.D0M1', 'user_id' => 2));
 
         /**
          * Initialise SPOTs. In order: 

@@ -27,6 +27,32 @@ App::missing(function($exception)
     return Response::view('errors.404', array(), 404);
 });
 
+Route::filter('spot', function() {
+	$spot = Spot::whereUserId(null)->first();
+	if($spot != null) {
+		Session::put('notice', 'A new Sun SPOT with the address of <strong>'.$spot->spot_address.'</strong> has been detected. Please <a href="'.url("spots/$spot->id/edit").'"><span class="glyphicon glyphicon-cog"></span> click here</a> to configure it.');
+	}
+});
+  
+Route::filter('basestation', function() {
+	$basestation = Basestation::whereUserId(Auth::user()->id)->first();
+	if(!isset($basestation->id) && !Auth::user()->isAdmin()) {
+		Auth::logout();
+		return Redirect::to('login')->with('error', 'Sorry, this user has not yet been configured. Please contact an administrator for assistance.');
+	}
+}); 
+
+Route::filter('admin', function() {
+	if(Auth::check() && !Auth::user()->isAdmin())
+		return Redirect::to('/')->with('error', 'Sorry, the resource you specified could not be found.');
+}); 
+
+Route::filter('user', function() {
+	if(Auth::check() && Auth::user()->isAdmin())
+		return Redirect::to('/admin')->with('error', 'Sorry, the resource you specified could not be found.');
+}); 
+
+
 /*
 |--------------------------------------------------------------------------
 | Authentication Filters
@@ -50,7 +76,7 @@ Route::filter('auth', function()
 		{
 			return Redirect::guest('login');
 		}
-	}
+	} 
 });
 
 

@@ -10,9 +10,6 @@ class BaseController extends Controller {
 	protected function setupLayout()
 	{
 		Debugbar::disable();
-		if(!Auth::check()) {
-			Auth::loginUsingId(1);
-		}
 		if ( ! is_null($this->layout))
 		{
 			$this->layout = View::make($this->layout);

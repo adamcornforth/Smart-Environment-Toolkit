@@ -3,11 +3,49 @@ class Spot extends Eloquent {
     protected $table = 'Spot';
 
     /**
+     * Override all() method to return spots with basestation user id of logged in user.
+     * If logged in user is admin, return all spots 
+     * @return [type] [description]
+     */
+    public static function all($columns = array()) {
+    	if(Auth::user()->isAdmin())
+    		return parent::all(); 
+    	else
+    		return Basestation::whereUserId(Auth::user()->id)->first()->spots; 
+    }
+
+    /**
+     * Override find() method to return spots with basestation user id of logged in user.
+     * If logged in user is admin, return spot by id
+     * @return [type] [description]
+     */
+    public static function find($id, $columns = array()) {
+    	if(Auth::user()->isAdmin())
+    		return parent::find($id); 
+
+    	$spot = Spot::whereId($id)->first(); 
+
+
+    	if(isset($spot->id) && $spot->basestation->user_id == Auth::user()->id)
+    		return $spot; 
+    	else
+    		return false; 
+    }
+
+    /**
 	 * Get this spot's user 
 	 */
 	public function user()
 	{
 		return $this->belongsTo('User');
+	}
+
+	 /**
+	 * Get this spot's basestation 
+	 */
+	public function basestation()
+	{
+		return $this->belongsTo('Basestation');
 	}
 
 	/**
@@ -74,17 +112,20 @@ class Spot extends Eloquent {
 	public static function getRoamingSpots() 
 	{
 		$spots = DB::table('Spot')
+			->join('Basestation', 'Spot.basestation_id', '=', 'Basestation.id')
+			->join('Users', 'Users.id', '=', 'Basestation.user_id')
             ->join('Object', 'Spot.id', '=', 'Object.spot_id')
             ->join('Job', 'Object.id', '=', 'Job.object_id')
             ->join('Sensor', 'Job.sensor_id', '=', 'Sensor.id')
             ->where('Sensor.title', '=', 'Roaming Spot')
+            ->where('Users.id', '=', Auth::user()->id)
             ->groupBy('Spot.id')
             ->get();
         $collection = new \Illuminate\Database\Eloquent\Collection;
         foreach ($spots as $spot) {
         	$collection->add(Spot::find($spot->spot_id));
         }
-        
+
         return $collection->reverse();
 	}
 
@@ -94,10 +135,13 @@ class Spot extends Eloquent {
 	public static function getTowerSpots() 
 	{
 		$spots = DB::table('Spot')
+			->join('Basestation', 'Spot.basestation_id', '=', 'Basestation.id')
+			->join('Users', 'Users.id', '=', 'Basestation.user_id')
             ->join('Object', 'Spot.id', '=', 'Object.spot_id')
             ->join('Job', 'Object.id', '=', 'Job.object_id')
             ->join('Sensor', 'Job.sensor_id', '=', 'Sensor.id')
             ->where('Sensor.title', '=', 'Cell Tower')
+            ->where('Users.id', '=', Auth::user()->id)
             ->groupBy('Spot.id')
             ->get();
         $collection = new \Illuminate\Database\Eloquent\Collection;
@@ -128,10 +172,13 @@ class Spot extends Eloquent {
 	public static function getTowerSpotsNoZoneNoObjectZone() 
 	{
 		$spots = DB::table('Spot')
+			->join('Basestation', 'Spot.basestation_id', '=', 'Basestation.id')
+			->join('Users', 'Users.id', '=', 'Basestation.user_id')
             ->join('Object', 'Spot.id', '=', 'Object.spot_id')
             ->join('Job', 'Object.id', '=', 'Job.object_id')
             ->join('Sensor', 'Job.sensor_id', '=', 'Sensor.id')
             ->where('Sensor.title', '=', 'Cell Tower')
+            ->where('Users.id', '=', Auth::user()->id)
             ->groupBy('Spot.id')
             ->get();
         $collection = new \Illuminate\Database\Eloquent\Collection;

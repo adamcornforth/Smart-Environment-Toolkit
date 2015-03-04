@@ -5,6 +5,23 @@ class Job extends Eloquent {
     protected $fillable = array('title', 'object_id', 'sensor_id', 'sample_rate');
 
     /**
+     * Override find() method to return job with basestation user id of logged in user.
+     * If logged in user is admin, return job by id
+     * @return [type] [description]
+     */
+    public static function find($id, $columns = array()) {
+    	if(Auth::user()->isAdmin())
+    		return parent::find($id); 
+
+    	$job = Job::whereId($id)->first(); 
+
+    	if(isset($job->id) && $job->object->spot->basestation->user_id == Auth::user()->id)
+    		return $job;  
+    	else
+    		return false; 
+    }
+
+    /**
 	 * Get this object's sensor
 	 */
 	public function sensor()

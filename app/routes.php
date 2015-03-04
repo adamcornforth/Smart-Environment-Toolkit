@@ -11,22 +11,16 @@
 |
 */
 
-Route::filter('spot', function() {
-	$spot = Spot::whereUserId(null)->first();
-	if($spot != null) {
-		Session::put('notice', 'A new Sun SPOT with the address of <strong>'.$spot->spot_address.'</strong> has been detected. Please <a href="'.url("spots/$spot->id/edit").'"><span class="glyphicon glyphicon-cog"></span> click here</a> to configure it.');
-	}
+Route::group(array('before' => 'guest'), function() {
+	Route::controller('login', 'LoginController');
 });
 
-Route::group(array('before' => 'spot'), function() {
-	Route::get('twitter', function() {
-		echo Heat::lab();
-		echo "<br />";
-		echo Light::lab();
-	});
+Route::group(array('before' => 'auth|admin'), function() {
+	Route::get('admin/logout', 'LoginController@getLogout');
+	Route::controller('admin', 'AdminController');
+});
 
-	Route::controller('cup', 'CupController');
-
+Route::group(array('before' => 'auth|basestation|spot|user'), function() {
 	Route::get('spots/{id}/stop_tracking', 'SpotController@getStopTracking');
 	Route::resource('spots', 'SpotController');
 	Route::controller('spots', 'SpotController');
@@ -60,10 +54,11 @@ Route::group(array('before' => 'spot'), function() {
 	Route::controller('reports', 'ReportController');
 	Route::resource('reports', 'ReportController');
 
-	Route::get('api', 'APIController@api');
-	Route::get('api/spots', 'APIController@spots');
-	Route::get('api/actuators', 'APIController@actuators');
-	Route::get('api/nonzone_spots', 'APIController@nonzone_spots');
-
+	Route::get('logout', 'LoginController@getLogout');
 	Route::controller('/', 'TouchController');
 });
+
+Route::get('api', 'APIController@api');
+Route::get('api/spots', 'APIController@spots');
+Route::get('api/actuators', 'APIController@actuators');
+Route::get('api/nonzone_spots', 'APIController@nonzone_spots');

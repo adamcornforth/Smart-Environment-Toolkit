@@ -1,6 +1,6 @@
 <?php
 
-class ActuatorController extends \BaseController {
+class ActuatorController extends BaseController {
 
 	/**
 	 * Display a listing of the resource.
@@ -11,29 +11,6 @@ class ActuatorController extends \BaseController {
 	{
 		return View::make('actuators.index', array('actuators' => Actuator::all()));
 	}
-
-
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
-	}
-
-
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
-	{
-		//
-	}
-
 
 	/**
 	 * Display the specified resource.

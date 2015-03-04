@@ -33,6 +33,7 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 		    $table->string('last_name'); 
 		    $table->string('email');
 		    $table->string('password');
+		    $table->boolean('admin')->default(false); 
 		    $table->rememberToken();
 		    $table->timestamps();
 		});
@@ -136,7 +137,7 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 		{
 		    $table->increments('id');
 		    $table->integer('object_id')->unsigned();
-		    $table->integer('width')->default(150); 
+		    $table->integer('width')->default(40); 
 		    $table->integer('height')->default(100); 
 		    $table->integer('top')->default(0); 
 		    $table->integer('left')->default(0); 
@@ -163,7 +164,7 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 		    $table->increments('id');
 		    $table->integer('zone_id')->unsigned();
 		    $table->integer('object_id')->unsigned();
-		    $table->integer('width')->default(150); 
+		    $table->integer('width')->default(40); 
 		    $table->integer('height')->default(100); 
 		    $table->integer('top')->default(0); 
 		    $table->integer('left')->default(0); 

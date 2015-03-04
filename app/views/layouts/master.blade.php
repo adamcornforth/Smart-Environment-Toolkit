@@ -30,58 +30,76 @@
         @section('nav')
   			<?php
 
-    			echo Navbar::withBrand('Java Sun SPOT', url(''))
-          ->withContent(Navigation::links([
-                  [
-                      'link' => url(''),
-                      'title' => 'Dashboard'
-                  ],
-                  [
-                      'link' => url('spots'),
-                      'title' => 'Spots'
-                  ],
-                  [
-                      'link' => url('actuators'),
-                      'title' => 'Actuators'
-                  ],
-                  [
-                      'link' => url('objects'),
-                      'title' => 'Lab Objects'
-                  ],
-                  [
-                      'link' => url('zones'),
-                      'title' => 'Zones'
-                  ],
-                  [
-                      'link' => url('reports'),
-                      'title' => 'Reports'
-                  ]
-                  // [
-                  //     'dropdown',
-                  //     [
-                  //         [
-                  //             'link' => '#',
-                  //             'title' => 'Action'
-                  //         ],
-                  //         [
-                  //             'link' => '#',
-                  //             'title' => 'Another Action'
-                  //         ],
-                  //         Navigation::NAVIGATION_DIVIDER,
-                  //         [
-                  //             'link' => '#',
-                  //             'title' => 'Something else here'
-                  //         ],
-                  //     ]
-                  // ]
-                  ]))
-          ->withContent(
-          '<ul class="nav navbar-nav navbar-right">
-            <p class="navbar-text">
-              '.((Auth::check()) ? 'Logged in as <a href='.url("users/".Auth::getUser()->id).'><span class="glyphicon glyphicon-user"></span> '.Auth::getUser()->name.'</a>' : '').'
-            </p>
-          </ul>');
-    			?>
+    			if (Auth::check()) {
+            if(Auth::user()->isAdmin()) {
+              echo Navbar::withBrand('Java Sun SPOT', url(''))
+               ->withContent(Navigation::links([
+                    [
+                        'link' => url('admin'),
+                        'title' => 'Dashboard'
+                    ],
+                    [
+                        'link' => url('admin/basestations'),
+                        'title' => 'Basestations'
+                    ]]));
+            } else {
+              echo Navbar::withBrand('Java Sun SPOT', url(''))
+               ->withContent(Navigation::links([
+                    [
+                        'link' => url(''),
+                        'title' => 'Dashboard'
+                    ],
+                    [
+                        'link' => url('spots'),
+                        'title' => 'Spots'
+                    ],
+                    [
+                        'link' => url('actuators'),
+                        'title' => 'Actuators'
+                    ],
+                    [
+                        'link' => url('objects'),
+                        'title' => 'Lab Objects'
+                    ],
+                    [
+                        'link' => url('zones'),
+                        'title' => 'Zones'
+                    ],
+                    [
+                        'link' => url('reports'),
+                        'title' => 'Reports'
+                    ]
+                    // [
+                    //     'dropdown',
+                    //     [
+                    //         [
+                    //             'link' => '#',
+                    //             'title' => 'Action'
+                    //         ],
+                    //         [
+                    //             'link' => '#',
+                    //             'title' => 'Another Action'
+                    //         ],
+                    //         Navigation::NAVIGATION_DIVIDER,
+                    //         [
+                    //             'link' => '#',
+                    //             'title' => 'Something else here'
+                    //         ],
+                    //     ]
+                    // ]
+                    ]))
+            ->withContent(
+            '<ul class="nav navbar-nav navbar-right">
+              <p class="pull-right navbar-text navbar-logout">
+                <a class="btn btn-default btn-sm btn-inverse"  href='.url('logout').'>Logout <span class="glyphicon glyphicon-log-out"></span></a>
+              </p>
+              <p class="navbar-text">
+                Logged in as <a href='.url("users/".Auth::getUser()->id).'><span class="glyphicon glyphicon-user"></span> '.Auth::getUser()->name.'</a>
+              </p>
+            </ul>');
+          }
+        }
+    			?> 
 
         @show
 
@@ -90,6 +108,11 @@
             @if(Session::has('notice'))
               <div class='alert alert-warning'>
                 <p> <strong>Heads up!</strong> {{ Session::pull('notice') }} </p>
+              </div>
+            @endif
+            @if(Session::has('error'))
+              <div class='alert alert-danger'>
+                <p> <strong>Error!</strong> {{ Session::pull('error') }} </p>
               </div>
             @endif
           @show

@@ -1,7 +1,6 @@
 <?php namespace Sunspot\Storage;
 
 interface ZoneRepository {
-
 	public function createZone($input);
 	public function createZoneObject($input);
 

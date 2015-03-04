@@ -13,6 +13,7 @@ class ZoneControllerTest extends TestCase {
 	public function setUp() 
 	{
 		parent::setUp();
+		Auth::loginUsingId(1); 
 	}
 
 	public function testAddZoneNoFields()
@@ -122,7 +123,7 @@ class ZoneControllerTest extends TestCase {
 	public function testUpdateObjectValidFields()
 	{
 		// When
-		$response = $this->call("POST", "/zones/4/updateObject", array('left' => 0, 'top' => 231, 'height' => 58, 'width' => 84.42460317460318));
+		$response = $this->call("POST", "/zones/4/updateObject", array('left' => 0, 'top' => 231, 'height' => 58, 'width' => 40));
 
 		// Get the response and decode it
 		$jsonResponse = $response->getContent();

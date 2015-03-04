@@ -11,11 +11,19 @@ class Basestation extends Eloquent {
 	}
 
 	/**
-	 * Get this spot's objects
+	 * Get this basestation's spots
 	 */
 	public function spots()
 	{
 		return $this->hasMany('Spot');
+	}
+
+	/**
+	 * Get this basestations's objects
+	 */
+	public function objects()
+	{
+		return $this->hasManyThrough('Object', 'Spot');
 	}
 
 }

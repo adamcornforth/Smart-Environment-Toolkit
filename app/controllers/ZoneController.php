@@ -2,7 +2,7 @@
 
 use Sunspot\Storage\ZoneRepository as ZoneRepository;
 
-class ZoneController extends \BaseController {
+class ZoneController extends BaseController {
 
 	public function __construct(ZoneRepository $zone_repository)
     {

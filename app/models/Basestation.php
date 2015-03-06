@@ -2,6 +2,8 @@
 class Basestation extends Eloquent {
     protected $table = 'Basestation';
 
+    protected $fillable = array('user_id');
+
     /**
 	 * Get this spot's user 
 	 */

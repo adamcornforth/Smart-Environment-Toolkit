@@ -41,7 +41,16 @@
                     [
                         'link' => url('admin/basestations'),
                         'title' => 'Basestations'
-                    ]]));
+                    ]]))
+               ->withContent(
+                '<ul class="nav navbar-nav navbar-right">
+                  <p class="pull-right navbar-text navbar-logout">
+                    <a class="btn btn-default btn-sm btn-inverse"  href='.url('admin/logout').'>Logout <span class="glyphicon glyphicon-log-out"></span></a>
+                  </p>
+                  <p class="navbar-text">
+                    Logged in as <a href='.url("users/".Auth::getUser()->id).'><span class="glyphicon glyphicon-user"></span> '.Auth::getUser()->name.'</a>
+                  </p>
+                </ul>');
             } else {
               echo Navbar::withBrand('Java Sun SPOT', url(''))
                ->withContent(Navigation::links([

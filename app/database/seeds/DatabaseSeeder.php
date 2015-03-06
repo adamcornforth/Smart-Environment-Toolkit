@@ -42,6 +42,7 @@ class DataSeeder extends Seeder {
          */
         $basestation = Basestation::create(array('basestation_address' => '0014.4F01.0000.7E54', 'user_id' => 1));
         $basestation = Basestation::create(array('basestation_address' => '0014.4F01.0000.D0M1', 'user_id' => 2));
+        $basestation = Basestation::create(array('basestation_address' => '0014.4F01.0000.UNSG'));
 
         /**
          * Initialise SPOTs. In order: 

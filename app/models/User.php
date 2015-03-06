@@ -44,4 +44,18 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		return $this->first_name." ".$this->last_name;
 	}
 
+	/**
+	 * Returns users that don't have basestations assigned
+	 */
+	public static function getUsersNoBasestation() 
+	{
+        $collection = new \Illuminate\Database\Eloquent\Collection;
+        foreach (User::all() as $user) {
+        	if(!isset(Basestation::whereUserId($user->id)->first()->id) && !$user->isAdmin())
+        		$collection->add($user);
+        }
+        
+        return $collection->reverse();
+	}
+
 }

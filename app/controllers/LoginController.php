@@ -11,6 +11,8 @@ class LoginController extends BaseController {
 
 	public function postIndex() {
 		Auth::attempt(array('first_name' => Input::get('first_name'), 'password' => 'password'));
+		if(Auth::user()->isAdmin())
+			return Redirect::to('/admin');	
 		return Redirect::to('/');
 	}
 

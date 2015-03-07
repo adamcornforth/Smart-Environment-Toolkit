@@ -17,10 +17,20 @@ Route::group(array('before' => 'guest'), function() {
 
 Route::group(array('before' => 'auth|admin'), function() {
 	Route::get('admin/logout', 'LoginController@getLogout');
-	Route::get('admin/basestations/{id}/unassign', 'AdminController@getUnassignBasestation');
-	Route::get('admin/basestations/{id}/edit', 'AdminController@getEditBasestation');
-	Route::get('admin/basestations/{id}', 'AdminController@getBasestation');
-	Route::post('admin/basestations/{id}', 'AdminController@postEditBasestation');
+
+	Route::get('admin/basestations/{id}/unassign', 'BasestationController@getUnassignBasestation');
+	Route::get('admin/basestations/{id}/edit', 'BasestationController@getEditBasestation');
+	Route::get('admin/basestations/{id}', 'BasestationController@getBasestation');
+	Route::post('admin/basestations/{id}', 'BasestationController@postEditBasestation');
+	Route::controller('admin/basestations/', 'BasestationController');
+ 
+	Route::get('admin/users/create', 'UserController@getCreateUser');
+	Route::post('admin/users/create', 'UserController@postCreateUser');
+	Route::get('admin/users/{id}/edit', 'UserController@getEditUser');
+	Route::get('admin/users/{id}', 'UserController@getUser');
+	Route::post('admin/users/{id}', 'UserController@postEditUser');
+	Route::controller('admin/users/', 'UserController');
+
 	Route::controller('admin', 'AdminController');
 });
 

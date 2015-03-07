@@ -23,11 +23,40 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	 */
 	protected $hidden = array('password', 'remember_token');
 
+	protected $fillable = array('first_name', 'last_name', 'email', 'password');
+
+	public static function create(array $data) 
+	{
+		if(Input::has('first_name') && Input::has('last_name') && Input::has('password') && Input::has('email')) {
+			if(isset($data['password'])) {
+				if($data['password']) 
+					$data['password'] = Hash::make($data['password']);
+				else
+					array_pull($data, 'password');
+			}
+			return parent::create($data);
+		} else {
+			return false; 
+		}
+	}
+
+	public function update(array $data = array()) 
+	{
+		if(isset($data['password'])) {
+			if($data['password']) 
+				$data['password'] = Hash::make($data['password']);
+			else
+				array_pull($data, 'password');
+		}
+		return parent::update($data);
+	}
+
 	/**
 	 * Returns if user is admin
 	 * @return boolean [description]
 	 */
-	public function isAdmin() {
+	public function isAdmin() 
+	{
 		return $this->admin;
 	}
 
@@ -37,6 +66,14 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	public function spots()
 	{
 		return $this->hasMany('Spot');
+	}
+
+	/**
+	 * Get this user's basestation 
+	 */
+	public function basestation()
+	{
+		return $this->hasOne('Basestation');
 	}
 
 	public function getNameAttribute()

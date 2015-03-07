@@ -41,6 +41,10 @@
                     [
                         'link' => url('admin/basestations'),
                         'title' => 'Basestations'
+                    ],
+                    [
+                        'link' => url('admin/users'),
+                        'title' => 'Users'
                     ]]))
                ->withContent(
                 '<ul class="nav navbar-nav navbar-right">

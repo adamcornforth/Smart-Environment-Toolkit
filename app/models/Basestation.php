@@ -15,6 +15,14 @@ class Basestation extends Eloquent {
 	/**
 	 * Get this basestation's spots
 	 */
+	public function actuators()
+	{
+		return $this->hasMany('Actuator');
+	}
+
+	/**
+	 * Get this basestation's spots
+	 */
 	public function spots()
 	{
 		return $this->hasMany('Spot');

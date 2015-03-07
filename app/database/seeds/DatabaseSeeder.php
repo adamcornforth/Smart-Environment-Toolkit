@@ -32,10 +32,10 @@ class DataSeeder extends Seeder {
          * Initialise users. In order:
          * Adam, Dom, Vitali
          */
-        User::create(array('first_name' => 'Adam', 'last_name' => 'Cornforth', 'password' => Hash::make('password'), 'email' => 'adam@sunspot.app'));
-        User::create(array('first_name' => 'Dom', 'last_name' => 'Lindsay', 'password' => Hash::make('password'), 'email' => 'dominic@sunspot.app'));
-        User::create(array('first_name' => 'Vitali', 'last_name' => 'Bokov', 'password' => Hash::make('password'), 'email' => 'vitali@sunspot.app'));
-        User::create(array('first_name' => 'Admin', 'last_name' => '', 'password' => Hash::make('password'), 'email' => 'administrator@sunspot.app', 'admin' => true));
+        User::seederCreate(array('first_name' => 'Adam', 'last_name' => 'Cornforth', 'password' => Hash::make('password'), 'email' => 'adam@sunspot.app'));
+        User::seederCreate(array('first_name' => 'Dom', 'last_name' => 'Lindsay', 'password' => Hash::make('password'), 'email' => 'dominic@sunspot.app'));
+        User::seederCreate(array('first_name' => 'Vitali', 'last_name' => 'Bokov', 'password' => Hash::make('password'), 'email' => 'vitali@sunspot.app'));
+        User::seederCreate(array('first_name' => 'Admin', 'last_name' => '', 'password' => Hash::make('password'), 'email' => 'administrator@sunspot.app', 'admin' => true));
 
         /**
          * Initialise Basestation

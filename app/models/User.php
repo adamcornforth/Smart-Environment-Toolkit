@@ -25,6 +25,11 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
 	protected $fillable = array('first_name', 'last_name', 'email', 'password');
 
+	public static function seederCreate(array $data) 
+	{
+		return parent::create($data);
+	}
+
 	public static function create(array $data) 
 	{
 		if(Input::has('first_name') && Input::has('last_name') && Input::has('password') && Input::has('email')) {

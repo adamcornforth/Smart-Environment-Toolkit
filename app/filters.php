@@ -27,6 +27,14 @@ App::missing(function($exception)
     return Response::view('errors.404', array(), 404);
 });
 
+Route::filter('api', function() {
+	Auth::loginUsingId(4); 
+}); 
+
+Route::filter('api-out', function() {
+	Auth::logout(); 
+}); 
+
 Route::filter('spot', function() {
 	$spot = Spot::whereBasestationId(null)->first();
 	if($spot != null) {

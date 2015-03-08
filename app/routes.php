@@ -11,6 +11,13 @@
 |
 */
 
+Route::group(array('before' => 'api', 'after' => 'api-out'), function() {
+	Route::get('api', 'APIController@api');
+	Route::get('api/spots', 'APIController@spots');
+	Route::get('api/actuators', 'APIController@actuators');
+	Route::get('api/nonzone_spots', 'APIController@nonzone_spots');
+}); 
+
 Route::group(array('before' => 'guest'), function() {
 	Route::controller('login', 'LoginController');
 });
@@ -71,8 +78,3 @@ Route::group(array('before' => 'auth|basestation|spot|user'), function() {
 	Route::get('logout', 'LoginController@getLogout');
 	Route::controller('/', 'TouchController');
 });
-
-Route::get('api', 'APIController@api');
-Route::get('api/spots', 'APIController@spots');
-Route::get('api/actuators', 'APIController@actuators');
-Route::get('api/nonzone_spots', 'APIController@nonzone_spots');

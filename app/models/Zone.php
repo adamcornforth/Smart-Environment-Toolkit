@@ -43,7 +43,7 @@ class Zone extends Elegant {
 
         $zone = Zone::whereId($id)->first(); 
 
-        if(isset($zone->id) && $zone->object->spot->basestation->user_id == Auth::user()->id)
+        if($id == 1 || (isset($zone->id) && isset($zone->object->id) && isset($zone->object->spot->id) && isset($zone->object->spot->basestation->id) && $zone->object->spot->basestation->user_id == Auth::user()->id))
             return $zone; 
         else
             return false; 

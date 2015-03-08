@@ -1,7 +1,10 @@
 <?php namespace Sunspot\Storage; 
 
+use Auth; 
+
 use Zone;
 use ZoneObject;
+use ZoneSpot;
 
 use Object; 
 use Job; 
@@ -13,10 +16,10 @@ class EloquentZoneRepository implements ZoneRepository {
 	{
 		// New object
 		if($input->has('zone_title') && $input->has('spot_id')) {
-			$object = Object::create(array('title' => $input->get('zone_title'), 'spot_id' => $input->get('spot_id')));
+			$object = Object::create(array('title' => $input->get('zone_title'), 'basestation_id' => Auth::user()->basestation->id, 'spot_id' => $input->get('spot_id')));
 
 			// Set up jobs
-			$job = Job::create(array('title' => "User Entered ".$input->get('zone_title'), 'object_id' => $object->id, 'sensor_id' => Sensor::whereTitle('Cell Tower')->first()->id, 'sample_rate' => 1));
+			$job = Job::create(array('title' => "User Entered ".$input->get('zone_title'), 'object_id' => $object->id, 'sensor_id' => Sensor::whereTitle('Cell Tower')->first()->id));
 
 			if($input->has('track_heat')) 
 				$job = Job::create(array('title' => "Zone Heat", 'object_id' => $object->id, 'sensor_id' => Sensor::whereTitle('Thermometer')->first()->id, 'sample_rate' => 1));
@@ -31,8 +34,14 @@ class EloquentZoneRepository implements ZoneRepository {
 
 		// Create zone, linked to object
 		if(isset($object->id)) 
-			return Zone::create(array_merge(array('object_id' => $object->id), $input->all()));
+			$zone =  Zone::create(array_merge(array('object_id' => $object->id), $input->all()));
 
+		// Create ZoneSpot
+		$zone_spot = ZoneSpot::create(array("zone_id" => $zone->id, "spot_id" => $object->spot->id));
+
+		if(isset($zone->id) && isset($zone_spot->id))
+			return true;
+		
 		return false; 
 	}
 
@@ -41,7 +50,7 @@ class EloquentZoneRepository implements ZoneRepository {
 	{
 		// New object
 		if($input->has('object_title') && $input->has('spot_id'))
-			$object = Object::create(array('title' => $input->get('object_title'), 'spot_id' => $input->get('spot_id')));
+			$object = Object::create(array('title' => $input->get('object_title'), 'basestation_id' => Auth::user()->basestation->id, 'spot_id' => $input->get('spot_id')));
 		
 		// Use existing object
 		elseif ($input->has('object_id')) 

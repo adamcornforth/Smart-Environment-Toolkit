@@ -163,6 +163,21 @@ class SpotController extends BaseController {
 			$job->object_id = $spot->object->id;
 			$job->sensor_id = Input::get('sensor_id');
 			$job->save();
+
+			
+			// If job == Cell tower 
+			if($sensor = Sensor::find(Input::get('sensor_id')) && isset($sensor->id) && $sensor->title == "Cell Tower") {
+				// Get/create zone 
+				if(isset($spot->object->zone)) {
+					$zone = $spot->object->zone;
+				} else {
+					$zone = Zone::create(array('left' => 0, 'top' => 0, 'width' => 10, 'height' => 10, 'object_id' => $spot->object->id));
+				}
+				
+				// Spot needs a ZoneSpot record 
+				ZoneSpot::create(array("zone_id" => $zone->id, "spot_id" => $spot->object->spot->id));
+			}
+
 		}
 
 		Session::forget('notice');

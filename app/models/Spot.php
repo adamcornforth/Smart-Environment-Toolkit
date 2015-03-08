@@ -89,6 +89,7 @@ class Spot extends Eloquent {
 
 	/**
 	 * Returns this spot's battery level. Maps 75-85 to 0-100
+	 * (value-start)*100/(end-start)
 	 */
 	public function getBatteryPercentAttribute($value)
 	{
@@ -96,13 +97,12 @@ class Spot extends Eloquent {
 		$end = 85; 
 
 		if(!$value) return 0;
-		if($value > $end) return 100;
 		
-		$percent = ($value-$start)*($end-$start); 
+		$percent = ($value-$start)*100/($end-$start);
 
 		if($percent > 100) return 100; 
 		if($percent < 0) return 0; 
-		return $percent;
+		return round($percent, 0);
 	}
 
 	/**

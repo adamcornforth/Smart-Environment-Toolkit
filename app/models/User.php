@@ -30,6 +30,24 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		return parent::create($data);
 	}
 
+	public function setAdmin() 
+	{
+		$this->admin = true; 
+		$this->save();
+	}
+
+	/**
+     * Override all() method to return all non admin users
+     * If logged in user is admin, return all users 
+     * @return [type] [description]
+     */
+    public static function all($columns = array()) {
+    	if(Auth::user()->isAdmin())
+    		return parent::all(); 
+    	else
+    		return User::whereAdmin(0)->get();
+    }
+
 	public static function create(array $data) 
 	{
 		if(Input::has('first_name') && Input::has('last_name') && Input::has('password') && Input::has('email')) {

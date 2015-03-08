@@ -25,7 +25,7 @@
 				</div>
 				<div class='panel-body'>
 					<p class='lead'>
-						{{ Basestation::all()->count() }} <a href='{{ url('admin/basestations') }}'>Basestations</a>
+						{{ Basestation::where('basestation_address', '!=', 'SET')->get()->count() }} <a href='{{ url('admin/basestations') }}'>Basestations</a>
 					</p>
 				</div>
 			</div>

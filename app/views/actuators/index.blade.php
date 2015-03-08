@@ -1,14 +1,35 @@
 @extends('layouts.master')
-
+@section('alert')
+	@if(Session::has('success'))
+      <div class='alert alert-success'>
+        <p> <strong>Success!</strong> {{ Session::pull('success') }} </p>
+      </div>
+    @endif
+    @if(Session::has('error'))
+      <div class='alert alert-danger'>
+        <p> <strong>Error!</strong> {{ Session::pull('error') }} </p>
+      </div>
+    @endif
+@stop
 @section('content')
-	<h1>{{ $title or "Actuators"}}</h1>
+	<h1>
+		<a class='btn btn-success pull-right' href='{{ url("actuators/create") }}'>
+			<span class='glyphicon glyphicon-plus-sign'></span> Add Actuator
+		</a>
+		{{ $title or "Actuators"}}
+	</h1>
 
 	<br /> 
 	<p class='lead'>
 		Please plug in your actuator to begin auto-discovery of your actuators. <br />
 		<small>
-			When a new actuator is discovered, it will appear on the list below as an "<span class='text-danger'><span class='glyphicon glyphicon-exclamation-sign'></span> Unconfigured Actuator </span>"
+			When a new actuator is discovered, you will be able to add it <a href='{{ url("actuators/create") }}'>here</a>. <br />
 		</small>
+	</p>
+	<hr />
+	<p>
+		A newly added actuator will appear on the list below as an "<span class='text-danger'><span class='glyphicon glyphicon-exclamation-sign'></span> Unconfigured Actuator </span>"
+		<br /><br />
 	</p>
 	@if(Session::has('message'))
 		<p class='alert alert-success'>

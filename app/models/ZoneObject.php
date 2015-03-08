@@ -15,7 +15,7 @@ class ZoneObject extends Elegant {
 
         $zone_object = ZoneObject::whereId($id)->first(); 
 
-        if(isset($zone_object->id) && $zone_object->object->spot->basestation->user_id == Auth::user()->id)
+        if(isset($zone_object->id) && isset($zone_obect->object->spot->id) && $zone_object->object->spot->basestation->user_id == Auth::user()->id)
             return $zone_object; 
         else
             return false; 

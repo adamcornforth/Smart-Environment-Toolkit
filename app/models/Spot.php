@@ -80,6 +80,13 @@ class Spot extends Eloquent {
 		return $this->hasMany('Switches', 'spot_address', 'spot_address');
 	}
 
+	public function isSmartCup() 
+	{
+		foreach($this->jobs as $job)
+			if($job->sensor->title == "Smart Cup") return true;
+		return false;
+	}
+
 	/**
 	 * Returns this spot's battery level. Maps 75-85 to 0-100
 	 */

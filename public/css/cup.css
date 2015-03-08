@@ -9,7 +9,9 @@
 			-moz-animation-fill-mode: forwards;
 			-0-animation-fill-mode: forwards;
 			animation-fill-mode: forwards;*/
-		}
+		
+		  left: 21px;
+}
 		#CupOfCoffee #lid {
 		  position: relative;
 		  top: 0;

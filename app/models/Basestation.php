@@ -33,7 +33,7 @@ class Basestation extends Eloquent {
 	 */
 	public function objects()
 	{
-		return $this->hasManyThrough('Object', 'Spot');
+		return $this->hasMany('Object');
 	}
 
 }

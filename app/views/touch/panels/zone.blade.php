@@ -1,7 +1,9 @@
 @foreach($zone->zoneobjects as $zone_object)
-	<button type="button" class='draggable-object panel object-spot-{{ $zone_object->object->spot->id }}' data-toggle="modal" data-target="#modal-spot-{{ $zone_object->object->spot->id }}" style='{{ $zone_object->style }} line-height: {{ ($zone_object->height - 8) }}px'>
-		{{ $zone_object->object->title }}
-	</button>
+	@if(isset($zone_object->object->spot->id))
+		<button type="button" class='draggable-object panel object-spot-{{ $zone_object->object->spot->id }}' data-toggle="modal" data-target="#modal-spot-{{ $zone_object->object->spot->id }}" style='{{ $zone_object->style }} line-height: {{ ($zone_object->height - 8) }}px'>
+			{{ $zone_object->object->title }}
+		</button>
+	@endif
 @endforeach
 <div class='panel panel-default panel-top'>
 	<div class='panel-body text-center'>

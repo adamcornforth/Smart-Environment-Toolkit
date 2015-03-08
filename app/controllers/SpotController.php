@@ -99,6 +99,10 @@ class SpotController extends BaseController {
 		if(isset($object->zone->id)) 
 			$object->zone->delete(); 
 
+		if(isset($object->zoneobject->id)) {
+			$object->zoneobject->delete(); 
+		}
+
 		return Redirect::to('spots/'.$id.'/edit');
 	}
 
@@ -134,6 +138,7 @@ class SpotController extends BaseController {
 		if(Input::has('object_title')) {
 			$object = new Object(); 
 			$object->title = Input::get('object_title');
+			$object->basestation_id = Auth::user()->basestation->id; 
 			$object->spot_id = $spot->id;
 			$object->save();
 		

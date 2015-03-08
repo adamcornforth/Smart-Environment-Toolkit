@@ -80,8 +80,10 @@ class SunSPOTWeek2SpotLightHeatZone extends Migration {
 		    $table->increments('id');
 		    $table->string('title');
 		    $table->string('description'); 
+		    $table->integer('basestation_id')->unsigned();
 		    $table->integer('spot_id')->unsigned()->nullable();
 
+			$table->foreign('basestation_id')->references('id')->on('Basestation');
 			$table->foreign('spot_id')->references('id')->on('Spot');
 		    $table->timestamps();
 		});

@@ -30,11 +30,11 @@
 				  		<?php
 				  			echo Form::label('object_title', 'What object will this SPOT track?', array('class' => 'col-md-4 control-label'));
 				  		?>
-				  		@if(Object::whereNull('spot_id')->count())
+				  		@if(Auth::user()->basestation->objects()->whereNull('Object.spot_id')->count())
 				  			<div class='col-md-3'>
 					  			<select name="object_id" class='form-control'>
 					  				<option value="" disabled="disabled" selected="selected">Please select an object</option>
-					  				@foreach(Object::whereNull('spot_id')->get() as $object) 
+					  				@foreach(Auth::user()->basestation->objects()->whereNull('Object.spot_id')->get() as $object) 
 					  					<option {{ ((count($spot->object) && $object->id == $spot->object->id)) ? "selected='selected'" : ""}}value="{{ $object->id }}">{{ $object->title }}</option>
 					  				@endforeach
 					  			</select>

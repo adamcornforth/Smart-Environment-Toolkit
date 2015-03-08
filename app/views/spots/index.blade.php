@@ -24,8 +24,12 @@
 		Please turn on your Java Sun SPOT to begin auto-discovery of your Sun SPOTs. <br />
 		<small>
 			When a new SPOT is discovered, you will be able to add it <a href='{{ url("spots/create") }}'>here</a>. <br />
-			A newly added SPOT will appear on the list below as an "<span class='text-danger'><span class='glyphicon glyphicon-exclamation-sign'></span> Unconfigured SPOT </span>"
-		</small>
+			</small>
+	</p>
+	<hr />
+	<p>
+		A newly added SPOT will appear on the list below as an "<span class='text-danger'><span class='glyphicon glyphicon-exclamation-sign'></span> Unconfigured SPOT </span>"
+		<br /><br />
 	</p>
 	<div class='row marketing'>
 		<div class='col-md-12'>

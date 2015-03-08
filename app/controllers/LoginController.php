@@ -10,10 +10,13 @@ class LoginController extends BaseController {
 	}
 
 	public function postIndex() {
-		Auth::attempt(array('first_name' => Input::get('first_name'), 'password' => Input::get('password')));
-		if(Auth::check() && Auth::user()->isAdmin())
-			return Redirect::to('/admin');	
-		return Redirect::to('/');
+		if(Auth::attempt(array('first_name' => Input::get('first_name'), 'password' => Input::get('password')))) {
+			if(Auth::check() && Auth::user()->isAdmin())
+				return Redirect::to('/admin');	
+			return Redirect::to('/');
+		} else {
+			return Redirect::to('/login')->with('error', "Sorry, we could not log you in with the details you supplied.");
+		}
 	}
 
 	public function getLogout() {

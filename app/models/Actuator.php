@@ -45,7 +45,7 @@ class Actuator extends Eloquent {
 	 */
 	public function basestation()
 	{
-		return $this->hasOne('Basestation');
+		return $this->belongsTo('Basestation');
 	}
 
 	/**

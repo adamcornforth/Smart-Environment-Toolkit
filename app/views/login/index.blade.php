@@ -1,5 +1,6 @@
 @extends('layouts.master')
-
+@section('alert')
+@stop
 @section('content')
 
 	<br /><br /><br />
@@ -16,7 +17,7 @@
 				@if(Session::has('error'))
 		          <div class='alert alert-danger alert-dismissable'>
 		          	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-		            <p> <strong>Heads up!</strong> {{ Session::pull('error') }} </p>
+		            <p> <strong>Error!</strong> {{ Session::pull('error') }} </p>
 		          </div>
 		          <br />
 		        @endif

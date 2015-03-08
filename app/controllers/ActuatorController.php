@@ -27,6 +27,36 @@ class ActuatorController extends BaseController {
 	/**
 	 * Show the form for editing the specified resource.
 	 *
+	 * @return Response
+	 */
+	public function create()
+	{
+		return View::make('actuators.create');
+	}
+
+	/**
+	 * Store the specified resource.
+	 *
+	 * @return Response
+	 */
+	public function store()
+	{
+		if(Input::has('actuator_address')) {
+			if($actuator = Actuator::whereBasestationId(null)->where('actuator_address', 'LIKE', '%'.Input::get('actuator_address').'%')->first()) {
+				$actuator->basestation_id = Auth::user()->basestation->id;
+				$actuator->save(); 
+				return Redirect::to('actuators')->with('success', "Actuator ID '".$actuator->actuator_address."' successfully added!");
+			} else {
+				return Redirect::to('actuators/create')->with('error', "Sorry, an Actuator with the ID '<strong>".Input::get('actuator_address')."</strong>' could not be found.");	
+			}
+		} else {
+			return Redirect::to('actuators/create')->with('error', "Sorry, you must specify an Actuator ID.");
+		}
+	}
+
+	/**
+	 * Show the form for editing the specified resource.
+	 *
 	 * @param  int  $id
 	 * @return Response
 	 */

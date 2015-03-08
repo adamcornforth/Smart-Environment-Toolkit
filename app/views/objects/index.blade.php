@@ -36,7 +36,7 @@
 				  						{{ $object->description }} <br/ >
 				  				    @endif
 				  					@if(count($object->jobs))
-				  						@if($object->jobs->count())
+				  						@if($object->jobs->count() && isset($object->spot->id))
 					  						<a href='{{ url('spots/'.$object->spot->id) }}' class='btn btn-success btn-xs pull-right'>
 				  								Add Job
 				  								<span class='glyphicon glyphicon-plus-sign'></span>
@@ -45,11 +45,9 @@
 					  							<small class='text-muted'>Tracking "{{ $job->title }}" event</small><br />
 				  							@endforeach
 				  						@else
-				  							<a href='{{ url('spots/'.$spot->id) }}' class='btn btn-success btn-xs pull-right'>
-				  								Add Job
-				  								<span class='glyphicon glyphicon-plus-sign'></span>
-				  							</a>
-				  							<small class='text-muted'><span class='glyphicon glyphicon-exclamation-sign'></span> This SPOT has no jobs </small>
+				  							<span class='text-danger'>
+					  							<span class='glyphicon glyphicon-exclamation-sign'></span> Object not being tracked 
+					  						</span>
 				  						@endif
 				  					@else
 				  						<span class='text-danger'>

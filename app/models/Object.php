@@ -26,18 +26,26 @@ class Object extends Eloquent {
 
     	$object = Object::whereId($id)->first(); 
 
-    	if(isset($object->id) && $object->spot->basestation->user_id == Auth::user()->id)
+    	if(isset($object->id) && isset($object->basestation->id) && $object->basestation->user_id == Auth::user()->id)
     		return $object; 
     	else
     		return false; 
     }
 
     /**
-	 * Get this object's spots 
+	 * Get this object's spot 
 	 */
 	public function spot()
 	{
 		return $this->belongsTo('Spot');
+	}
+
+	/**
+	 * Get this object's basestation 
+	 */
+	public function basestation()
+	{
+		return $this->belongsTo('Basestation');
 	}
 
 	/**

@@ -1,4 +1,4 @@
-<div class='panel panel-default tabpanel draggable'>
+<div class='panel panel-default draggable'>
 	<div class='dock text-center'>
 		<p> Actuators </p>
 	</div>

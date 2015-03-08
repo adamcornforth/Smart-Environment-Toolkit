@@ -28,9 +28,10 @@ App::missing(function($exception)
 });
 
 Route::filter('spot', function() {
-	$spot = Spot::whereUserId(null)->first();
+	$spot = Spot::whereBasestationId(null)->first();
 	if($spot != null) {
-		Session::put('notice', 'A new Sun SPOT with the address of <strong>'.$spot->spot_address.'</strong> has been detected. Please <a href="'.url("spots/$spot->id/edit").'"><span class="glyphicon glyphicon-cog"></span> click here</a> to configure it.');
+		Session::forget('notice');
+		Session::put('notice', 'There are Sun SPOTs available for you to add. <a class="btn btn-success btn-xs pull-right" href="'.url("spots/create").'"><span class="glyphicon glyphicon-plus-sign"></span> Add Sun SPOT</a>');
 	}
 });
   

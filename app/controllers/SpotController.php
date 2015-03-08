@@ -19,7 +19,7 @@ class SpotController extends BaseController {
 	 */
 	public function create()
 	{
-		//
+		return View::make('spots.create');
 	}
 
 
@@ -30,7 +30,17 @@ class SpotController extends BaseController {
 	 */
 	public function store()
 	{
-		//
+		if(Input::has('spot_address')) {
+			if($spot = Spot::whereBasestationId(null)->where('spot_address', 'LIKE', '%'.Input::get('spot_address').'%')->first()) {
+				$spot->basestation_id = Auth::user()->basestation->id;
+				$spot->save(); 
+				return Redirect::to('spots')->with('success', "SPOT ".$spot->spot_address." successfully added!");
+			} else {
+				return Redirect::to('spots/create')->with('error', "Sorry, a SPOT with the address <strong>0014.4F01.0000.".Input::get('spot_address')."</strong> could not be found.");	
+			}
+		} else {
+			return Redirect::to('spots/create')->with('error', "Sorry, you must specify a SPOT address.");
+		}
 	}
 
 
@@ -42,7 +52,10 @@ class SpotController extends BaseController {
 	 */
 	public function show($id)
 	{
-		return View::make('spots.view', array('spot' => Spot::find($id)));
+		if($spot = Spot::find($id))
+			return View::make('spots.view', array('spot' => $spot));
+		else
+			return App::abort(404);
 	}
 
 	/**

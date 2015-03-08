@@ -26,7 +26,7 @@ class Spot extends Eloquent {
     	$spot = Spot::whereId($id)->first(); 
 
 
-    	if(isset($spot->id) && $spot->basestation->user_id == Auth::user()->id)
+    	if(isset($spot->id) && isset($spot->basestation->id) && $spot->basestation->user_id == Auth::user()->id)
     		return $spot; 
     	else
     		return false; 

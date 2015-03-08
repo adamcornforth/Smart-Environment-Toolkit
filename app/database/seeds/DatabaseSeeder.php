@@ -55,7 +55,7 @@ class DataSeeder extends Seeder {
 
         $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7201', 'user_id' => 1, 'basestation_id' => 1, 'battery_percent' => 0)); // Fake SPOT for kettle
         $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7202', 'user_id' => 1, 'basestation_id' => 1, 'battery_percent' => 0)); // Fake SPOT for chair
-        $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7836', 'user_id' => 1, 'basestation_id' => 1, 'battery_percent' => 0)); // Fridge SPOT
+        $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7836', 'user_id' => 1, 'basestation_id' => null, 'battery_percent' => 0)); // Fridge SPOT
 
         $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.Z0N1', 'user_id' => 1, 'basestation_id' => 1, 'battery_percent' => 0)); // Fake SPOT for setting up zone
         $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.Z0N2', 'user_id' => 1, 'basestation_id' => 1, 'battery_percent' => 0)); // Fake SPOT for setting up zone

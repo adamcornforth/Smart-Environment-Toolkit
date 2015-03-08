@@ -1,13 +1,30 @@
 @extends('layouts.master')
-
+@section('alert')
+	@if(Session::has('success'))
+      <div class='alert alert-success'>
+        <p> <strong>Success!</strong> {{ Session::pull('success') }} </p>
+      </div>
+    @endif
+    @if(Session::has('error'))
+      <div class='alert alert-danger'>
+        <p> <strong>Error!</strong> {{ Session::pull('error') }} </p>
+      </div>
+    @endif
+@stop
 @section('content')
-	<h1>{{ $title or "Java Sun SPOTs"}}</h1>
+	<h1>
+		<a class='btn btn-success pull-right' href='{{ url("spots/create") }}'>
+			<span class='glyphicon glyphicon-plus-sign'></span> Add SPOT
+		</a>
+		{{ $title or "Java Sun SPOTs"}}
+	</h1>
 
 	<br /> 
 	<p class='lead'>
 		Please turn on your Java Sun SPOT to begin auto-discovery of your Sun SPOTs. <br />
 		<small>
-			When a new SPOT is discovered, it will appear on the list below as an "<span class='text-danger'><span class='glyphicon glyphicon-exclamation-sign'></span> Unconfigured SPOT </span>"
+			When a new SPOT is discovered, you will be able to add it <a href='{{ url("spots/create") }}'>here</a>. <br />
+			A newly added SPOT will appear on the list below as an "<span class='text-danger'><span class='glyphicon glyphicon-exclamation-sign'></span> Unconfigured SPOT </span>"
 		</small>
 	</p>
 	<div class='row marketing'>

@@ -238,11 +238,6 @@
 				<strong>Success!</strong> {{ Session::get('message') }}
 			</p>
 		@endif
-		@if(Session::has('error'))
-			<p class='alert alert-danger'>
-				<strong>Error!</strong> {{ Session::get('error') }}
-			</p>
-		@endif
 		<div class='row'>
 			<div class='panel panel-default'>
 				<div class='panel-heading'>

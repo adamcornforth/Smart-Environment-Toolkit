@@ -162,8 +162,10 @@
 								</td>
 								<td class="col-md-5" id="spot_{{ $spot->id }}_last_zone">
 									@if($day_picked == 0)
-										<?php $zone = $spot->zonechanges()->orderBy('id', 'DESC')->first() ?>
-										{{ Zone::find($zone['zone_id'])->object->title }}
+										<?php $zone = $spot->zonechanges()->orderBy('id', 'DESC')->first(); ?>
+										@if($zone = Zone::find($zone['zone_id']))
+											{{ $zone->object->title }}
+										@endif
 									@endif
 								</td>
 								<td class="col-md-2" id="spot_{{ $spot->id }}_time_of_change">

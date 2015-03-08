@@ -30,7 +30,7 @@
 			  			</tr>
 			  		</thead>
 			  		<tbody>
-			  			@foreach(Basestation::all() as $basestation)
+			  			@foreach(Basestation::where('basestation_address', '!=', 'SET')->get() as $basestation)
 				  			<tr>
 				  				<td>{{ $basestation->id }}</td>
 				  				<td>

@@ -13,36 +13,76 @@ class DatabaseSeeder extends Seeder {
 	{
 		Eloquent::unguard();
 
-		// $this->call('Initialise');
-        // $this->call('MinimalDataSeeder');
+        $this->call('UserSeeder');
         $this->call('DataSeeder');
 	}
 
+} 
+
+class UserSeeder extends Seeder {
+    public function run() 
+    {
+        Eloquent::unguard();
+        DB::table('Spot')->delete();
+        DB::table('Zone')->delete();
+        DB::table('Object')->delete();
+        DB::table('Basestation')->delete();
+        DB::table('Users')->delete();
+        DB::table('Sensor')->delete();
+
+        /**
+         * Create some sensors
+         */
+        $sensors['thermometer'] = Sensor::create(array('title' => 'Thermometer', 'table' => 'Heat', 'field' => 'heat_temperature', 
+                                                        'unit' => '&deg;C', 'measures' => 'Temperature', 'decimal_points' => 2, 'port_number' => 110));
+
+        $sensors['photosensor'] = Sensor::create(array('title' => 'Photosensor', 'table' => 'Light', 'field' => 'light_intensity', 
+                                                        'unit' => '<em>&Iota;</em><sub>v</sub>','measures' => 'Light', 'decimal_points' => 0, 'port_number' => 120));
+
+        $sensors['accelerometer'] = Sensor::create(array('title' => 'Accelerometer', 'table' => 'Acceleration', 'field' => 'acceleration', 
+                                                        'unit' => 'g', 'measures' => 'Acceleration', 'decimal_points' => 2, 'port_number' => 130));
+
+        $sensors['motion_sensor'] = Sensor::create(array('title' => 'Motion Sensor', 'table' => 'Motion', 'field' => 'motion', 
+                                                        'unit' => '', 'measures' => 'Motion', 'decimal_points' => 0, 'port_number' => 140));
+
+        $sensors['compass'] = Sensor::create(array('title' => 'Compass', 'table' => 'Bearing', 'field' => 'bearing', 
+                                                        'unit' => '°', 'measures' => 'Angle', 'decimal_points' => 0, 'port_number' => 200));
+        
+        $sensors['cell_tower'] = Sensor::create(array('title' => 'Cell Tower', 'table' => 'ZoneSpot', 'field' => 'zone_id', 
+                                                        'unit' => '', 'measures' => 'Zone Entries', 'port_number' => 150));
+
+        $sensors['roaming_spot'] = Sensor::create(array('title' => 'Roaming Spot', 'table' => 'ZoneSpot', 'field' => 'zone_id',
+                                                        'unit' => '', 'measures' => 'Zone', 'port_number' => 160));
+
+        $sensors['smart_cup'] = Sensor::create(array('title' => 'Smart Cup', 'table' => 'Water', 'field' => 'water_percent',
+                                                        'unit' => '%', 'measures' => 'Water Level', 'port_number' => 180));
+
+        $basestation = Basestation::create(array('basestation_address' => 'SET'));
+        $set = Object::create(array('title' => "SET", 'basestation_id' => $basestation->id));
+        Zone::create(array('object_id' => $set->id, 'width' => 28.91, 'height' => 430, 'top' => 20, 'left' => 2.19));
+
+        /**
+         * Initialise users. In order:
+         * Adam, Dom, Vitali, Admin
+         */
+        User::seederCreate(array('first_name' => 'Adam', 'last_name' => 'Cornforth', 'password' => Hash::make('password'), 'email' => 'adam@sunspot.app'));
+        User::seederCreate(array('first_name' => 'Dom', 'last_name' => 'Lindsay', 'password' => Hash::make('password'), 'email' => 'dominic@sunspot.app'));
+        User::seederCreate(array('first_name' => 'Vitali', 'last_name' => 'Bokov', 'password' => Hash::make('password'), 'email' => 'vitali@sunspot.app'));
+        $admin = User::seederCreate(array('first_name' => 'Admin', 'last_name' => '', 'password' => Hash::make('password'), 'email' => 'administrator@sunspot.app'));
+        $admin->setAdmin();
+    }
 }
 
 class DataSeeder extends Seeder {
 
     public function run()
     {
-        DB::table('Spot')->delete();
-        DB::table('Zone')->delete();
-        DB::table('Users')->delete();
-
-        /**
-         * Initialise users. In order:
-         * Adam, Dom, Vitali
-         */
-        User::seederCreate(array('first_name' => 'Adam', 'last_name' => 'Cornforth', 'password' => Hash::make('password'), 'email' => 'adam@sunspot.app'));
-        User::seederCreate(array('first_name' => 'Dom', 'last_name' => 'Lindsay', 'password' => Hash::make('password'), 'email' => 'dominic@sunspot.app'));
-        User::seederCreate(array('first_name' => 'Vitali', 'last_name' => 'Bokov', 'password' => Hash::make('password'), 'email' => 'vitali@sunspot.app'));
-        User::seederCreate(array('first_name' => 'Admin', 'last_name' => '', 'password' => Hash::make('password'), 'email' => 'administrator@sunspot.app', 'admin' => true));
-
         /**
          * Initialise Basestation
          */
-        $basestation = Basestation::create(array('basestation_address' => '0014.4F01.0000.7E54', 'user_id' => 1));
-        $basestation = Basestation::create(array('basestation_address' => '0014.4F01.0000.7E99', 'user_id' => 2));
-        $basestation = Basestation::create(array('basestation_address' => '0014.4F01.0000.UNSG'));
+        Basestation::create(array('basestation_address' => '0014.4F01.0000.7E54', 'user_id' => 1));
+        Basestation::create(array('basestation_address' => '0014.4F01.0000.7E99', 'user_id' => 2));
+        Basestation::create(array('basestation_address' => '0014.4F01.0000.UNSG'));
 
         /**
          * Initialise SPOTs. In order: 

@@ -2,7 +2,7 @@
 class Object extends Eloquent {
     protected $table = 'Object';
 
-    protected $fillable = array('title', 'spot_id');
+    protected $fillable = array('title', 'spot_id', 'basestation_id');
 
     /**
      * Override all() method to return objects with basestation user id of logged in user.

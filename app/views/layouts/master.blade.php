@@ -32,7 +32,7 @@
 
     			if (Auth::check()) {
             if(Auth::user()->isAdmin()) {
-              echo Navbar::withBrand('Java Sun SPOT', url(''))
+              echo Navbar::withBrand('Java Sun SPOT', url('/admin'))
                ->withContent(Navigation::links([
                     [
                         'link' => url('admin'),

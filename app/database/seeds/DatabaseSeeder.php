@@ -90,21 +90,21 @@ class DataSeeder extends Seeder {
          * 2x Dom's SPOTs
          * 2x Vitali's SPOTs
          */
-        $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7827', 'user_id' => 1, 'basestation_id' => 1, 'battery_percent' => 0)); // Adam
-        $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.76FF', 'user_id' => 1, 'basestation_id' => 1, 'battery_percent' => 0));
+        $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7827', 'user_id' => 1, 'basestation_id' => 2, 'battery_percent' => 0)); // Adam
+        $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.76FF', 'user_id' => 1, 'basestation_id' => 2, 'battery_percent' => 0));
 
-        $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7201', 'user_id' => 1, 'basestation_id' => 1, 'battery_percent' => 0)); // Fake SPOT for kettle
-        $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7202', 'user_id' => 1, 'basestation_id' => 1, 'battery_percent' => 0)); // Fake SPOT for chair
+        $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7201', 'user_id' => 1, 'basestation_id' => 2, 'battery_percent' => 0)); // Fake SPOT for kettle
+        $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7202', 'user_id' => 1, 'basestation_id' => 2, 'battery_percent' => 0)); // Fake SPOT for chair
         $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7836', 'user_id' => 1, 'basestation_id' => null, 'battery_percent' => 0)); // Fridge SPOT
 
-        $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.Z0N1', 'user_id' => 1, 'basestation_id' => 1, 'battery_percent' => 0)); // Fake SPOT for setting up zone
-        $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.Z0N2', 'user_id' => 1, 'basestation_id' => 1, 'battery_percent' => 0)); // Fake SPOT for setting up zone
+        $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.Z0N1', 'user_id' => 1, 'basestation_id' => 2, 'battery_percent' => 0)); // Fake SPOT for setting up zone
+        $spots['adam'][] = Spot::create(array('spot_address' => '0014.4F01.0000.Z0N2', 'user_id' => 1, 'basestation_id' => 2, 'battery_percent' => 0)); // Fake SPOT for setting up zone
 
-        $spots['dom'][] = Spot::create(array('spot_address' => '0014.4F01.0000.77A7', 'user_id' => 2, 'basestation_id' => 1, 'battery_percent' => 0)); // Dom
-        $spots['dom'][] = Spot::create(array('spot_address' => '0014.4F01.0000.77C0', 'user_id' => 2, 'basestation_id' => 2, 'battery_percent' => 0));
-        $spots['dom'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7E4D', 'user_id' => 2, 'basestation_id' => 1, 'battery_percent' => 0));
-        $spots['vitali'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7A12', 'user_id' => 3, 'basestation_id' => 1, 'battery_percent' => 0)); // Vitali
-        $spots['vitali'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7AD7', 'user_id' => 1, 'basestation_id' => 1, 'battery_percent' => 0));
+        $spots['dom'][] = Spot::create(array('spot_address' => '0014.4F01.0000.77A7', 'user_id' => 2, 'basestation_id' => 2, 'battery_percent' => 0)); // Dom
+        $spots['dom'][] = Spot::create(array('spot_address' => '0014.4F01.0000.77C0', 'user_id' => 2, 'basestation_id' => 3, 'battery_percent' => 0));
+        $spots['dom'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7E4D', 'user_id' => 2, 'basestation_id' => 2, 'battery_percent' => 0));
+        $spots['vitali'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7A12', 'user_id' => 3, 'basestation_id' => 2, 'battery_percent' => 0)); // Vitali
+        $spots['vitali'][] = Spot::create(array('spot_address' => '0014.4F01.0000.7AD7', 'user_id' => 1, 'basestation_id' => 2, 'battery_percent' => 0));
 
         /**
          * Create some sensors

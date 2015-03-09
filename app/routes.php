@@ -11,18 +11,25 @@
 |
 */
 
-Route::group(array('before' => 'api', 'after' => 'api-out'), function() {
-	Route::get('api', 'APIController@api');
-	Route::get('api/spots', 'APIController@spots');
-	Route::get('api/actuators', 'APIController@actuators');
-	Route::get('api/nonzone_spots', 'APIController@nonzone_spots');
-}); 
+
+// Route::group(array('before' => 'api', 'after' => 'api-out'), function() {
+// 	Route::get('api', 'APIController@api');
+// 	Route::get('api/spots', 'APIController@spots');
+// 	Route::get('api/actuators', 'APIController@actuators');
+// 	Route::get('api/nonzone_spots', 'APIController@nonzone_spots');
+// });
+
+// Route::get('api/5', 'APIController@api');
+
+Route::any('api/login', 'APIController@login');
+
 
 Route::group(array('before' => 'guest'), function() {
 	Route::controller('login', 'LoginController');
 });
 
 Route::group(array('before' => 'auth|admin'), function() {
+
 	Route::get('admin/logout', 'LoginController@getLogout');
 
 	Route::get('admin/basestations/{id}/unassign', 'BasestationController@getUnassignBasestation');
@@ -30,9 +37,9 @@ Route::group(array('before' => 'auth|admin'), function() {
 	Route::get('admin/basestations/{id}', 'BasestationController@getBasestation');
 	Route::post('admin/basestations/{id}', 'BasestationController@postEditBasestation');
 	Route::controller('admin/basestations/', 'BasestationController');
- 
+
  	Route::get('admin/spots', 'AdminController@getSpots');
-	
+
 	Route::get('admin/users/create', 'UserController@getCreateUser');
 	Route::post('admin/users/create', 'UserController@postCreateUser');
 	Route::get('admin/users/{id}/edit', 'UserController@getEditUser');
@@ -44,6 +51,12 @@ Route::group(array('before' => 'auth|admin'), function() {
 });
 
 Route::group(array('before' => 'auth|basestation|spot|user'), function() {
+
+	Route::get('api/getCurrentUser', 'APIController@getAuth');
+	Route::get('api/getCurrentUserId', 'APIController@getAuthId');
+	Route::get('api/logout', 'APIController@logout');
+	Route::get('api/{id}', 'APIController@api');
+
 	Route::get('spots/{id}/stop_tracking', 'SpotController@getStopTracking');
 	Route::resource('spots', 'SpotController');
 	Route::controller('spots', 'SpotController');

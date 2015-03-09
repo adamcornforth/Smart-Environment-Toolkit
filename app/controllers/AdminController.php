@@ -9,4 +9,8 @@ class AdminController extends BaseController {
 		return View::make('admin.index'); 
 	}
 
+	public function getSpots() {
+		return View::make('admin.spot.index', array('spots' => Spot::all()));
+	}
+
 }

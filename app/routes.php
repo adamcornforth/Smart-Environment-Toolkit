@@ -31,6 +31,8 @@ Route::group(array('before' => 'auth|admin'), function() {
 	Route::post('admin/basestations/{id}', 'BasestationController@postEditBasestation');
 	Route::controller('admin/basestations/', 'BasestationController');
  
+ 	Route::get('admin/spots', 'AdminController@getSpots');
+	
 	Route::get('admin/users/create', 'UserController@getCreateUser');
 	Route::post('admin/users/create', 'UserController@postCreateUser');
 	Route::get('admin/users/{id}/edit', 'UserController@getEditUser');

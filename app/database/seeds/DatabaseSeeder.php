@@ -109,29 +109,14 @@ class DataSeeder extends Seeder {
         /**
          * Create some sensors
          */
-        $sensors['thermometer'] = Sensor::create(array('title' => 'Thermometer', 'table' => 'Heat', 'field' => 'heat_temperature', 
-                                                        'unit' => '&deg;C', 'measures' => 'Temperature', 'decimal_points' => 2, 'port_number' => 110));
-
-        $sensors['photosensor'] = Sensor::create(array('title' => 'Photosensor', 'table' => 'Light', 'field' => 'light_intensity', 
-                                                        'unit' => '<em>&Iota;</em><sub>v</sub>','measures' => 'Light', 'decimal_points' => 0, 'port_number' => 120));
-
-        $sensors['accelerometer'] = Sensor::create(array('title' => 'Accelerometer', 'table' => 'Acceleration', 'field' => 'acceleration', 
-                                                        'unit' => 'g', 'measures' => 'Acceleration', 'decimal_points' => 2, 'port_number' => 130));
-
-        $sensors['motion_sensor'] = Sensor::create(array('title' => 'Motion Sensor', 'table' => 'Motion', 'field' => 'motion', 
-                                                        'unit' => '', 'measures' => 'Motion', 'decimal_points' => 0, 'port_number' => 140));
-
-        $sensors['compass'] = Sensor::create(array('title' => 'Compass', 'table' => 'Bearing', 'field' => 'bearing', 
-                                                        'unit' => '°', 'measures' => 'Angle', 'decimal_points' => 0, 'port_number' => 200));
-        
-        $sensors['cell_tower'] = Sensor::create(array('title' => 'Cell Tower', 'table' => 'ZoneSpot', 'field' => 'zone_id', 
-                                                        'unit' => '', 'measures' => 'Zone Entries', 'port_number' => 150));
-
-        $sensors['roaming_spot'] = Sensor::create(array('title' => 'Roaming Spot', 'table' => 'ZoneSpot', 'field' => 'zone_id',
-                                                        'unit' => '', 'measures' => 'Zone', 'port_number' => 160));
-
-        $sensors['smart_cup'] = Sensor::create(array('title' => 'Smart Cup', 'table' => 'Water', 'field' => 'water_percent',
-                                                        'unit' => '%', 'measures' => 'Water Level', 'port_number' => 180));
+        $sensors['thermometer'] = Sensor::find(1);
+        $sensors['photosensor'] = Sensor::find(2);
+        $sensors['accelerometer'] = Sensor::find(3);
+        $sensors['motion_sensor'] = Sensor::find(4);
+        $sensors['compass'] = Sensor::find(5);
+        $sensors['cell_tower'] = Sensor::find(6);
+        $sensors['roaming_spot'] = Sensor::find(7);
+        $sensors['smart_cup'] = Sensor::find(8);
 
 
     	DB::table('Acceleration')->delete();

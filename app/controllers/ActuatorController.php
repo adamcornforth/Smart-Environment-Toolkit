@@ -81,11 +81,13 @@ class ActuatorController extends BaseController {
 		 * For creating jobs for the actuator
 		 */
 		if(Input::has('condition-id') && Input::has('job-field')) {
-			if(Input::has('job_title') && Input::has('job_id') && Input::has('threshold') && Input::has('direction')) {
+			if(Input::has('job_title') && Input::has('job_id') && Input::has('threshold') && Input::has('direction') && Input::has('time_hour') && Input::has('time_minute') && Input::has('time_second')) {
+
 				$job = new ActuatorJob(); 
 				$job->title = Input::get('job_title');
 				$job->threshold = Input::get('threshold');
 				$job->direction = Input::get('direction');
+				$job->seconds = (Input::get('time_hour') * 3600) + (Input::get('time_minute') * 60) + Input::get('time_second');
 				$job->actuator_id = $actuator->id;
 				$job->job_id = Input::get('job_id');
 				$job->save();

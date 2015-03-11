@@ -23,6 +23,9 @@
 			</strong>
 		@else
 			<strong> {{ ucwords(strtolower($actuator_job->job->sensor->measures)) }} </strong> goes <strong> {{ strtolower($actuator_job->direction) }} {{ $actuator_job->threshold }}{{ $actuator_job->job->sensor->unit }}</strong>
+			@if($actuator_job->seconds > 0)
+				for <strong>{{ $actuator_job->seconds}}s</strong>
+			@endif
 		@endif
 	</small>
 @else 

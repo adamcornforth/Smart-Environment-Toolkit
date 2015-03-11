@@ -201,7 +201,7 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+					<h4 class="modal-title" id="myModalLabel">Add Event</h4>
 				</div>
 				<div class="modal-body">
 					<br />
@@ -210,9 +210,9 @@
 				  	<input type="hidden" class='job-field' name="job-field" value="">
 				  	<div class='form-group'>
 				  		<?php
-				  			echo Form::label('job_title', 'Name', array('class' => 'col-md-2 control-label'));
+				  			echo Form::label('job_title', 'Name', array('class' => 'col-md-1 control-label'));
 				  		?>
-			  			<div class='col-md-4'>
+			  			<div class='col-md-5'>
 				  			<?php 
 				  				echo Form::text('job_title', null, array('placeholder' => 'Event Name e.g. Light On'));
 				  			?>
@@ -226,9 +226,9 @@
 
 				  	<div class='form-group'>
 				  		<?php
-				  			echo Form::label('job_id', 'Job', array('class' => 'col-md-2 control-label'));
+				  			echo Form::label('job_id', 'Job', array('class' => 'col-md-1 control-label'));
 				  		?>
-			  			<div class='col-md-4'>
+			  			<div class='col-md-5'>
 				  			<select name="job_id" class='form-control'>
 				  				<option value="" disabled="disabled" selected="selected">Please select a job</option>
 				  				@foreach(Job::all() as $job) 
@@ -245,7 +245,7 @@
 
 				  	<div class='form-group'>
 				  		<?php
-				  			echo Form::label('threshold', 'Threshold', array('class' => 'col-md-2 control-label'));
+				  			echo Form::label('threshold', 'Thresh', array('class' => 'col-md-1 control-label'));
 				  		?>
 				  		<div class='col-md-2'>
 				  			<select name="direction" class='form-control'>
@@ -254,7 +254,7 @@
 				  				<option value="EQUALS">Equals</option>
 				  			</select>
 				  		</div>
-			  			<div class='col-md-2'>
+			  			<div class='col-md-3'>
 				  			<?php 
 				  				echo Form::text('threshold', null, array('placeholder' => 'e.g. 30'));
 				  			?>
@@ -262,6 +262,46 @@
 				  		<div class='col-md-6'>
 				  			<p class='text-muted'>
 				  				The threshold that has to be reached by the job readings for this event to trigger. 
+				  			</p>
+				  		</div>
+				  	</div>
+
+				  	<div class='form-group'>
+				  		<?php
+				  			echo Form::label('time_hour', 'Time', array('class' => 'col-md-1 control-label'));
+				  		?>
+				  		<div class='col-md-5'>
+				  			<div class='row'>
+					  			<div class='col-md-4'>
+						  			<select class='form-control' name="time_hour" class='form-control'>
+						  				<option disabled='disabled' selected='selected' value='0'>Hours</option>	
+						  				@for($i = 0; $i <= 24; $i++)
+						  					<option value="{{ $i }}">{{ $i }}</option>	
+						  				@endfor
+						  			</select>
+						  		</div>
+					  			<div class='col-md-4'>
+						  			<select class='form-control' name="time_minute" class='form-control'>
+						  				<option disabled='disabled' selected='selected' value='0'>Minutes</option>	
+						  				@for($i = 0; $i <= 60; $i++)
+						  					<option value="{{ $i }}">{{ $i }}</option>	
+						  				@endfor
+						  			</select>
+						  		</div>
+					  			<div class='col-md-4'>
+						  			<select class='form-control' name="time_second" class='form-control'>
+						  				<option disabled='disabled' selected='selected' value='0'>Seconds</option>	
+						  				@for($i = 0; $i <= 60; $i++)
+						  					<option value="{{ $i }}">{{ $i }}</option>	
+						  				@endfor
+						  			</select>
+						  		</div>
+						  	</div>
+				  		</div>
+			  			
+				  		<div class='col-md-6'>
+				  			<p class='text-muted'>
+				  				The length of time that the reading has to exist for this event to trigger.
 				  			</p>
 				  		</div>
 				  	</div>

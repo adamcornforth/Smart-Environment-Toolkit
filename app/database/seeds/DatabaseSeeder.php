@@ -131,13 +131,13 @@ class DataSeeder extends Seeder {
         $objects['kettle'] = Object::create(array('title' => 'Kettle', 'spot_id' => $spots['adam'][2]->id, 'basestation_id' => 1));        
         $objects['chair'] = Object::create(array('title' => 'Computer Chair', 'spot_id' => $spots['adam'][3]->id, 'basestation_id' => 1));
         $objects['fridge'] = Object::create(array('title' => 'Fridge', 'spot_id' => $spots['adam'][4]->id, 'basestation_id' => 1));
+        $objects['fridge_door'] = Object::create(array('title' => 'Fridge Door', 'spot_id' => $spots['dom'][2]->id, 'basestation_id' => 1));
 
         $objects['north_zone'] = Object::create(array('title' => 'North Zone', 'spot_id' => $spots['adam'][1]->id, 'basestation_id' => 1));
         $objects['south_zone'] = Object::create(array('title' => 'South Zone', 'spot_id' => $spots['adam'][0]->id, 'basestation_id' => 1));
         $objects['center_zone'] = Object::create(array('title' => 'Center Zone', 'spot_id' => $spots['dom'][0]->id, 'basestation_id' => 1));
         $objects['roaming_user_1'] = Object::create(array('title' => 'Roaming User (Dom)', 'spot_id' => $spots['dom'][1]->id, 'basestation_id' => 2));
         $objects['roaming_user_2'] = Object::create(array('title' => 'Roaming User (Vitali)', 'spot_id' => $spots['vitali'][1]->id, 'basestation_id' => 1));
-        $objects['roaming_user_3'] = Object::create(array('title' => 'Roaming User (Dom)', 'spot_id' => $spots['dom'][2]->id, 'basestation_id' => 1));
 
         /**
          * Attach some actuators
@@ -149,6 +149,7 @@ class DataSeeder extends Seeder {
          */
         $jobs['door_open'] = Job::create(array('title' => 'Door open', 'object_id' => $objects['fridge']->id, 'sensor_id' => $sensors['accelerometer']->id, 'threshold' => 1));
         $jobs['fridge_light_on'] = Job::create(array('title' => 'Light on', 'object_id' => $objects['fridge']->id, 'sensor_id' => $sensors['photosensor']->id, 'threshold' => 10, 'direction' => 'ABOVE'));
+        $jobs['fridge_door_open'] = Job::create(array('title' => 'Door Open', 'object_id' => $objects['fridge_door']->id, 'sensor_id' => $sensors['compass']->id, 'threshold' => 180, 'direction' => 'BELOW'));
         $jobs['chair_moved'] = Job::create(array('title' => 'Chair moved', 'object_id' => $objects['chair']->id, 'sensor_id' => $sensors['accelerometer']->id, 'threshold' => null));
         $jobs['kettle_moved'] = Job::create(array('title' => 'Kettle moved', 'object_id' => $objects['kettle']->id, 'sensor_id' => $sensors['accelerometer']->id, 'threshold' => null));
         $jobs['kettle_boiled'] = Job::create(array('title' => 'Kettle boiled', 'object_id' => $objects['kettle']->id, 'sensor_id' => $sensors['thermometer']->id, 'threshold' => 40, 'direction' => 'ABOVE'));
@@ -169,7 +170,6 @@ class DataSeeder extends Seeder {
 
         $jobs['roaming_user_1'] = Job::create(array('title' => 'Roaming User 1 (Dom)', 'object_id' => $objects['roaming_user_1']->id, 'sensor_id' => $sensors['roaming_spot']->id, 'threshold' => null));
         $jobs['roaming_user_2'] = Job::create(array('title' => 'Roaming User 2 (Vitali)', 'object_id' => $objects['roaming_user_2']->id, 'sensor_id' => $sensors['roaming_spot']->id, 'threshold' => null));
-        $jobs['roaming_user_3'] = Job::create(array('title' => 'Roaming User 3 (Dom)', 'object_id' => $objects['roaming_user_3']->id, 'sensor_id' => $sensors['roaming_spot']->id, 'threshold' => null));
 
         /**
          * Initialise Zones
@@ -211,14 +211,14 @@ class DataSeeder extends Seeder {
         /**
          * Create Actuator 
          */
-        Actuator::create(array('actuator_address' => 'RELAYLO1-10FBC.relay1', 'auto_start_time' => Carbon::now()->startOfDay()->addHours(9)->toTimeString(), 'auto_end_time' => Carbon::now()->startOfDay()->addHours(17)->toTimeString()));
+        Actuator::create(array('actuator_address' => 'RELAYLO1-10FBC.relay1', 'auto_start_time' => Carbon::now()->startOfDay()->addHours(9)->toTimeString(), 'auto_end_time' => Carbon::now()->startOfDay()->addHours(17)->toTimeString(), 'basestation_id' => 2));
 
         ActuatorJob::create(array('title' => "Light Off", 'actuator_id' => 1, 'job_id' => $jobs['north_zone_light']->id, 'direction' => 'BELOW', 'threshold' => 30)); 
         ActuatorJob::create(array('title' => "Light Off", 'actuator_id' => 1, 'job_id' => $jobs['south_zone_light']->id, 'direction' => 'BELOW', 'threshold' => 30)); 
         // ActuatorJob::create(array('title' => "Light Off", 'actuator_id' => 1, 'job_id' => $jobs['center_table_light']->id, 'direction' => 'BELOW', 'threshold' => 30)); 
         // ActuatorJob::create(array('title' => "Room Warm", 'actuator_id' => 1, 'job_id' => $jobs['center_table_temperature']->id, 'direction' => 'ABOVE', 'threshold' => 20)); 
         // ActuatorJob::create(array('title' => "Light On", 'actuator_id' => 1, 'job_id' => $jobs['south_zone_light']->id, 'direction' => 'ABOVE', 'threshold' => 30)); 
-        ActuatorJob::create(array('title' => "Entered Zone", 'actuator_id' => 1, 'job_id' => $jobs['roaming_user_3']->id, 'direction' => 'EQUALS', 'threshold' => 1)); 
+        ActuatorJob::create(array('title' => "Door Open 10s", 'actuator_id' => 1, 'job_id' => $jobs['fridge_door_open']->id, 'direction' => 'BELOW', 'threshold' => 180, 'seconds' => 10));  
 
         /**
          * Create some boolean conditions
@@ -238,8 +238,6 @@ class DataSeeder extends Seeder {
         $user_zone[0]['spot'] = $objects['roaming_user_1']->spot->id;
         $user_zone[1]['zone'] = 1; 
         $user_zone[1]['spot'] = $objects['roaming_user_2']->spot->id;
-        $user_zone[2]['zone'] = 1; 
-        $user_zone[2]['spot'] = $objects['roaming_user_3']->spot->id;
 
         $cup_percent = 100;
         echo "Seeding data";

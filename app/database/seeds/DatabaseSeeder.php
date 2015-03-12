@@ -126,18 +126,18 @@ class DataSeeder extends Seeder {
         /**
          * Create some lab Objects
          */
-        $objects['smart_cup'] = Object::create(array('title' => 'Smart Cup', 'spot_id' => $spots['vitali'][0]->id, 'basestation_id' => 1));
+        $objects['smart_cup'] = Object::create(array('title' => 'Smart Cup', 'spot_id' => $spots['vitali'][0]->id, 'basestation_id' => 2));
 
-        $objects['kettle'] = Object::create(array('title' => 'Kettle', 'spot_id' => $spots['adam'][2]->id, 'basestation_id' => 1));        
-        $objects['chair'] = Object::create(array('title' => 'Computer Chair', 'spot_id' => $spots['adam'][3]->id, 'basestation_id' => 1));
-        $objects['fridge'] = Object::create(array('title' => 'Fridge', 'spot_id' => $spots['adam'][4]->id, 'basestation_id' => 1));
-        $objects['fridge_door'] = Object::create(array('title' => 'Fridge Door', 'spot_id' => $spots['dom'][2]->id, 'basestation_id' => 1));
+        $objects['kettle'] = Object::create(array('title' => 'Kettle', 'spot_id' => $spots['adam'][2]->id, 'basestation_id' => 2));        
+        $objects['chair'] = Object::create(array('title' => 'Computer Chair', 'spot_id' => $spots['adam'][3]->id, 'basestation_id' => 2));
+        $objects['fridge'] = Object::create(array('title' => 'Fridge', 'spot_id' => $spots['adam'][4]->id, 'basestation_id' => 2));
+        $objects['fridge_door'] = Object::create(array('title' => 'Fridge Door', 'spot_id' => $spots['dom'][2]->id, 'basestation_id' => 2));
 
-        $objects['north_zone'] = Object::create(array('title' => 'North Zone', 'spot_id' => $spots['adam'][1]->id, 'basestation_id' => 1));
-        $objects['south_zone'] = Object::create(array('title' => 'South Zone', 'spot_id' => $spots['adam'][0]->id, 'basestation_id' => 1));
-        $objects['center_zone'] = Object::create(array('title' => 'Center Zone', 'spot_id' => $spots['dom'][0]->id, 'basestation_id' => 1));
-        $objects['roaming_user_1'] = Object::create(array('title' => 'Roaming User (Dom)', 'spot_id' => $spots['dom'][1]->id, 'basestation_id' => 2));
-        $objects['roaming_user_2'] = Object::create(array('title' => 'Roaming User (Vitali)', 'spot_id' => $spots['vitali'][1]->id, 'basestation_id' => 1));
+        $objects['north_zone'] = Object::create(array('title' => 'North Zone', 'spot_id' => $spots['adam'][1]->id, 'basestation_id' => 2));
+        $objects['south_zone'] = Object::create(array('title' => 'South Zone', 'spot_id' => $spots['adam'][0]->id, 'basestation_id' => 2));
+        $objects['center_zone'] = Object::create(array('title' => 'Center Zone', 'spot_id' => $spots['dom'][0]->id, 'basestation_id' => 2));
+        $objects['roaming_user_1'] = Object::create(array('title' => 'Roaming User (Dom)', 'spot_id' => $spots['dom'][1]->id, 'basestation_id' => 3));
+        $objects['roaming_user_2'] = Object::create(array('title' => 'Roaming User (Vitali)', 'spot_id' => $spots['vitali'][1]->id, 'basestation_id' => 2));
 
         /**
          * Attach some actuators

@@ -55,6 +55,7 @@ Route::group(array('before' => 'auth|basestation|spot|user'), function() {
 	Route::get('api/getCurrentUser', 'APIController@getAuth');
 	Route::get('api/getCurrentUserId', 'APIController@getAuthId');
 	Route::get('api/logout', 'APIController@logout');
+	Route::any('api/setActuatorStatus', 'APIController@setActuatorStatus');
 	Route::get('api/{id}', 'APIController@api');
 
 	Route::get('spots/{id}/stop_tracking', 'SpotController@getStopTracking');

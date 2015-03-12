@@ -38,6 +38,31 @@ class APIController extends BaseController {
 	// 	}
 	// }
 
+
+	public function setActuatorStatus() {
+
+		$actuator_id = Input::get('actuator_id');
+		$actuator_status = Input::get('actuator_status');
+
+		$actuator = Actuator::where('id', '=', $actuator_id)->first();
+		// return $actuator_status;
+		if($actuator_status == null)
+			$actuator->is_on = null;
+		else
+			$actuator->is_on = $actuator_status;
+		$actuator->save();
+
+		return $actuator->is_on;
+
+		// if (Auth::attempt(array('first_name' => Input::get('first_name'), 'password' => Input::get('password'))))
+		// {
+		// 	return Auth::user()->id;
+		// }
+
+		// return 0;
+		// return Input::all();
+	}
+
 	public function login() {
 		Auth::logout();
 		if (Auth::attempt(array('first_name' => Input::get('first_name'), 'password' => Input::get('password'))))
@@ -121,7 +146,7 @@ class APIController extends BaseController {
 								// $spot_modified->heat_level = $this->getSensorLatestReading($spot->object->id, "Thermometer", 1);
 								// $spot_modified->light_level = $this->getSensorLatestReading($spot->object->id, "Photosensor", 1);
 
-								foreach (Heat::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->get() as $heat) {
+								foreach (Heat::orderBy('created_at', '')->where('spot_address', '=', $spot->spot_address)->get() as $heat) {
 									$heat_level->add($heat);
 								}
 								$spot_modified->heat_level = $heat_level;

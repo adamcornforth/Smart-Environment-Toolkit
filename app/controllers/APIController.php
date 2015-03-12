@@ -23,20 +23,20 @@ class APIController extends BaseController {
 		}
 	}
 
-	private function convertObjectIdToZoneId($object_id) {
-		switch ($object_id)
-		{
-			case 5:
-				return 1; // North Zone
-				break;
-			case 6:
-				return 3; // Centre Zone
-				break;
-			case 7:
-				return 2; // South Zone
-				break;
-		}
-	}
+	// private function convertObjectIdToZoneId($object_id) {
+	// 	switch ($object_id)
+	// 	{
+	// 		case 5:
+	// 			return 1; // North Zone
+	// 			break;
+	// 		case 6:
+	// 			return 3; // Centre Zone
+	// 			break;
+	// 		case 7:
+	// 			return 2; // South Zone
+	// 			break;
+	// 	}
+	// }
 
 	public function login() {
 		Auth::logout();
@@ -100,7 +100,10 @@ class APIController extends BaseController {
 								$spot_modified->accel_level = $accel_level;
 
 								$spot_modified->battery_level = $spot->battery_percent;
-								$spot_modified->zone_id = $this->convertObjectIdToZoneId($spot->object->id);
+
+								$zone_spot = ZoneSpot::orderBy('created_at', 'DESC')->where('spot_id', '=', $spot->id)->first();
+								$spot_modified->zone_id = $zone_spot->zone_id;
+								// $spot_modified->zone_id = $this->convertObjectIdToZoneId($spot->object->id);
 
 								$zone_spots->add($spot_modified);
 							}
@@ -172,7 +175,14 @@ class APIController extends BaseController {
 								$spot_modified->accel_level = $accel_level;
 
 								$spot_modified->battery_level = $spot->battery_percent;
-								$zone_object = ZoneObject::orderBy('created_at', 'DESC')->where('object_id', '=', $spot->object->id)->first();
+								// $zone_object = ZoneObject::orderBy('created_at', 'DESC')->where('object_id', '=', $spot->object->id)->first();
+								// $spot_modified->zone_id = $spot->object->zone_id;
+
+								$object = Object::orderBy('created_at', 'DESC')->where('spot_id', '=', $spot->id)->first();
+								$zone_object = ZoneObject::orderBy('created_at', 'DESC')->where('object_id', '=', $object->id)->first();
+								if($zone_object == null)
+									continue;
+
 								$spot_modified->zone_id = $zone_object->zone_id;
 								$spot_modified->date_of_entering_zone = Carbon::parse($spot->zonechanges()->orderBy('id', 'DESC')->first()['created_at'])->format('G:ia jS M');
 

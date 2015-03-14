@@ -202,7 +202,7 @@ class DataSeeder extends Seeder {
         Actuator::create(array('actuator_address' => 'RELAYLO1-10FBC.relay1', 'auto_start_time' => Carbon::now()->startOfDay()->addHours(9)->toTimeString(), 'auto_end_time' => Carbon::now()->startOfDay()->addHours(17)->toTimeString(), 'triggers' => 'Alarm', 'triggered_by' => 'High Energy Use or Security Alarm', 'basestation_id' => 2));
 
         ActuatorJob::create(array('title' => "Fridge Door Open", 'actuator_id' => 1, 'job_id' => $jobs['fridge_light_on']->id, 'direction' => 'ABOVE', 'threshold' => 20, 'seconds' => 10));  
-        ActuatorJob::create(array('title' => "Lab Door Open", 'actuator_id' => 1, 'job_id' => $jobs['lab_door_open']->id, 'direction' => 'ABOVE', 'threshold' => 180, 'seconds' => 0));  
+        ActuatorJob::create(array('title' => "Lab Door Open", 'actuator_id' => 1, 'job_id' => $jobs['lab_door_open']->id, 'direction' => 'ABOVE', 'threshold' => 185, 'seconds' => 0));  
         Condition::create(array('actuator_id' => 1, 'actuator_job' => 1, 'boolean_operator' => 'or', 'second_actuator_job' => 2, 'next_condition' => null, 'next_operator' => null));
 
 

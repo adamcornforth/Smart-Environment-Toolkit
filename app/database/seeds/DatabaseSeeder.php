@@ -144,7 +144,7 @@ class DataSeeder extends Seeder {
         /**
          * Create some Jobs
          */
-        $jobs['lab_door_open'] = Job::create(array('title' => 'Lab Door Open', 'object_id' => $objects['lab_door']->id, 'sensor_id' => $sensors['compass']->id, 'threshold' => 300, 'direction' => 'BELOW'));
+        $jobs['lab_door_open'] = Job::create(array('title' => 'Lab Door Open', 'object_id' => $objects['lab_door']->id, 'sensor_id' => $sensors['compass']->id, 'threshold' => 180, 'direction' => 'ABOVE'));
         $jobs['fridge_light_on'] = Job::create(array('title' => 'Fridge Door Open', 'object_id' => $objects['fridge_door']->id, 'sensor_id' => $sensors['photosensor']->id, 'threshold' => 10, 'direction' => 'ABOVE'));
 
         $jobs['cup_drank_from'] = Job::create(array('title' => 'Cup drank to', 'object_id' => $objects['smart_cup']->id, 'sensor_id' => $sensors['smart_cup']->id, 'threshold' => null));
@@ -203,7 +203,7 @@ class DataSeeder extends Seeder {
         Actuator::create(array('actuator_address' => 'RELAYLO1-10FBC.relay1', 'auto_start_time' => Carbon::now()->startOfDay()->addHours(9)->toTimeString(), 'auto_end_time' => Carbon::now()->startOfDay()->addHours(17)->toTimeString(), 'triggers' => 'Alarm', 'triggered_by' => 'High Energy Use or Security Alarm', 'basestation_id' => 2));
 
         ActuatorJob::create(array('title' => "Fridge Door Open", 'actuator_id' => 1, 'job_id' => $jobs['fridge_light_on']->id, 'direction' => 'ABOVE', 'threshold' => 20, 'seconds' => 10));  
-        ActuatorJob::create(array('title' => "Lab Door Open", 'actuator_id' => 1, 'job_id' => $jobs['lab_door_open']->id, 'direction' => 'BELOW', 'threshold' => 300, 'seconds' => 0));  
+        ActuatorJob::create(array('title' => "Lab Door Open", 'actuator_id' => 1, 'job_id' => $jobs['lab_door_open']->id, 'direction' => 'ABOVE', 'threshold' => 180, 'seconds' => 0));  
         Condition::create(array('actuator_id' => 1, 'actuator_job' => 1, 'boolean_operator' => 'or', 'second_actuator_job' => 2, 'next_condition' => null, 'next_operator' => null));
 
 

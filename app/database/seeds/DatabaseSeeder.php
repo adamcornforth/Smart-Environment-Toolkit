@@ -220,7 +220,8 @@ class DataSeeder extends Seeder {
         Actuator::create(array('actuator_address' => 'RELAYLO1-10F70.relay1', 'auto_start_time' => Carbon::now()->startOfDay()->addHours(9)->toTimeString(), 'auto_end_time' => Carbon::now()->startOfDay()->addHours(17)->toTimeString(), 'triggers' => 'LED Light', 'triggered_by' => 'Low Light', 'basestation_id' => 2));
         
          ActuatorJob::create(array('title' => "Light Off", 'actuator_id' => 2, 'job_id' => $jobs['north_zone_light_off']->id, 'direction' => 'BELOW', 'threshold' => 20, 'seconds' => 0)); 
-         Condition::create(array('actuator_id' => 2, 'actuator_job' => 3, 'boolean_operator' => null, 'second_actuator_job' => null, 'next_condition' => null, 'next_operator' => null));
+         ActuatorJob::create(array('title' => "Impact", 'actuator_id' => 2, 'job_id' => $jobs['impact']->id, 'direction' => 'ABOVE', 'threshold' => 0, 'seconds' => 0)); 
+         Condition::create(array('actuator_id' => 2, 'actuator_job' => 3, 'boolean_operator' => "or", 'second_actuator_job' => 4, 'next_condition' => null, 'next_operator' => null));
  
         /**
          * Add a week's worth of data

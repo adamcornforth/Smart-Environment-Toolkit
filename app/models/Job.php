@@ -39,6 +39,7 @@ class Job extends Eloquent {
 
 	public function getReadings($threshold, $table, $field, $limit=null)
 	{
+		die($table);
 		if($threshold && !is_null($threshold) && $table && !is_null($table)) {
 			return $this->hasMany($table)->orderBy('id', 'DESC')->get();
 		} elseif($table && !is_null($table) && $limit != null) {

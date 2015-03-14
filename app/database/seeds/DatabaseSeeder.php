@@ -55,7 +55,7 @@ class UserSeeder extends Seeder {
                                                         'unit' => '', 'measures' => 'Zone', 'port_number' => 160));
 
         $sensors['smart_cup'] = Sensor::create(array('title' => 'Smart Cup', 'table' => 'Water', 'field' => 'water_percent',
-                                                        'unit' => '%', 'measures' => 'Water Level', 'port_number' => 180));
+                                                        'unit' => '%', 'measures' => 'Water Level', 'port_number' => 185));
 
         $basestation = Basestation::create(array('basestation_address' => 'SET'));
         $set = Object::create(array('title' => "SET", 'basestation_id' => $basestation->id));
@@ -144,7 +144,7 @@ class DataSeeder extends Seeder {
         /**
          * Create some Jobs
          */
-        $jobs['lab_door_open'] = Job::create(array('title' => 'Lab Door Open', 'object_id' => $objects['lab_door']->id, 'sensor_id' => $sensors['compass']->id, 'threshold' => 180, 'direction' => 'ABOVE'));
+        $jobs['lab_door_open'] = Job::create(array('title' => 'Lab Door Open', 'object_id' => $objects['lab_door']->id, 'sensor_id' => $sensors['compass']->id, 'threshold' => 185, 'direction' => 'ABOVE'));
         $jobs['fridge_light_on'] = Job::create(array('title' => 'Fridge Door Open', 'object_id' => $objects['fridge_door']->id, 'sensor_id' => $sensors['photosensor']->id, 'threshold' => 10, 'direction' => 'ABOVE'));
 
         $jobs['cup_drank_from'] = Job::create(array('title' => 'Cup drank to', 'object_id' => $objects['smart_cup']->id, 'sensor_id' => $sensors['smart_cup']->id, 'threshold' => null));
@@ -183,14 +183,10 @@ class DataSeeder extends Seeder {
          * Assign spots to Zones
          */
         $spot_zone['north'] = ZoneSpot::create(array('spot_id'  => $spots['adam'][1]->id, 'zone_id' => $zones['north']->id));
-        $spot_zone['center'] = ZoneSpot::create(array('spot_id'=> $spots['dom'][1]->id, 'zone_id'   => $zones['center']->id));
+        $spot_zone['center'] = ZoneSpot::create(array('spot_id'=> $spots['vitali'][0]->id, 'zone_id'   => $zones['center']->id));
         $spot_zone['south'] = ZoneSpot::create(array('spot_id'  => $spots['adam'][0]->id, 'zone_id' => $zones['south']->id));
 
-        foreach($spots as $owner) {
-            foreach($owner as $spot) {
-                ZoneSPot::create(array('spot_id' => $spot->id, 'zone_id' => $zones['north']->id));
-            }
-        }
+        ZoneSpot::create(array('spot_id' => $spot->id, 'zone_id' => $zones['north']->id));
 
         /**
          * Assign actuator jobs

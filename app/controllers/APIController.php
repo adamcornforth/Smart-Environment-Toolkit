@@ -23,19 +23,210 @@ class APIController extends BaseController {
 		}
 	}
 
-	private function convertObjectIdToZoneId($object_id) {
-		switch ($object_id)
-		{
-			case 5:
-				return 1; // North Zone
-				break;
-			case 6:
-				return 3; // Centre Zone
-				break;
-			case 7:
-				return 2; // South Zone
-				break;
+	public function getDataForZoneSpot()
+	{
+		$id = Auth::user()->id;
+
+		$zone_spots = new \Illuminate\Database\Eloquent\Collection;
+		foreach (Spot::all() as $spot) {
+			if(count($spot->object)) {
+				if(count($spot->object->jobs->first())) {
+					if(count($spot->object->jobs->first()->sensor)) {
+						if($spot->basestation->user_id == $id)
+						{
+							if($spot->object->jobs->first()->sensor->title == "Cell Tower")
+							{
+								$heat_level = new \Illuminate\Database\Eloquent\Collection;
+								$light_level = new \Illuminate\Database\Eloquent\Collection;
+								$accel_level = new \Illuminate\Database\Eloquent\Collection;
+								$spot_modified = new stdClass();
+								$spot_modified->id = $spot->id;
+								$spot_modified->address = $spot->spot_address;
+								$spot_modified->title = $spot->object->title;
+
+								foreach (Heat::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->get() as $heat) {
+									$heat_level->add($heat);
+								}
+								$spot_modified->heat_level = $heat_level;
+
+								foreach (Light::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->get() as $light) {
+									$light_level->add($light);
+								}
+								$spot_modified->light_level = $light_level;
+
+								foreach (Acceleration::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->get() as $accel) {
+									$accel_level->add($accel);
+								}
+								$spot_modified->accel_level = $accel_level;
+
+								$spot_modified->battery_level = $spot->battery_percent;
+
+								$zone_spot = ZoneSpot::orderBy('created_at', 'DESC')->where('spot_id', '=', $spot->id)->first();
+								$spot_modified->zone_id = $zone_spot->zone_id;
+
+								$zone_spots->add($spot_modified);
+							}
+						}
+					}
+				}
+			}
 		}
+		return array('zone_spots' => $zone_spots);
+	}
+
+	public function getDataForRoamingSpot()
+	{
+		$id = Auth::user()->id;
+
+		$roaming_spots = new \Illuminate\Database\Eloquent\Collection;
+		foreach (Spot::all() as $spot) {
+
+			if(count($spot->object)) {
+				if(count($spot->object->jobs->first())) {
+					if(count($spot->object->jobs->first()->sensor)) {
+						if($spot->basestation->user_id == $id)
+						{
+							if ($spot->object->jobs->first()->sensor->title == "Roaming Spot")
+							{
+								$heat_level = new \Illuminate\Database\Eloquent\Collection;
+								$light_level = new \Illuminate\Database\Eloquent\Collection;
+								$accel_level = new \Illuminate\Database\Eloquent\Collection;
+								$spot_modified = new stdClass();
+								$spot_modified->id = $spot->id;
+								$spot_modified->address = $spot->spot_address;
+								$spot_modified->title = $spot->object->title;
+								$spot_modified->user = $spot->user->first_name . " " . $spot->user->last_name;
+
+								foreach (Heat::orderBy('created_at', '')->where('spot_address', '=', $spot->spot_address)->get() as $heat) {
+									$heat_level->add($heat);
+								}
+								$spot_modified->heat_level = $heat_level;
+
+								foreach (Light::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->get() as $light) {
+									$light_level->add($light);
+								}
+								$spot_modified->light_level = $light_level;
+
+								foreach (Acceleration::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->get() as $accel) {
+									$accel_level->add($accel);
+								}
+								$spot_modified->accel_level = $accel_level;
+
+								$spot_modified->battery_level = $spot->battery_percent;
+								$zone_spot = ZoneSpot::orderBy('created_at', 'DESC')->where('job_id', '!=', 'NULL')->where('spot_id', '=', $spot->id)->first();
+								if($zone_spot == null)
+									continue;
+
+								$spot_modified->zone_id = $zone_spot->zone_id;
+								$spot_modified->date_of_entering_zone = Carbon::parse($spot->zonechanges()->orderBy('id', 'DESC')->first()->created_at)->format('G:ia jS M');
+
+								$roaming_spots->add($spot_modified);
+							}
+						}
+					}
+				}
+			}
+		}
+		return array('roaming_spots' => $roaming_spots);
+	}
+
+	public function getDataForObjectSpot()
+	{
+		$id = Auth::user()->id;
+
+		$object_spots = new \Illuminate\Database\Eloquent\Collection;
+		foreach (Spot::all() as $spot) {
+
+			if(count($spot->object)) {
+				if(count($spot->object->jobs->first())) {
+					if(count($spot->object->jobs->first()->sensor)) {
+						if($spot->basestation->user_id == $id)
+						{
+							if(!($spot->object->jobs->first()->sensor->title == "Cell Tower") & !($spot->object->jobs->first()->sensor->title == "Roaming Spot"))
+							{
+								$heat_level = new \Illuminate\Database\Eloquent\Collection;
+								$light_level = new \Illuminate\Database\Eloquent\Collection;
+								$accel_level = new \Illuminate\Database\Eloquent\Collection;
+
+								$spot_modified = new stdClass();
+								$spot_modified->id = $spot->id;
+								$spot_modified->address = $spot->spot_address;
+								$spot_modified->title = $spot->object->title;
+								$spot_modified->user = $spot->user->first_name . " " . $spot->user->last_name;
+
+								foreach (Heat::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->get() as $heat) {
+									$heat_level->add($heat);
+								}
+								$spot_modified->heat_level = $heat_level;
+
+								foreach (Light::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->get() as $light) {
+									$light_level->add($light);
+								}
+								$spot_modified->light_level = $light_level;
+
+								foreach (Acceleration::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->get() as $accel) {
+									$accel_level->add($accel);
+								}
+								$spot_modified->accel_level = $accel_level;
+
+								$spot_modified->battery_level = $spot->battery_percent;
+
+								$object = Object::orderBy('created_at', 'DESC')->where('spot_id', '=', $spot->id)->first();
+								$zone_object = ZoneObject::orderBy('created_at', 'DESC')->where('object_id', '=', $object->id)->first();
+								if($zone_object == null)
+									continue;
+
+								$spot_modified->zone_id = $zone_object->zone_id;
+								$spot_modified->date_of_entering_zone = Carbon::parse($spot->zonechanges()->orderBy('id', 'DESC')->first()['created_at'])->format('G:ia jS M');
+
+								$object_spots->add($spot_modified);
+							}
+						}
+					}
+				}
+			}
+		}
+		return array('object_spots' => $object_spots);
+	}
+
+	// private function convertObjectIdToZoneId($object_id) {
+	// 	switch ($object_id)
+	// 	{
+	// 		case 5:
+	// 			return 1; // North Zone
+	// 			break;
+	// 		case 6:
+	// 			return 3; // Centre Zone
+	// 			break;
+	// 		case 7:
+	// 			return 2; // South Zone
+	// 			break;
+	// 	}
+	// }
+
+
+	public function setActuatorStatus() {
+
+		$actuator_id = Input::get('actuator_id');
+		$actuator_status = Input::get('actuator_status');
+
+		$actuator = Actuator::where('id', '=', $actuator_id)->first();
+		// return $actuator_status;
+		if($actuator_status == null)
+			$actuator->is_on = null;
+		else
+			$actuator->is_on = $actuator_status;
+		$actuator->save();
+
+		return $actuator->is_on;
+
+		// if (Auth::attempt(array('first_name' => Input::get('first_name'), 'password' => Input::get('password'))))
+		// {
+		// 	return Auth::user()->id;
+		// }
+
+		// return 0;
+		// return Input::all();
 	}
 
 	public function login() {
@@ -100,7 +291,10 @@ class APIController extends BaseController {
 								$spot_modified->accel_level = $accel_level;
 
 								$spot_modified->battery_level = $spot->battery_percent;
-								$spot_modified->zone_id = $this->convertObjectIdToZoneId($spot->object->id);
+
+								$zone_spot = ZoneSpot::orderBy('created_at', 'DESC')->where('spot_id', '=', $spot->id)->first();
+								$spot_modified->zone_id = $zone_spot->zone_id;
+								// $spot_modified->zone_id = $this->convertObjectIdToZoneId($spot->object->id);
 
 								$zone_spots->add($spot_modified);
 							}
@@ -118,7 +312,7 @@ class APIController extends BaseController {
 								// $spot_modified->heat_level = $this->getSensorLatestReading($spot->object->id, "Thermometer", 1);
 								// $spot_modified->light_level = $this->getSensorLatestReading($spot->object->id, "Photosensor", 1);
 
-								foreach (Heat::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->get() as $heat) {
+								foreach (Heat::orderBy('created_at', '')->where('spot_address', '=', $spot->spot_address)->get() as $heat) {
 									$heat_level->add($heat);
 								}
 								$spot_modified->heat_level = $heat_level;
@@ -135,6 +329,9 @@ class APIController extends BaseController {
 
 								$spot_modified->battery_level = $spot->battery_percent;
 								$zone_spot = ZoneSpot::orderBy('created_at', 'DESC')->where('job_id', '!=', 'NULL')->where('spot_id', '=', $spot->id)->first();
+								if($zone_spot == null)
+									continue;
+
 								$spot_modified->zone_id = $zone_spot->zone_id;
 								$spot_modified->date_of_entering_zone = Carbon::parse($spot->zonechanges()->orderBy('id', 'DESC')->first()->created_at)->format('G:ia jS M');
 
@@ -172,7 +369,14 @@ class APIController extends BaseController {
 								$spot_modified->accel_level = $accel_level;
 
 								$spot_modified->battery_level = $spot->battery_percent;
-								$zone_object = ZoneObject::orderBy('created_at', 'DESC')->where('object_id', '=', $spot->object->id)->first();
+								// $zone_object = ZoneObject::orderBy('created_at', 'DESC')->where('object_id', '=', $spot->object->id)->first();
+								// $spot_modified->zone_id = $spot->object->zone_id;
+
+								$object = Object::orderBy('created_at', 'DESC')->where('spot_id', '=', $spot->id)->first();
+								$zone_object = ZoneObject::orderBy('created_at', 'DESC')->where('object_id', '=', $object->id)->first();
+								if($zone_object == null)
+									continue;
+
 								$spot_modified->zone_id = $zone_object->zone_id;
 								$spot_modified->date_of_entering_zone = Carbon::parse($spot->zonechanges()->orderBy('id', 'DESC')->first()['created_at'])->format('G:ia jS M');
 

@@ -18,7 +18,12 @@
 					<td> 
 						<small>
 							<span class='text-muted'>
-								<a href='{{ url("actuators/$actuator->id") }}'>{{ $actuator->actuator_address }}</a>
+								@if(isset($actuator->triggers))
+									{{ $actuator->triggers }}<br />
+									<small><a href='{{ url("actuators/$actuator->id") }}'>{{ $actuator->actuator_address }}</a></small>
+								@else
+									<a href='{{ url("actuators/$actuator->id") }}'>{{ $actuator->actuator_address }}</a>
+								@endif
 							</span>
 						</small>
 					</td>

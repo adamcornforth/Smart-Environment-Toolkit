@@ -31,11 +31,15 @@
 		<strong>{{ $job->title }}</strong>, tracked using the <strong>{{ $job->sensor->title }}</strong>. 
 		<br />
 		<small class='text-muted'>
-			@if(isset($job->threshold))
-				Threshold: <strong>{{ $job->sensor->measures }}</strong> {{ ucwords(strtolower($job->direction)) }} <strong>{{ $job->threshold }}{{ $job->sensor->unit }}</strong>
-			@endif
-			@if(isset($job->sample_rate))
-				Sample Rate: <strong>{{ $job->sample_rate }}s</strong>
+			@if(isset($job->threshold) && isset($job->sample_rate))
+				<strong>{{ $job->sample_rate }}</strong> impacts in <strong>{{ $job->threshold }}s</strong>.
+			@else
+				@if(isset($job->threshold))
+					Threshold: <strong>{{ $job->sensor->measures }}</strong> {{ ucwords(strtolower($job->direction)) }} <strong>{{ $job->threshold }}{{ $job->sensor->unit }}</strong>
+				@endif
+				@if(isset($job->sample_rate))
+					Sample Rate: <strong>{{ $job->sample_rate }}s</strong>
+				@endif
 			@endif
 		</small>
 	</div>

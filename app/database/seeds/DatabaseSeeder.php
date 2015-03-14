@@ -55,7 +55,10 @@ class UserSeeder extends Seeder {
                                                         'unit' => '', 'measures' => 'Zone', 'port_number' => 160));
 
         $sensors['smart_cup'] = Sensor::create(array('title' => 'Smart Cup', 'table' => 'Water', 'field' => 'water_percent',
-                                                        'unit' => '%', 'measures' => 'Water Level', 'port_number' => 185));
+                                                        'unit' => '%', 'measures' => 'Water Level', 'port_number' => 180));
+
+        $sensors['impact'] = Sensor::create(array('title' => 'Impact Sensor', 'table' => 'Impact', 'field' => 'impact',
+                                                        'unit' => '', 'measures' => 'Impact', 'port_number' => 210));
 
         $basestation = Basestation::create(array('basestation_address' => 'SET'));
         $set = Object::create(array('title' => "SET", 'basestation_id' => $basestation->id));
@@ -102,6 +105,7 @@ class DataSeeder extends Seeder {
         $spots['dom'][0] = Spot::create(array('spot_address' => '0014.4F01.0000.77A7', 'user_id' => 2, 'basestation_id' => 2, 'battery_percent' => 0)); // Smart Cup
         $spots['dom'][1] = Spot::create(array('spot_address' => '0014.4F01.0000.77C0', 'user_id' => 2, 'basestation_id' => 2, 'battery_percent' => 0)); // Fridge Door
         $spots['dom'][2] = Spot::create(array('spot_address' => '0014.4F01.0000.7E4D', 'user_id' => 2, 'basestation_id' => 2, 'battery_percent' => 0));
+        $spots['dom'][3] = Spot::create(array('spot_address' => '0014.4F01.0000.7C89', 'user_id' => 2, 'basestation_id' => 2, 'battery_percent' => 0)); // Impact Sensoe
 
         $spots['vitali'][0] = Spot::create(array('spot_address' => '0014.4F01.0000.7A12', 'user_id' => 3, 'basestation_id' => 2, 'battery_percent' => 0)); // Center
         $spots['vitali'][1] = Spot::create(array('spot_address' => '0014.4F01.0000.7AD7', 'user_id' => 1, 'basestation_id' => 2, 'battery_percent' => 0));
@@ -117,6 +121,7 @@ class DataSeeder extends Seeder {
         $sensors['cell_tower'] = Sensor::find(6);
         $sensors['roaming_spot'] = Sensor::find(7);
         $sensors['smart_cup'] = Sensor::find(8);
+        $sensors['impact'] = Sensor::find(9);
 
 
     	DB::table('Acceleration')->delete();
@@ -134,6 +139,7 @@ class DataSeeder extends Seeder {
         $objects['lab_door'] = Object::create(array('title' => 'Lab Door', 'spot_id' => $spots['adam'][3]->id, 'basestation_id' => 2));
         $objects['smart_cup'] = Object::create(array('title' => 'Smart Cup', 'spot_id' => $spots['dom'][0]->id, 'basestation_id' => 2));
         $objects['fridge_door'] = Object::create(array('title' => 'Fridge Door', 'spot_id' => $spots['dom'][1]->id, 'basestation_id' => 2));
+        $objects['impact'] = Object::create(array('title' => 'Impact', 'spot_id' => $spots['dom'][3]->id, 'basestation_id' => 2));
 
 
         /**
@@ -148,6 +154,8 @@ class DataSeeder extends Seeder {
         $jobs['fridge_light_on'] = Job::create(array('title' => 'Fridge Door Open', 'object_id' => $objects['fridge_door']->id, 'sensor_id' => $sensors['photosensor']->id, 'threshold' => 10, 'direction' => 'ABOVE'));
 
         $jobs['cup_drank_from'] = Job::create(array('title' => 'Cup drank to', 'object_id' => $objects['smart_cup']->id, 'sensor_id' => $sensors['smart_cup']->id, 'threshold' => null));
+
+        $jobs['impact'] = Job::create(array('title' => 'Impact', 'object_id' => $objects['impact']->id, 'sensor_id' => $sensors['impact']->id, 'sample_rate' => 2, 'threshold' => 2));
         
 
         $jobs['center_table_range'] = Job::create(array('title' => 'User Entered Center Zone', 'object_id' => $objects['center_zone']->id, 'sensor_id' => $sensors['cell_tower']->id, 'threshold' => null));

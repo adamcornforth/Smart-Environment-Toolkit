@@ -186,6 +186,9 @@ class DataSeeder extends Seeder {
         $spot_zone['center'] = ZoneSpot::create(array('spot_id'=> $spots['vitali'][0]->id, 'zone_id'   => $zones['center']->id));
         $spot_zone['south'] = ZoneSpot::create(array('spot_id'  => $spots['adam'][0]->id, 'zone_id' => $zones['south']->id));
 
+        // Assign spots to roaming zones
+        $spot_zone['roaming'] = ZoneSpot::create(array('spot_id'  => $spots['adam'][2]->id, 'job_id' => $jobs['roaming_user_1']->id, 'zone_id' => $zones['south']->id));
+
         // ZoneSpot::create(array('spot_id' => $spot->id, 'zone_id' => $zones['north']->id));
 
         /**

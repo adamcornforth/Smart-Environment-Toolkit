@@ -97,7 +97,7 @@ class DataSeeder extends Seeder {
         $spots['adam'][1] = Spot::create(array('spot_address' => '0014.4F01.0000.76FF', 'user_id' => 1, 'basestation_id' => 2, 'battery_percent' => 0)); // North
 
         $spots['adam'][2] = Spot::create(array('spot_address' => '0014.4F01.0000.7836', 'user_id' => 1, 'basestation_id' => 2, 'battery_percent' => 0)); // Roaming
-        $spots['adam'][3] = Spot::create(array('spot_address' => '0014.4F01.0000.7FBF', 'user_id' => 1, 'basestation_id' => 2, 'battery_percent' => 0)); // Lab Door
+        $spots['adam'][3] = Spot::create(array('spot_address' => '0014.4F01.0000.7E4D', 'user_id' => 1, 'basestation_id' => 2, 'battery_percent' => 0)); // Lab Door
 
         // $spots['adam'][4] = Spot::create(array('spot_address' => '0014.4F01.0000.7A06', 'user_id' => 1, 'basestation_id' => null, 'battery_percent' => 0)); // Blank
         // $spots['adam'][5] = Spot::create(array('spot_address' => '0014.4F01.0000.78E0', 'user_id' => 1, 'basestation_id' => null, 'battery_percent' => 0)); // Blank

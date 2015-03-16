@@ -104,7 +104,6 @@ class DataSeeder extends Seeder {
 
         $spots['dom'][0] = Spot::create(array('spot_address' => '0014.4F01.0000.77A7', 'user_id' => 2, 'basestation_id' => 2, 'battery_percent' => 0)); // Smart Cup
         $spots['dom'][1] = Spot::create(array('spot_address' => '0014.4F01.0000.77C0', 'user_id' => 2, 'basestation_id' => 2, 'battery_percent' => 0)); // Fridge Door
-        $spots['dom'][2] = Spot::create(array('spot_address' => '0014.4F01.0000.7E4D', 'user_id' => 2, 'basestation_id' => 2, 'battery_percent' => 0));
         $spots['dom'][3] = Spot::create(array('spot_address' => '0014.4F01.0000.7C89', 'user_id' => 2, 'basestation_id' => 2, 'battery_percent' => 0)); // Impact Sensoe
 
         $spots['vitali'][0] = Spot::create(array('spot_address' => '0014.4F01.0000.7A12', 'user_id' => 3, 'basestation_id' => 2, 'battery_percent' => 0)); // Center

@@ -44,25 +44,25 @@ class APIController extends BaseController {
 								$spot_modified->address = $spot->spot_address;
 								$spot_modified->title = $spot->object->title;
 
-								foreach (Heat::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->get() as $heat) {
-									$heat_level->add($heat);
-								}
-								$spot_modified->heat_level = $heat_level;
-
-								foreach (Light::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->get() as $light) {
-									$light_level->add($light);
-								}
-								$spot_modified->light_level = $light_level;
-
-								foreach (Acceleration::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->get() as $accel) {
-									$accel_level->add($accel);
-								}
-								$spot_modified->accel_level = $accel_level;
-
 								$spot_modified->battery_level = $spot->battery_percent;
 
 								$zone_spot = ZoneSpot::orderBy('created_at', 'DESC')->where('spot_id', '=', $spot->id)->first();
 								$spot_modified->zone_id = $zone_spot->zone_id;
+
+								foreach (Heat::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->where('zone_id', '=', $spot_modified->zone_id)->get() as $heat) {
+									$heat_level->add($heat);
+								}
+								$spot_modified->heat_level = $heat_level;
+
+								foreach (Light::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->where('zone_id', '=', $spot_modified->zone_id)->get() as $light) {
+									$light_level->add($light);
+								}
+								$spot_modified->light_level = $light_level;
+
+								foreach (Acceleration::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->where('zone_id', '=', $spot_modified->zone_id)->get() as $accel) {
+									$accel_level->add($accel);
+								}
+								$spot_modified->accel_level = $accel_level;
 
 								$zone_spots->add($spot_modified);
 							}
@@ -97,27 +97,29 @@ class APIController extends BaseController {
 								$spot_modified->title = $spot->object->title;
 								$spot_modified->user = $spot->user->first_name . " " . $spot->user->last_name;
 
-								foreach (Heat::orderBy('created_at', '')->where('spot_address', '=', $spot->spot_address)->get() as $heat) {
-									$heat_level->add($heat);
-								}
-								$spot_modified->heat_level = $heat_level;
-
-								foreach (Light::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->get() as $light) {
-									$light_level->add($light);
-								}
-								$spot_modified->light_level = $light_level;
-
-								foreach (Acceleration::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->get() as $accel) {
-									$accel_level->add($accel);
-								}
-								$spot_modified->accel_level = $accel_level;
-
-								$spot_modified->battery_level = $spot->battery_percent;
 								$zone_spot = ZoneSpot::orderBy('created_at', 'DESC')->where('job_id', '!=', 'NULL')->where('spot_id', '=', $spot->id)->first();
 								if($zone_spot == null)
 									continue;
 
 								$spot_modified->zone_id = $zone_spot->zone_id;
+
+								foreach (Heat::orderBy('created_at', '')->where('spot_address', '=', $spot->spot_address)->where('zone_id', '=', $spot_modified->zone_id)->get() as $heat) {
+									$heat_level->add($heat);
+								}
+								$spot_modified->heat_level = $heat_level;
+
+								foreach (Light::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->where('zone_id', '=', $spot_modified->zone_id)->get() as $light) {
+									$light_level->add($light);
+								}
+								$spot_modified->light_level = $light_level;
+
+								foreach (Acceleration::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->where('zone_id', '=', $spot_modified->zone_id)->get() as $accel) {
+									$accel_level->add($accel);
+								}
+								$spot_modified->accel_level = $accel_level;
+
+								$spot_modified->battery_level = $spot->battery_percent;
+
 								$spot_modified->date_of_entering_zone = Carbon::parse($spot->zonechanges()->orderBy('id', 'DESC')->first()->created_at)->format('G:ia jS M');
 
 								$roaming_spots->add($spot_modified);
@@ -154,29 +156,30 @@ class APIController extends BaseController {
 								$spot_modified->title = $spot->object->title;
 								$spot_modified->user = $spot->user->first_name . " " . $spot->user->last_name;
 
-								foreach (Heat::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->get() as $heat) {
-									$heat_level->add($heat);
-								}
-								$spot_modified->heat_level = $heat_level;
-
-								foreach (Light::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->get() as $light) {
-									$light_level->add($light);
-								}
-								$spot_modified->light_level = $light_level;
-
-								foreach (Acceleration::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->get() as $accel) {
-									$accel_level->add($accel);
-								}
-								$spot_modified->accel_level = $accel_level;
-
-								$spot_modified->battery_level = $spot->battery_percent;
-
 								$object = Object::orderBy('created_at', 'DESC')->where('spot_id', '=', $spot->id)->first();
 								$zone_object = ZoneObject::orderBy('created_at', 'DESC')->where('object_id', '=', $object->id)->first();
 								if($zone_object == null)
 									continue;
 
 								$spot_modified->zone_id = $zone_object->zone_id;
+
+								foreach (Heat::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->where('zone_id', '=', $spot_modified->zone_id)->get() as $heat) {
+									$heat_level->add($heat);
+								}
+								$spot_modified->heat_level = $heat_level;
+
+								foreach (Light::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->where('zone_id', '=', $spot_modified->zone_id)->get() as $light) {
+									$light_level->add($light);
+								}
+								$spot_modified->light_level = $light_level;
+
+								foreach (Acceleration::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->where('zone_id', '=', $spot_modified->zone_id)->get() as $accel) {
+									$accel_level->add($accel);
+								}
+								$spot_modified->accel_level = $accel_level;
+
+								$spot_modified->battery_level = $spot->battery_percent;
+
 								$spot_modified->date_of_entering_zone = Carbon::parse($spot->zonechanges()->orderBy('id', 'DESC')->first()['created_at'])->format('G:ia jS M');
 
 								$object_spots->add($spot_modified);
@@ -275,25 +278,27 @@ class APIController extends BaseController {
 								// $spot_modified->heat_level = round($this->getSensorLatestReading($spot->object->id, "Thermometer", 1), 2);
 								// $spot_modified->light_level = round($this->getSensorLatestReading($spot->object->id, "Photosensor", 1), 0);
 
-								foreach (Heat::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->get() as $heat) {
+
+								$zone_spot = ZoneSpot::orderBy('created_at', 'DESC')->where('spot_id', '=', $spot->id)->first();
+								$spot_modified->zone_id = $zone_spot->zone_id;
+
+								foreach (Heat::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->where('zone_id', '=', $spot_modified->zone_id)->get() as $heat) {
 									$heat_level->add($heat);
 								}
 								$spot_modified->heat_level = $heat_level;
 
-								foreach (Light::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->get() as $light) {
+								foreach (Light::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->where('zone_id', '=', $spot_modified->zone_id)->get() as $light) {
 									$light_level->add($light);
 								}
 								$spot_modified->light_level = $light_level;
 
-								foreach (Acceleration::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->get() as $accel) {
+								foreach (Acceleration::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->where('zone_id', '=', $spot_modified->zone_id)->get() as $accel) {
 									$accel_level->add($accel);
 								}
 								$spot_modified->accel_level = $accel_level;
 
 								$spot_modified->battery_level = $spot->battery_percent;
 
-								$zone_spot = ZoneSpot::orderBy('created_at', 'DESC')->where('spot_id', '=', $spot->id)->first();
-								$spot_modified->zone_id = $zone_spot->zone_id;
 								// $spot_modified->zone_id = $this->convertObjectIdToZoneId($spot->object->id);
 
 								$zone_spots->add($spot_modified);
@@ -312,27 +317,29 @@ class APIController extends BaseController {
 								// $spot_modified->heat_level = $this->getSensorLatestReading($spot->object->id, "Thermometer", 1);
 								// $spot_modified->light_level = $this->getSensorLatestReading($spot->object->id, "Photosensor", 1);
 
-								foreach (Heat::orderBy('created_at', '')->where('spot_address', '=', $spot->spot_address)->get() as $heat) {
-									$heat_level->add($heat);
-								}
-								$spot_modified->heat_level = $heat_level;
-
-								foreach (Light::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->get() as $light) {
-									$light_level->add($light);
-								}
-								$spot_modified->light_level = $light_level;
-
-								foreach (Acceleration::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->get() as $accel) {
-									$accel_level->add($accel);
-								}
-								$spot_modified->accel_level = $accel_level;
-
-								$spot_modified->battery_level = $spot->battery_percent;
 								$zone_spot = ZoneSpot::orderBy('created_at', 'DESC')->where('job_id', '!=', 'NULL')->where('spot_id', '=', $spot->id)->first();
 								if($zone_spot == null)
 									continue;
 
 								$spot_modified->zone_id = $zone_spot->zone_id;
+
+								foreach (Heat::orderBy('created_at', '')->where('spot_address', '=', $spot->spot_address)->where('zone_id', '=', $spot_modified->zone_id)->get() as $heat) {
+									$heat_level->add($heat);
+								}
+								$spot_modified->heat_level = $heat_level;
+
+								foreach (Light::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->where('zone_id', '=', $spot_modified->zone_id)->get() as $light) {
+									$light_level->add($light);
+								}
+								$spot_modified->light_level = $light_level;
+
+								foreach (Acceleration::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->where('zone_id', '=', $spot_modified->zone_id)->get() as $accel) {
+									$accel_level->add($accel);
+								}
+								$spot_modified->accel_level = $accel_level;
+
+								$spot_modified->battery_level = $spot->battery_percent;
+
 								$spot_modified->date_of_entering_zone = Carbon::parse($spot->zonechanges()->orderBy('id', 'DESC')->first()->created_at)->format('G:ia jS M');
 
 								$roaming_spots->add($spot_modified);
@@ -353,17 +360,24 @@ class APIController extends BaseController {
 								// $spot_modified->light_level = $this->getSensorLatestReading($spot->object->id, "Photosensor", 1);
 								// $spot_modified->accel_level = $this->getSensorLatestReading($spot->object->id, "Accelerometer", 1);
 
-								foreach (Heat::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->get() as $heat) {
+								$object = Object::orderBy('created_at', 'DESC')->where('spot_id', '=', $spot->id)->first();
+								$zone_object = ZoneObject::orderBy('created_at', 'DESC')->where('object_id', '=', $object->id)->first();
+								if($zone_object == null)
+									continue;
+
+								$spot_modified->zone_id = $zone_object->zone_id;
+
+								foreach (Heat::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->where('zone_id', '=', $spot_modified->zone_id)->get() as $heat) {
 									$heat_level->add($heat);
 								}
 								$spot_modified->heat_level = $heat_level;
 
-								foreach (Light::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->get() as $light) {
+								foreach (Light::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->where('zone_id', '=', $spot_modified->zone_id)->get() as $light) {
 									$light_level->add($light);
 								}
 								$spot_modified->light_level = $light_level;
 
-								foreach (Acceleration::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->get() as $accel) {
+								foreach (Acceleration::orderBy('created_at', 'DESC')->where('spot_address', '=', $spot->spot_address)->where('zone_id', '=', $spot_modified->zone_id)->get() as $accel) {
 									$accel_level->add($accel);
 								}
 								$spot_modified->accel_level = $accel_level;
@@ -372,12 +386,6 @@ class APIController extends BaseController {
 								// $zone_object = ZoneObject::orderBy('created_at', 'DESC')->where('object_id', '=', $spot->object->id)->first();
 								// $spot_modified->zone_id = $spot->object->zone_id;
 
-								$object = Object::orderBy('created_at', 'DESC')->where('spot_id', '=', $spot->id)->first();
-								$zone_object = ZoneObject::orderBy('created_at', 'DESC')->where('object_id', '=', $object->id)->first();
-								if($zone_object == null)
-									continue;
-
-								$spot_modified->zone_id = $zone_object->zone_id;
 								$spot_modified->date_of_entering_zone = Carbon::parse($spot->zonechanges()->orderBy('id', 'DESC')->first()['created_at'])->format('G:ia jS M');
 
 								$object_spots->add($spot_modified);
